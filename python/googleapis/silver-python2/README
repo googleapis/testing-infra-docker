@@ -1,0 +1,7 @@
+This is a slightly modified copy of the Jenkernetes image which we would like to move away from in the future.
+
+Original location:
+
+https://github.com/GoogleCloudPlatform/jenkernetes/tree/master/examples/python_slave/image
+
+

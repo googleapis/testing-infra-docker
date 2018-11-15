@@ -1,0 +1,8 @@
+schemaVersion: 1.0.0
+commandTests:
+- name: "version"
+  command: ["go", "version"]
+  expectedOutput: ["go version go1.8.*"]
+- name: "gcloud"
+  command: ["gcloud", "version"]
+  expectedOutput: ["Google Cloud SDK"]

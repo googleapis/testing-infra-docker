@@ -1,0 +1,67 @@
+# Dockerfile derived from googleapis/python-multi (the image used by the client
+# libraries tests). We modify this to ensure that all standard library
+# features are available and only build Python 2.7 and 3.6.
+FROM ubuntu:16.04
+
+ENV DEBIAN_FRONTEND noninteractive
+
+# Ensure local Python is preferred over distribution Python.
+ENV PATH /usr/local/bin:$PATH
+
+# http://bugs.python.org/issue19846
+# At the moment, setting "LANG=C" on a Linux system fundamentally breaks
+# Python 3.
+ENV LANG C.UTF-8
+
+# Install dependencies.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    build-essential \
+    bzip2 \
+    ca-certificates \
+    git \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    ssh \
+    tcl \
+    tcl-dev \
+    tk \
+    tk-dev \
+    wget \
+  && apt-get clean autoclean \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /var/cache/apt/archives/*.deb
+
+# Install the desired versions of Python.
+RUN for PYTHON_VERSION in 2.7.14 3.6.3; do \
+  set -ex \
+    && wget -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
+    && mkdir -p /usr/src/python-${PYTHON_VERSION} \
+    && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
+    && rm python-${PYTHON_VERSION}.tar.xz \
+    && cd /usr/src/python-${PYTHON_VERSION} \
+    && ./configure \
+        --enable-shared \
+        --enable-optimizations \
+      # This works only on Python 2.7 and throws a warning on every other
+      # version, but seems otherwise harmless.
+        --enable-unicode=ucs4 \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig \
+  ; done \
+  && rm -rf /usr/src/python* \
+  && rm -rf ~/.cache/
+
+# Make sure the Python 3 version of pip is up-to-date and install virtualenv
+RUN /usr/local/bin/python3 -m pip \
+  install \
+  --no-cache-dir \
+  --upgrade \
+  pip \
+  virtualenv
+
+CMD ["python3.6"]
