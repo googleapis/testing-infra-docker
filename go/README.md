@@ -1,6 +1,6 @@
 # Go Docker Images
 
-This repository contains the Docker images for running Go tests for the Google API toolchains.
+This directory contains the Docker images for running Go tests for the Google API toolchains.
 The primary use case for this images is to run tests on Kokoro via Trampoline.
 
 ## Building Images

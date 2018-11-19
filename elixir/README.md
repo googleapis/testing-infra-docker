@@ -1,6 +1,6 @@
 # Elixir Docker Images
 
-This repository contains the Docker images for running Elixir tests for the
+This directory contains the Docker images for running Elixir tests for the
 Google API toolchains. The primary use case for this images is to run tests
 on Kokoro via Trampoline.
 

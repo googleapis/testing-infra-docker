@@ -1,6 +1,6 @@
 # Java Docker Images
 
-This repository contains the Docker images for running Java tests for the
+This directory contains the Docker images for running Java tests for the
 Google API toolchains. The primary use case for this images is to run tests
 on Kokoro via Trampoline.
 
