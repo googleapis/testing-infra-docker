@@ -1,3 +1,3 @@
 This is not an officially supported Google product.
 
-This repository has docker images used for testing in google cloud libraries.
+This repository has Docker images used for testing in Google client libraries.
