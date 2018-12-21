@@ -14,18 +14,29 @@
 
 steps:
 
-# Ruby Autosynth
+# Node 6
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/autosynth', '.']
-  dir: 'autosynth'
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:6-user', '.']
+  dir: '6-user'
   waitFor: ['-']
 
-# Ruby Multi Ubuntu
+# Node 8
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/ruby-multi-ubuntu', '.']
-  dir: 'ruby-multi'
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:8-user', '.']
+  dir: '8-user'
+  waitFor: ['-']
+
+# Node 10
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:10-user', '.']
+  dir: '10-user'
+  waitFor: ['-']
+
+# Node 11
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:11-user', '.']
+  dir: '11-user'
   waitFor: ['-']
 
 images:
-  - gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/autosynth
-  - gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/ruby-multi-ubuntu
+  - gcr.io/cloud-devrel-kokoro-resources/node
