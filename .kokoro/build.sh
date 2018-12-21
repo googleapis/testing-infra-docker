@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -eo pipefail
-
 # Disable buffering, so that the logs stream through.
 export PYTHONUNBUFFERED=1
 
