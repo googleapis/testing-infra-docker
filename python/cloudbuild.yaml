@@ -20,37 +20,35 @@ steps:
   dir: 'google-cloud-python/autosynth'
   waitFor: ['-']
 
-# cloud-devrel-kokoro-resources/python
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python', '.']
-  dir: 'cloud-devrel-kokoro-resources/python'
-  waitFor: ['-']
-
 # cloud-devrel-kokoro-resources/python-base
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
   dir: 'cloud-devrel-kokoro-resources/python'
   waitFor: ['-']
+  id: 'python-base'
 
-# googleapispython-multi
+# googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
   dir: 'googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
 
-# googleapis/silver-python2
+# cloud-devrel-kokoro-resources/python
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/silver-python2/python-worker', '.']
-  dir: 'googleapis/silver-python2'
-  waitFor: ['-']
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python', '.']
+  dir: 'cloud-devrel-kokoro-resources/python'
+  waitFor: ['python-base']
+
+# googleapis/silver-python2
+# - name: gcr.io/cloud-builders/docker
+#   args: ['build', '-t', 'gcr.io/silver-python2/python-worker', '.']
+#   dir: 'googleapis/silver-python2'
+#   waitFor: ['-']
 
 images:
   - gcr.io/cloud-devrel-kokoro-resources/google-cloud-python/autosynth
   - gcr.io/cloud-devrel-kokoro-resources/python
-  - gcr.io/cloud-devrel-public-resources/python
   - gcr.io/cloud-devrel-kokoro-resources/python-base
   - gcr.io/cloud-devrel-kokoro-resources/python-multi
-  - gcr.io/cloud-devrel-public-resources/python-multi
-  - gcr.io/silver-python2/python-worker
 
