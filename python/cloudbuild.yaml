@@ -23,14 +23,14 @@ steps:
 # cloud-devrel-kokoro-resources/python-base
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
-  dir: 'cloud-devrel-kokoro-resources/python'
+  dir: 'cloud-devrel-kokoro-resources/python-base'
   waitFor: ['-']
   id: 'python-base'
 
 # googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
-  dir: 'cloud-devrel-kokoro-resources/googleapis/python-multi'
+  dir: 'googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
 - name: gcr.io/cloud-builders/docker
