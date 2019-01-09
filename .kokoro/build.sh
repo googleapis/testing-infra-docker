@@ -21,4 +21,4 @@ export PYTHONUNBUFFERED=1
 
 cd github/testing-infra-docker/${LANGUAGE}
 
-gcloud builds submit --timeout 1h --config cloudbuild.yaml .
+gcloud builds submit --timeout 2h --config cloudbuild.yaml .
