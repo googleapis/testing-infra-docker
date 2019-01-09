@@ -26,6 +26,9 @@ steps:
   dir: 'cloud-devrel-kokoro-resources/python-base'
   waitFor: ['-']
   id: 'python-base'
+- name: gcr.io/cloud-builders/docker
+  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-base', 'gcr.io/cloud-devrel-public-resources/python-base']
+  waitFor: ['python-base']
 
 # googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
@@ -33,9 +36,6 @@ steps:
   dir: 'googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', 'gcr.io/cloud-devrel-public-resources/python-multi']
-  waitFor: ['python-multi']
 
 # cloud-devrel-kokoro-resources/python
 - name: gcr.io/cloud-builders/docker
@@ -60,4 +60,4 @@ images:
   - gcr.io/cloud-devrel-kokoro-resources/python-base
   - gcr.io/cloud-devrel-kokoro-resources/python-multi
   - gcr.io/cloud-devrel-public-resources/python
-  - gcr.io/cloud-devrel-public-resources/python-multi
+  - gcr.io/cloud-devrel-public-resources/python-base
