@@ -55,7 +55,6 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-RUN cd /root/.rbenv && src/configure && make -C src
 
 ENV PATH /root/.pyenv/bin:$PATH
 ENV PATH /root/.pyenv/shims:$PATH
