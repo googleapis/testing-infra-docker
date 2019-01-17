@@ -36,3 +36,6 @@ commandTests:
 - name: "xmllint tool"
   command: ["xmllint", "--version"]
   expectedError: ["using libxml version"]
+- name: "python"
+  command: ["python", "--version"]
+  expectedOutput: ["Python 3.6.1"]
