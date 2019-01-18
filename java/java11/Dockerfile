@@ -53,4 +53,21 @@ RUN mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
+# Install pyenv
+RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+
+ENV PATH /root/.pyenv/bin:$PATH
+ENV PATH /root/.pyenv/shims:$PATH
+
+RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
+    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
+
+# Install python
+RUN pyenv install 3.6.1 && \
+    pyenv global 3.6.1
+
 WORKDIR /workspace
