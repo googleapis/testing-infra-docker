@@ -31,7 +31,8 @@ RUN apt update \
     python-pyaudio \
     libmemcached-dev \
     libmagickwand-dev \
-  && apt clean
+    portaudio19-dev \
+ && apt clean
 
 RUN python --version
 RUN which python
@@ -46,7 +47,7 @@ RUN /google-cloud-sdk/install.sh
 ENV PATH /google-cloud-sdk/bin:$PATH
 
 # Setup the user profile for pip
-ENV PATH ~/.local/bin:$PATH
+ENV PATH ~/.local/bin:/root/.local/bin:$PATH
 
 # Install the current version of nox.
 RUN python3 -m pip install --user --no-cache-dir nox==2018.10.9
