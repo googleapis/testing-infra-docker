@@ -16,6 +16,9 @@ FROM gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/autosynth:latest
 
 ENTRYPOINT /bin/bash
 
+# Install python 3.7
+RUN pyenv install 3.7.2
+RUN pyenv global 3.7.2
+
 RUN python3 -m pip install nox
 RUN pyenv rehash
-
