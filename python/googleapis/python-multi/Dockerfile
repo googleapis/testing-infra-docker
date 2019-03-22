@@ -40,6 +40,7 @@ RUN apt-get update \
     tk \
     tk-dev \
     wget \
+    libsnappy-dev \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
