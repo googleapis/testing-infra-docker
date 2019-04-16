@@ -16,16 +16,23 @@ steps:
 
 # Ruby Autosynth
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/autosynth', '.']
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth', '.']
   dir: 'autosynth'
   waitFor: ['-']
 
 # Ruby Multi Ubuntu
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/ruby-multi-ubuntu', '.']
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi', '.']
   dir: 'ruby-multi'
   waitFor: ['-']
 
+# Ruby Release
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release', '.']
+  dir: 'ruby-release'
+  waitFor: ['-']
+
 images:
-  - gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/autosynth
-  - gcr.io/cloud-devrel-kokoro-resources/google-cloud-ruby/ruby-multi-ubuntu
+  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth
+  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi
+  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release
