@@ -73,6 +73,7 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
 
 # Install python
 RUN pyenv install 3.6.1 && \
-    pyenv global 3.6.1
+    pyenv global 3.6.1 && \
+    python3 -m pip install --upgrade pip setuptools
 
 WORKDIR /workspace
