@@ -35,7 +35,6 @@ ENV CLOUD_SDK_VERSION=251.0.0 \
     CLOUDSDK_PYTHON=/usr/bin/python \
     PATH=/home/node/google-cloud-sdk/bin:$PATH
 RUN set -ex; \
-    pwd -P; \
     curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz; \
     tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz; \
     rm google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
