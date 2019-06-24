@@ -44,3 +44,5 @@ RUN set -ex; \
     gcloud config set component_manager/disable_update_check true; \
     gcloud --quiet components update; \
     gcloud --quiet components install beta
+
+WORKDIR /
