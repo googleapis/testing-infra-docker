@@ -44,5 +44,11 @@ steps:
   dir: '11-user'
   waitFor: ['-']
 
+# Node 12
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:12-user', '.']
+  dir: '12-user'
+  waitFor: ['-']
+
 images:
   - gcr.io/cloud-devrel-kokoro-resources/node
