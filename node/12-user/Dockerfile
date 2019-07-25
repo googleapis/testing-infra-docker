@@ -17,7 +17,6 @@ FROM node:12-stretch
 USER node
 
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
-RUN ls -lah ~/
 
 RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile
 RUN echo 'export PATH="/home/node/.pyenv/shims:$PATH"' >> ~/.profile
