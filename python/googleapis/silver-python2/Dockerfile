@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:14.04
+FROM ubuntu:14.10
 
 RUN apt-get update -q && apt-get install -y software-properties-common && apt-get clean
 RUN add-apt-repository -y ppa:fkrull/deadsnakes
