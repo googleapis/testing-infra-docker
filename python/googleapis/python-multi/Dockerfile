@@ -110,17 +110,18 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   # https://github.com/docker-library/python/pull/100
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
+# Install "virtualenv", since the vast majority of users of this image
+# will want it.
+RUN pip install --no-cache-dir virtualenv
+
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 253.0.0
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON /usr/bin/python
+ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
 ENV PATH /google-cloud-sdk/bin:$PATH
 
-# Install "virtualenv", since the vast majority of users of this image
-# will want it.
-RUN pip install --no-cache-dir virtualenv
 
 CMD ["python3.6"]
