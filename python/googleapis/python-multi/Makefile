@@ -6,5 +6,5 @@ build:
 .PHONY: publish
 publish: build
 	docker push googleapis/python-multi:${TAG}
-	gcloud docker -- push gcr.io/cloud-devrel-kokoro-resources/python-multi:${TAG}
+	gcloud docker -- push gcr.io/cloud-devrel-public-resources/python-multi:${TAG}
 	gcloud docker -- push gcr.io/cloud-devrel-kokoro-resources/python-multi:${TAG}
