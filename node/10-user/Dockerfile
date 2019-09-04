@@ -31,7 +31,7 @@ RUN pyenv global 3.7.1
 
 # Setup Cloud SDK
 WORKDIR /home/node
-ENV CLOUD_SDK_VERSION=251.0.0 \
+ENV CLOUD_SDK_VERSION=261.0.0 \
     CLOUDSDK_PYTHON=/usr/bin/python \
     PATH=/home/node/google-cloud-sdk/bin:$PATH
 RUN set -ex; \
