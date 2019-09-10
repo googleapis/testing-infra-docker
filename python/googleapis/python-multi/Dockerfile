@@ -40,6 +40,7 @@ RUN apt-get update \
     libsqlite3-dev \
     libbz2-dev \
     libffi-dev \
+    redis-server \
     ssh \
     tcl \
     tcl-dev \
