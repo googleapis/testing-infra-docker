@@ -124,5 +124,7 @@ RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
 ENV PATH /google-cloud-sdk/bin:$PATH
 
+# Enable redis-server on boot.
+RUN sudo systemctl enable redis-server.service
 
 CMD ["python3.6"]
