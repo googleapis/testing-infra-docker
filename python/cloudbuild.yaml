@@ -40,6 +40,9 @@ steps:
   dir: 'googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
+- name: gcr.io/cloud-builders/docker
+  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', 'gcr.io/cloud-devrel-public-resources/python-multi']
+  waitFor: ['python-multi']
 
 # cloud-devrel-kokoro-resources/python
 - name: gcr.io/cloud-builders/docker
@@ -65,4 +68,5 @@ images:
   - gcr.io/cloud-devrel-public-resources/google-cloud-python/autosynth
   - gcr.io/cloud-devrel-public-resources/python
   - gcr.io/cloud-devrel-public-resources/python-base
+  - gcr.io/cloud-devrel-public-resources/python-multi
 # - gcr.io/silver-python2/python-worker
