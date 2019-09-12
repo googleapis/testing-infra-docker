@@ -40,6 +40,7 @@ RUN apt-get update \
     libsqlite3-dev \
     libbz2-dev \
     libffi-dev \
+    redis-server \
     ssh \
     tcl \
     tcl-dev \
@@ -53,17 +54,6 @@ RUN apt-get update \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
-
-
-# Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 253.0.0
-# Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON /usr/bin/python
-RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
-RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
-RUN /google-cloud-sdk/install.sh
-ENV PATH /google-cloud-sdk/bin:$PATH
-
 
 # Install the desired versions of Python.
 RUN for PYTHON_VERSION in 2.7.13 3.3.6 3.4.6 3.5.3 3.7.0b3 3.6.0; do \
@@ -121,9 +111,20 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   # https://github.com/docker-library/python/pull/100
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
-
 # Install "virtualenv", since the vast majority of users of this image
 # will want it.
 RUN pip install --no-cache-dir virtualenv
+
+# Setup Cloud SDK
+ENV CLOUD_SDK_VERSION 253.0.0
+# Use system python for cloud sdk.
+ENV CLOUDSDK_PYTHON python3.6
+RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
+RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
+RUN /google-cloud-sdk/install.sh
+ENV PATH /google-cloud-sdk/bin:$PATH
+
+# Enable redis-server on boot.
+RUN sudo systemctl enable redis-server.service
 
 CMD ["python3.6"]
