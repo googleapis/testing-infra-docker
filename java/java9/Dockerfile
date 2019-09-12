@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM java:openjdk-9
+FROM openjdk:9-jdk
 
 RUN apt-get update && \
     apt-get -y upgrade && \
