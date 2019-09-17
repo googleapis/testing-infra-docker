@@ -14,6 +14,14 @@
 
 FROM node:12-stretch
 
+# Add Graphviz
+RUN set -ex; \
+  apt-get update -y; \
+  apt-get install -y \
+    graphviz \
+    ; \
+  rm -rf /var/lib/apt/lists/*
+
 USER node
 
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
