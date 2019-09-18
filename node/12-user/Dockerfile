@@ -14,6 +14,14 @@
 
 FROM node:12-stretch
 
+# Add Graphviz
+RUN set -ex; \
+  apt-get update -y; \
+  apt-get install -y \
+    graphviz \
+    ; \
+  rm -rf /var/lib/apt/lists/*
+
 USER node
 
 # Install Python
@@ -25,3 +33,21 @@ RUN set -ex; \
   echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.profile; \
   pyenv install 3.7.1; \
   pyenv global 3.7.1
+
+# Setup Cloud SDK
+WORKDIR /home/node
+ENV CLOUD_SDK_VERSION=261.0.0 \
+    CLOUDSDK_PYTHON=/usr/bin/python \
+    PATH=/home/node/google-cloud-sdk/bin:$PATH
+RUN set -ex; \
+    curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz; \
+    tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz; \
+    rm google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
+RUN set -ex; \
+    ./google-cloud-sdk/install.sh; \
+    gcloud config set core/disable_usage_reporting true; \
+    gcloud config set component_manager/disable_update_check true; \
+    gcloud --quiet components update; \
+    gcloud --quiet components install beta
+
+WORKDIR /
