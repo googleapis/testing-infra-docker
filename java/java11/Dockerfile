@@ -20,10 +20,9 @@ RUN apt-get update && \
     rm -rf /var/cache/apt
 
 # Add Graphviz
-RUN set -ex && \
-  apt-get update -y && \
-  apt-get install -y graphviz && \
-  rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && \
+    apt-get install -y graphviz && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN wget -q http://www-us.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz -O /tmp/maven.tar.gz && \
     mkdir -p /usr/local/lib/maven && \
