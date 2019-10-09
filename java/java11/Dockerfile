@@ -19,6 +19,14 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libxml2-utils && \
     rm -rf /var/cache/apt
 
+# Add Graphviz
+RUN set -ex; \
+  apt-get update -y; \
+  apt-get install -y \
+    graphviz \
+    ; \
+  rm -rf /var/lib/apt/lists/*
+
 RUN wget -q http://www-us.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz -O /tmp/maven.tar.gz && \
     mkdir -p /usr/local/lib/maven && \
     tar xzf /tmp/maven.tar.gz -C /usr/local/lib/maven --strip-components=1 && \
