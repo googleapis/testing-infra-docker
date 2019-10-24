@@ -18,9 +18,9 @@ steps:
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', '-r', 'gs://$PROJECT_ID/elixir-artifacts/elixir*', '/workspace/plt_builder/plts/']
   id: load-plts
+  waitFor: ['-']
 
 # Elixir 1.4 build
-  waitFor: ['-']
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir14', '--build-arg', 'BASE_IMAGE=elixir:1.4', '--build-arg', 'SHORT_VERSION=14', '.']
   id: elixir14-build
@@ -76,15 +76,45 @@ steps:
   id: elixir17-extract-plts
   waitFor: ['elixir17-test']
 
+# Elixir 1.8 build
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir18', '--build-arg', 'BASE_IMAGE=elixir:1.8', '--build-arg', 'SHORT_VERSION=18', '.']
+  id: elixir18-build
+  waitFor: [load-plts]
+- name: gcr.io/gcp-runtimes/container-structure-test
+  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir18', '--config', '/workspace/elixir18.yaml']
+  id: elixir18-test
+  waitFor: ['elixir18-build']
+- name: gcr.io/$PROJECT_ID/elixir18
+  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/plt_builder/plts/elixir18']
+  id: elixir18-extract-plts
+  waitFor: ['elixir18-test']
+
+# Elixir 1.9 build
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir19', '--build-arg', 'BASE_IMAGE=elixir:1.9', '--build-arg', 'SHORT_VERSION=19', '.']
+  id: elixir19-build
+  waitFor: [load-plts]
+- name: gcr.io/gcp-runtimes/container-structure-test
+  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir19', '--config', '/workspace/elixir19.yaml']
+  id: elixir19-test
+  waitFor: ['elixir19-build']
+- name: gcr.io/$PROJECT_ID/elixir19
+  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/plt_builder/plts/elixir19']
+  id: elixir19-extract-plts
+  waitFor: ['elixir19-test']
+
 # Push cached plt files
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', '-r', '/workspace/plt_builder/plts/elixir*', 'gs://$PROJECT_ID/elixir-artifacts/']
-  waitFor: ['elixir14-extract-plts', 'elixir15-extract-plts', 'elixir16-extract-plts', 'elixir17-extract-plts']
+  waitFor: ['elixir14-extract-plts', 'elixir15-extract-plts', 'elixir16-extract-plts', 'elixir17-extract-plts', 'elixir18-extract-plts', 'elixir19-extract-plts']
 
-timeout: 2400s
+timeout: 3600s
 
 images:
 - gcr.io/$PROJECT_ID/elixir14
 - gcr.io/$PROJECT_ID/elixir15
 - gcr.io/$PROJECT_ID/elixir16
 - gcr.io/$PROJECT_ID/elixir17
+- gcr.io/$PROJECT_ID/elixir18
+- gcr.io/$PROJECT_ID/elixir19

@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@ commandTests:
 - name: "elixir version"
   command: "elixir"
   args: ["--version"]
-  expectedOutput: ["Elixir 1.6"]
+  expectedOutput: ["Elixir 1.9"]
 - name: "otp version"
   command: "elixir"
   args: ["--version"]
-  expectedOutput: ["Erlang/OTP 20"]
+  expectedOutput: ["Erlang/OTP 22"]
 - name: "node version"
   command: "node"
   args: ["--version"]
