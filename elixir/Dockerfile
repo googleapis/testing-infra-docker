@@ -27,9 +27,9 @@ FROM core AS plt-builder
 
 ARG SHORT_VERSION
 
-RUN mkdir -p /workspace/plt_builder
-WORKDIR /workspace/plt_builder
-COPY plt_builder /workspace/plt_builder
+RUN mkdir -p /opt/plt_builder
+WORKDIR /opt/plt_builder
+COPY plt_builder /opt/plt_builder
 
 RUN cp plts/elixir${SHORT_VERSION}/*.plt /root/.mix ; \
     mix do deps.get, dialyzer --plt
