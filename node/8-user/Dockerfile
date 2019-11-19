@@ -14,6 +14,11 @@
 
 FROM node:8-stretch
 
+# Setup protoc
+RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.10.1/protoc-3.10.1-linux-x86_64.zip > /tmp/protoc-3.10.1-linux-x86_64.zip && \
+    cd /usr/local && unzip /tmp/protoc-3.10.1-linux-x86_64.zip && rm -f /tmp/protoc-3.10.1-linux-x86_64.zip && \
+    chmod -R o+rX /usr/local/include/google /usr/local/bin/protoc
+
 USER node
 
 RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
