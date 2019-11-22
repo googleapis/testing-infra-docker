@@ -56,7 +56,7 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.13 3.3.6 3.4.6 3.5.3 3.7.0b3 3.6.0; do \
+RUN for PYTHON_VERSION in 2.7.17 3.4.10 3.5.8 3.6.9 3.7.5 3.8.0; do \
   set -ex \
     && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
