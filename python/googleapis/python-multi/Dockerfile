@@ -113,7 +113,7 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 253.0.0
+ENV CLOUD_SDK_VERSION 272.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
