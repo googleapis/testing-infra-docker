@@ -56,28 +56,25 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.13 3.3.6 3.4.6 3.5.3 3.7.0b3 3.6.0; do \
+RUN for PYTHON_VERSION in 2.7.17 3.4.10 3.5.9 3.6.9 3.7.5 3.8.0; do \
   set -ex \
     && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
     && export GNUPGHOME="$(mktemp -d)" \
     && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
-      # 2.7.13
+      # 2.7.17 (Benjamin Peterson)
       C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
-      # 3.3.6
-      26DEA9D4613391EF3E25C9FF0A5B101836580288 \
-      # 3.4.6
+      # 3.4.10, 3.5.9 (Larry Hastings)
       97FC712E4C024BBEA48A61ED3A5CA953F73C700D \
-      # 3.5.3
-      97FC712E4C024BBEA48A61ED3A5CA953F73C700D \
-      # 3.6.0, 3.7.0
+      # 3.6.9, 3.7.5 (Ned Deily)
       0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
+      # 3.8.0 (Łukasz Langa)
+      E3FF2839C048B25C084DEBE9B26995E310250568 \
     && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
     && rm -r "$GNUPGHOME" python-${PYTHON_VERSION}.tar.xz.asc \
     && mkdir -p /usr/src/python-${PYTHON_VERSION} \
     && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
     && rm python-${PYTHON_VERSION}.tar.xz \
-    \
     && cd /usr/src/python-${PYTHON_VERSION} \
     && ./configure \
         --enable-shared \
@@ -116,7 +113,7 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 253.0.0
+ENV CLOUD_SDK_VERSION 272.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
