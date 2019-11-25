@@ -32,6 +32,7 @@ RUN apt update \
     libmemcached-dev \
     libmagickwand-dev \
     portaudio19-dev \
+    graphviz \
  && apt clean
 
 RUN python --version
