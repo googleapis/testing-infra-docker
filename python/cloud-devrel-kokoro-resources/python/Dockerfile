@@ -51,6 +51,6 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 ENV PATH ~/.local/bin:/root/.local/bin:$PATH
 
 # Install the current version of nox.
-RUN python3 -m pip install --user --no-cache-dir nox==2018.10.9
+RUN python3 -m pip install --user --no-cache-dir nox==2019.11.9
 
 CMD ["nox"]
