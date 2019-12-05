@@ -97,7 +97,7 @@ RUN for PYTHON_VERSION in 2.7.17 3.4.10 3.5.9 3.6.9 3.7.5 3.8.0; do \
 ENV PYTHON_PIP_VERSION 10.0.1
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.6 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
-    && rm /tmp/get-pip.py \
+
 
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
   # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
@@ -107,6 +107,10 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   # then we use "pip list" to ensure we don't have more than one pip version installed
   # https://github.com/docker-library/python/pull/100
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
+
+# Ensure Pip for 3.8.0
+RUN python3.8 /tmp/get-pip.py
+RUN rm /tmp/get-pip.py
 
 # Install "virtualenv", since the vast majority of users of this image
 # will want it.
