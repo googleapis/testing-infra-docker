@@ -31,6 +31,7 @@ RUN apt-get update \
     ca-certificates \
     build-essential \
     git \
+    graphviz \
     libdb5.3-dev \
     libexpat1-dev \
     libffi-dev \
