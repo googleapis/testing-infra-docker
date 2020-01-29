@@ -17,22 +17,22 @@ FROM gcr.io/cloud-devrel-kokoro-resources/python-base:latest
 # Install libraries needed by third-party python packages that we depend on.
 RUN apt update \
   && apt install -y \
-    openssl \
+    graphviz \
+    libcurl4-openssl-dev \
     libffi-dev \
+    libjpeg-dev \
+    libmagickwand-dev \
+    libmemcached-dev \
+    libmysqlclient-dev \
+    libpng12-dev \
+    libpq-dev \
     libssl-dev \
     libxml2-dev \
     libxslt1-dev \
-    libpq-dev \
-    libmysqlclient-dev \
-    libcurl4-openssl-dev \
-    libjpeg-dev \
-    zlib1g-dev \
-    libpng12-dev \
-    python-pyaudio \
-    libmemcached-dev \
-    libmagickwand-dev \
+    openssl \
     portaudio19-dev \
-    graphviz \
+    python-pyaudio \
+    zlib1g-dev \
  && apt clean
 
 RUN python --version
