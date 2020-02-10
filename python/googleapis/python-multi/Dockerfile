@@ -28,8 +28,10 @@ ENV LANG C.UTF-8
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     sudo \
+    apt-transport-https \
     ca-certificates \
     build-essential \
+    curl \
     git \
     graphviz \
     libdb5.3-dev \
@@ -42,6 +44,7 @@ RUN apt-get update \
     libbz2-dev \
     libffi-dev \
     redis-server \
+    software-properties-common \
     ssh \
     tcl \
     tcl-dev \
@@ -51,6 +54,22 @@ RUN apt-get update \
     wget \
     libsnappy-dev \
     zlib1g-dev \
+  && apt-get clean autoclean \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /var/cache/apt/archives/*.deb
+
+# Install docker
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+  docker-ce \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
@@ -128,23 +147,5 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 
 # Enable redis-server on boot.
 RUN sudo systemctl enable redis-server.service
-
-# Install docker
-RUN apt-get update \
-  && apt-get install -y \
-     apt-transport-https \
-     ca-certificates \
-     curl \
-     software-properties-common \
-     sudo
-
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-
-RUN apt-get update && apt-get install -y docker-ce
 
 CMD ["python3.6"]
