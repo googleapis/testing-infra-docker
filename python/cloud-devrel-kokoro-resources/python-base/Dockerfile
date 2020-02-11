@@ -30,15 +30,19 @@ ENV LANG C.UTF-8
 # Install dependencies.
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
+    apt-transport-https \
     build-essential \
     bzip2 \
     ca-certificates \
+    curl \
     git \
     libbz2-dev \
     libreadline-dev \
     libsqlite3-dev \
     libssl-dev \
+    software-properties-common \
     ssh \
+    sudo \
     tcl \
     tcl-dev \
     tk \
@@ -79,14 +83,6 @@ RUN /usr/local/bin/python3 -m pip \
   virtualenv
 
 # Install docker
-RUN apt-get update \
-  && apt-get install -y \
-     apt-transport-https \
-     ca-certificates \
-     curl \
-     software-properties-common \
-     sudo
-
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
 RUN add-apt-repository \
@@ -94,6 +90,12 @@ RUN add-apt-repository \
    $(lsb_release -cs) \
    stable"
 
-RUN apt-get update && apt-get install -y docker-ce
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    docker-ce \
+  && apt-get clean autoclean \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /var/cache/apt/archives/*.deb
 
 CMD ["python3.6"]
