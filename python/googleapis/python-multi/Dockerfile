@@ -68,7 +68,7 @@ RUN add-apt-repository \
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-  docker-ce \
+    docker-ce \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
