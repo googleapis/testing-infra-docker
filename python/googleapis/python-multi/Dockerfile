@@ -27,32 +27,31 @@ ENV LANG C.UTF-8
 # Install dependencies.
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    sudo \
     apt-transport-https \
-    ca-certificates \
     build-essential \
+    ca-certificates \
     curl \
     git \
     graphviz \
+    libbz2-dev \
     libdb5.3-dev \
     libexpat1-dev \
     libffi-dev \
     liblzma-dev \
     libreadline-dev \
+    libsnappy-dev \
     libssl-dev \
     libsqlite3-dev \
-    libbz2-dev \
-    libffi-dev \
     redis-server \
     software-properties-common \
     ssh \
+    sudo \
     tcl \
     tcl-dev \
     tk \
     tk-dev \
     uuid-dev \
     wget \
-    libsnappy-dev \
     zlib1g-dev \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
