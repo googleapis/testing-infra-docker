@@ -14,12 +14,6 @@
 
 steps:
 
-# Node 6
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:6-user', '.']
-  dir: '6-user'
-  waitFor: ['-']
-
 # Node 8
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:8-user', '.']
@@ -54,6 +48,12 @@ steps:
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:12-user', '.']
   dir: '12-user'
+  waitFor: ['-']
+
+# Node 13
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:13-user', '.']
+  dir: '13-user'
   waitFor: ['-']
 
 images:
