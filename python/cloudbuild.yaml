@@ -16,7 +16,7 @@ steps:
 
 # cloud-devrel-kokoro-resources/google-cloud-python/autosynth
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-python/autosynth', '.']
+  args: ['build', '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-python/autosynth', '.']
   dir: 'cloud-devrel-kokoro-resources/google-cloud-python/autosynth'
   waitFor: ['-']
   id: 'autosynth'
@@ -26,7 +26,7 @@ steps:
 
 # cloud-devrel-kokoro-resources/python-base
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
+  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
   dir: 'cloud-devrel-kokoro-resources/python-base'
   waitFor: ['-']
   id: 'python-base'
@@ -36,7 +36,7 @@ steps:
 
 # googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
+  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
   dir: 'googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
@@ -46,7 +46,7 @@ steps:
 
 # cloud-devrel-kokoro-resources/python
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python', '.']
+  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python', '.']
   dir: 'cloud-devrel-kokoro-resources/python'
   waitFor: ['python-base']
   id: 'python'
