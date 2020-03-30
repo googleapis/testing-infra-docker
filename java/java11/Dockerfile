@@ -75,5 +75,10 @@ RUN pyenv install 3.6.1 && \
 RUN apt-get update -y && \
     apt-get install -y graphviz && \
     rm -rf /var/lib/apt/lists/*
+    
+# Add imagemagick
+RUN apt-get update -y && \
+    apt-get install -y imagemagick && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
