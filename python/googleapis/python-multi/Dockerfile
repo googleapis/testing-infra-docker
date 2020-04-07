@@ -75,6 +75,13 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
+# Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17
+RUN apt-get install unixodbc-dev
+
 # Install the desired versions of Python.
 RUN for PYTHON_VERSION in 2.7.17 3.4.10 3.5.9 3.6.9 3.7.5 3.8.0; do \
   set -ex \
