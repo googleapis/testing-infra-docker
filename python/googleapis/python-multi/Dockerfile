@@ -42,7 +42,6 @@ RUN apt-get update \
     libsnappy-dev \
     libssl-dev \
     libsqlite3-dev \
-    portaudio19-dev \
     redis-server \
     software-properties-common \
     ssh \
@@ -70,18 +69,6 @@ RUN add-apt-repository \
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     docker-ce \
-  && apt-get clean autoclean \
-  && apt-get autoremove -y \
-  && rm -rf /var/lib/apt/lists/* \
-  && rm -f /var/cache/apt/archives/*.deb
-
-# Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-  && apt-get update \
-  && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
-    msodbcsql17 \
-    unixodbc-dev \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
@@ -149,7 +136,7 @@ RUN rm /tmp/get-pip.py
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 289.0.0
+ENV CLOUD_SDK_VERSION 272.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
