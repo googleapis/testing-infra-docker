@@ -42,6 +42,7 @@ RUN apt-get update \
     libsnappy-dev \
     libssl-dev \
     libsqlite3-dev \
+    portaudio19-dev \
     redis-server \
     software-properties-common \
     ssh \
@@ -69,6 +70,18 @@ RUN add-apt-repository \
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     docker-ce \
+  && apt-get clean autoclean \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /var/cache/apt/archives/*.deb
+
+# Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+  && curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+  && apt-get update \
+  && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
+    msodbcsql17 \
+    unixodbc-dev \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
