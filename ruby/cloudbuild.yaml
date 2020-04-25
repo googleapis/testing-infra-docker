@@ -14,22 +14,24 @@
 
 steps:
 
+timeout: 7200s  # 2 hours
+
 # Ruby Autosynth
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth', '.']
-  dir: 'autosynth'
+  dir: 'ruby/autosynth'
   waitFor: ['-']
 
 # Ruby Multi Ubuntu
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi', '.']
-  dir: 'ruby-multi'
+  dir: 'ruby/ruby-multi'
   waitFor: ['-']
 
 # Ruby Release
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release', '.']
-  dir: 'ruby-release'
+  dir: 'ruby/ruby-release'
   waitFor: ['-']
 
 images:
