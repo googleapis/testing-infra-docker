@@ -15,9 +15,8 @@
 # note: /workspace is a special directory in the docker image where all the files in this folder
 # get placed on your behalf
 
-steps:
-
 timeout: 7200s  # 2 hours
+steps:
 
 # Go 1.6 build
 - name: gcr.io/cloud-builders/docker
