@@ -20,7 +20,7 @@ commandTests:
   expectedError: ["(java|openjdk) version \"9.*\""]
 - name: "maven"
   command: ["mvn", "-version"]
-  expectedOutput: ["Apache Maven 3.5.*"]
+  expectedOutput: ["Apache Maven 3.6.*"]
 - name: "gradle"
   command: ["gradle", "-version"]
   expectedOutput: ["Gradle 4.9"]
