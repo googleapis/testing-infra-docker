@@ -26,6 +26,10 @@ RUN apt-get update && apt-get install -y git curl autoconf bison build-essential
     libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm5 libgdbm-dev
 RUN apt-get -y autoclean
 
+# Install FreeTDS
+RUN apt-get update && apt-get install -y freetds-dev freetds-bin
+RUN apt-get -y autoclean
+
 # Install rbenv
 RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv
 RUN cd /root/.rbenv && src/configure && make -C src
