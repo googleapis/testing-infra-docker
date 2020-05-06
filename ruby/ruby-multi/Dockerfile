@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends locales && rm -
 ENV LANG en_US.utf8
 
 # Install dependencies
-RUN apt-get update && apt-get install -y git curl autoconf bison build-essential libssl1.0-dev \
+RUN apt-get update && apt-get install -y git curl autoconf bison build-essential libssl-dev \
     libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm5 libgdbm-dev
 RUN apt-get -y autoclean
 
