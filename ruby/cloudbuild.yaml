@@ -33,7 +33,11 @@ steps:
   dir: 'ruby/ruby-release'
   waitFor: ['-']
 
-images:
-  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth
-  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi
-  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release
+# TODO(dazuma): Re-enable upload of these images (or remove them altogether
+# from this repo) AFTER they have been consolidated with the images in
+# googleapis/google-cloud-ruby.
+
+# images:
+#   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth
+#   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi
+#   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release
