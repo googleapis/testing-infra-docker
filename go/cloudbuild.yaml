@@ -15,7 +15,6 @@
 # note: /workspace is a special directory in the docker image where all the files in this folder
 # get placed on your behalf
 
-# We don't use 1.6 - 1.10 anymore, so they're not included here.
 steps:
 # Go 1.11 build
 - name: gcr.io/cloud-builders/docker
