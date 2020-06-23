@@ -17,6 +17,12 @@ FROM golang:1.9
 # Install python3 for trampoline.
 RUN apt-get update && apt-get install -y python3 && which python3
 
+# Install protoc
+RUN apt-get update && apt-get install -y unzip wget vim
+RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.7.1/protoc-3.7.1-linux-x86_64.zip
+RUN unzip protoc-3.7.1-linux-x86_64.zip
+RUN mv bin/protoc /bin/protoc && which protoc
+
 # Install gcloud SDK
 RUN mkdir -p /usr/local/gcloud && \
     curl -sSL https://sdk.cloud.google.com | bash -s -- --install-dir=/usr/local/gcloud
