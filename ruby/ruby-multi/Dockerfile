@@ -48,7 +48,7 @@ RUN git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ru
 # Install ruby
 ENV RUBY_CONFIGURE_OPTS --disable-install-doc
 ENV RUBY_VERSIONS "2.4.9 2.5.7 2.6.5"
-RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
+RUN echo 'gem: --no-document' >> /.gemrc
 RUN for version in ${RUBY_VERSIONS}; do \
         rbenv install "$version" && rbenv global "$version" && \
         gem install bundler:1.17.3 bundler:2.0.2 && gem update --system \
