@@ -53,4 +53,14 @@ ENV PATH ~/.local/bin:/root/.local/bin:$PATH
 # Install the current version of nox.
 RUN python3 -m pip install --user --no-cache-dir nox==2019.11.9
 
+# Setup DRIFT region tag parser
+ENV REGION_TAG_PARSER_DIR /region-tag-parser
+ENV PARSER_PATH /region-tag-parser/wizard-py/cli.py
+
+## TODO(ace-n) add to main requirements.txt instead of installing here?
+RUN python3 -m pip install --user --no-cache-dir pyyaml
+## TODO(ace-n) use "main" branch
+git clone https://github.com/GoogleCloudPlatform/repo-automation-playground "$REGION_TAG_PARSER_DIR" --single-branch --branch python-fixes
+RUN chmod +x $PARSER_PATH
+
 CMD ["nox"]
