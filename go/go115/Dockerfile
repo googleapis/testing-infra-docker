@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.11
+FROM golang:1.15
 
 # Install python3 for trampoline.
 RUN apt-get update && apt-get install -y python3 && which python3
@@ -26,6 +26,9 @@ RUN mv bin/protoc /bin/protoc && which protoc
 # Install gcloud SDK
 RUN mkdir -p /usr/local/gcloud && \
     curl -sSL https://sdk.cloud.google.com | bash -s -- --install-dir=/usr/local/gcloud
+
+# Install tools used in build
+RUN GO111MODULE=on go get honnef.co/go/tools/cmd/staticcheck@latest
 
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
