@@ -22,7 +22,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libxml2-utils && \
     rm -rf /var/cache/apt
 
-RUN wget -q http://www-us.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz -O /tmp/maven.tar.gz && \
+RUN wget -q http://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -O /tmp/maven.tar.gz && \
     mkdir -p /usr/local/lib/maven && \
     tar xzf /tmp/maven.tar.gz -C /usr/local/lib/maven --strip-components=1 && \
     rm /tmp/maven.tar.gz && \
@@ -62,7 +62,7 @@ RUN mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
-RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+RUN apt-get install -y --force-yes make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv

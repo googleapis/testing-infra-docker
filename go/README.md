@@ -15,6 +15,9 @@ You can publish the images by running:
 
 ```
 # first, auth. make sure you're in the cloud-dpe-testing-working-group googlegroup to have access
-gcloud login
-gcloud builds submit --project=cloud-devrel-kokoro-resources --config=cloudbuild.yaml .
+gcloud auth login
+gcloud builds submit \
+    --timeout 1h \
+    --project=cloud-devrel-kokoro-resources \
+    --config=cloudbuild.yaml .
 ```

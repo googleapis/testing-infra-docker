@@ -12,27 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+timeout: 7200s  # 2 hours
 steps:
 
 # Ruby Autosynth
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth', '.']
-  dir: 'autosynth'
+  dir: 'ruby/autosynth'
   waitFor: ['-']
 
 # Ruby Multi Ubuntu
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi', '.']
-  dir: 'ruby-multi'
+  dir: 'ruby/ruby-multi'
   waitFor: ['-']
 
 # Ruby Release
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release', '.']
-  dir: 'ruby-release'
+  dir: 'ruby/ruby-release'
   waitFor: ['-']
 
-images:
-  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth
-  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi
-  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release
+# TODO(dazuma): Re-enable upload of these images (or remove them altogether
+# from this repo) AFTER they have been consolidated with the images in
+# googleapis/google-cloud-ruby.
+
+# images:
+#   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth
+#   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi
+#   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release

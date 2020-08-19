@@ -19,6 +19,4 @@ set -eo pipefail
 # Disable buffering, so that the logs stream through.
 export PYTHONUNBUFFERED=1
 
-cd github/testing-infra-docker/${LANGUAGE}
-
-gcloud builds submit --timeout 2h --config cloudbuild.yaml .
+gcloud builds submit --config ${LANGUAGE}/cloudbuild.yaml .

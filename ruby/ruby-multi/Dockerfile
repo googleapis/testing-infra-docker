@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:latest
+FROM ubuntu:bionic
 
 ENTRYPOINT /bin/bash
 
@@ -24,6 +24,10 @@ ENV LANG en_US.utf8
 # Install dependencies
 RUN apt-get update && apt-get install -y git curl autoconf bison build-essential libssl1.0-dev \
     libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm5 libgdbm-dev
+RUN apt-get -y autoclean
+
+# Install FreeTDS
+RUN apt-get update && apt-get install -y freetds-dev freetds-bin
 RUN apt-get -y autoclean
 
 # Install rbenv
