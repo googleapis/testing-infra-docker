@@ -8,7 +8,6 @@ Defaults to start container as user `node` because running `node` as root causes
 Also install `python3.7` and `pip3` to run Yoshi tools.
 
 ## Docker Registry
-
 This image is available at `gcr.io/cloud-devrel-kokoro-resources/node`.  You can try it out by running:
 
 ```sh
@@ -18,5 +17,4 @@ $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/node:10-user
 The images are tagged with the suffix `-user` to avoid confusion over images that runs as `root`.
 
 ## Questions
-
 Please reach out to `node-team@google.com` with any questions!
