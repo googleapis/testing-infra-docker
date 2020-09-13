@@ -50,3 +50,5 @@ images:
   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi-node
   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth
   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/release
+  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi
+  - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release
