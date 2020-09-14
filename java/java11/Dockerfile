@@ -56,7 +56,7 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 # Install pyenv
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl memcached
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
 ENV PATH /root/.pyenv/bin:$PATH
