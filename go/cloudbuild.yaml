@@ -15,6 +15,7 @@
 # note: /workspace is a special directory in the docker image where all the files in this folder
 # get placed on your behalf
 
+timeout: 3600s
 steps:
 # Go 1.11 build
 - name: gcr.io/cloud-builders/docker
@@ -23,7 +24,7 @@ steps:
   id: go111-build
   waitFor: ['-']
 - name: gcr.io/gcp-runtimes/structure_test
-  args: ['-i', 'gcr.io/$PROJECT_ID/go111', '--config', '/workspace/go111.yaml', '-v']
+  args: ['-i', 'gcr.io/$PROJECT_ID/go111', '--config', '/workspace/go/go111.yaml', '-v']
   waitFor: ['go111-build']
 
 # Go 1.12 build
@@ -33,7 +34,7 @@ steps:
   id: go112-build
   waitFor: ['-']
 - name: gcr.io/gcp-runtimes/structure_test
-  args: ['-i', 'gcr.io/$PROJECT_ID/go112', '--config', '/workspace/go112.yaml', '-v']
+  args: ['-i', 'gcr.io/$PROJECT_ID/go112', '--config', '/workspace/go/go112.yaml', '-v']
   waitFor: ['go112-build']
 
 # Go 1.13 build
@@ -43,7 +44,7 @@ steps:
   id: go113-build
   waitFor: ['-']
 - name: gcr.io/gcp-runtimes/structure_test
-  args: ['-i', 'gcr.io/$PROJECT_ID/go113', '--config', '/workspace/go113.yaml', '-v']
+  args: ['-i', 'gcr.io/$PROJECT_ID/go113', '--config', '/workspace/go/go113.yaml', '-v']
   waitFor: ['go113-build']
 
 # Go 1.14 build
@@ -53,7 +54,7 @@ steps:
   id: go114-build
   waitFor: ['-']
 - name: gcr.io/gcp-runtimes/structure_test
-  args: ['-i', 'gcr.io/$PROJECT_ID/go114', '--config', '/workspace/go114.yaml', '-v']
+  args: ['-i', 'gcr.io/$PROJECT_ID/go114', '--config', '/workspace/go/go114.yaml', '-v']
   waitFor: ['go114-build']
 
 # Go 1.15 build
@@ -63,7 +64,7 @@ steps:
   id: go115-build
   waitFor: ['-']
 - name: gcr.io/gcp-runtimes/structure_test
-  args: ['-i', 'gcr.io/$PROJECT_ID/go115', '--config', '/workspace/go115.yaml', '-v']
+  args: ['-i', 'gcr.io/$PROJECT_ID/go115', '--config', '/workspace/go/go115.yaml', '-v']
   waitFor: ['go115-build']
 
 images:
