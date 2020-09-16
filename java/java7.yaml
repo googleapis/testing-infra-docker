@@ -39,3 +39,6 @@ commandTests:
 - name: "python"
   command: ["python", "--version"]
   expectedOutput: ["Python 3.6.1"]
+- name: "docker"
+  command: ["docker", "--version"]
+  expectedOutput: ["Docker version * "]
