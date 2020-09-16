@@ -28,13 +28,19 @@ ENV LANG C.UTF-8
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     apt-transport-https \
+    aspell \
+    aspell-en \
     build-essential \
     ca-certificates \
+    dictionaries-common \
     curl \
+    enchant \
     git \
     graphviz \
+    hunspell-en-us \
     libbz2-dev \
     libdb5.3-dev \
+    libenchant1c2a \
     libexpat1-dev \
     libffi-dev \
     liblzma-dev \
