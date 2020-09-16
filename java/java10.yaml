@@ -38,4 +38,4 @@ commandTests:
   expectedError: ["using libxml version"]
 - name: "docker"
   command: ["docker", "--version"]
-  expectedOutput: ["Docker version * "]
+  expectedOutput: ["Docker version *"]
