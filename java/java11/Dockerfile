@@ -81,4 +81,14 @@ RUN apt-get update -y && \
     apt-get install -y imagemagick && \
     rm -rf /var/lib/apt/lists/*
 
+# Install docker
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"  && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends docker-ce && \
+    apt-get clean autoclean && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -f /var/cache/apt/archives/*.deb
+
 WORKDIR /workspace
