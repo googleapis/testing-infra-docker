@@ -56,7 +56,7 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 # Install pyenv
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl memcached
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
 ENV PATH /root/.pyenv/bin:$PATH
@@ -70,5 +70,21 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
 RUN pyenv install 3.6.1 && \
     pyenv global 3.6.1 && \
     python3 -m pip install --upgrade pip setuptools
+
+# Install docker
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+RUN add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    docker-ce \
+  && apt-get clean autoclean \
+  && apt-get autoremove -y \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /var/cache/apt/archives/*.deb
 
 WORKDIR /workspace
