@@ -63,3 +63,30 @@ do
     --project="${project}" \
     --branch="${branch}"
 done
+
+# find all non-root cloudbuild-test.yaml configs
+for config in $(find -- */ -name 'cloudbuild-test.yaml' | sort -u)
+do
+  directory=$(dirname "${config}")
+  triggerName=$(dirname "${config}" | sed 's/\//-/g')-presubmit
+
+  # test to see if the deployment trigger already exists
+  if gcloud beta builds triggers describe "${triggerName}" --project="${project}" &>/dev/null
+  then
+    # trigger already exists, skip
+    continue
+  fi
+
+  echo "Syncing test trigger for ${directory}"
+
+  # create the trigger
+  gcloud beta builds triggers create github \
+    --project="${project}" \
+    --repo-name="${repoName}" \
+    --repo-owner="${repoOwner}" \
+    --description="Build testing docker images in ${directory}" \
+    --included-files="${directory}/**" \
+    --name="${triggerName}" \
+    --pull-request-pattern="${branch}" \
+    --build-config="${config}"
+done
