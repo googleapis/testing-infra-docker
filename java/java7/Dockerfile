@@ -80,13 +80,19 @@ RUN pyenv install 3.6.1 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install docker
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && \
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"  && \
+RUN apt-get update && apt-get install -y \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg-agent \
+        lsb-release \
+        software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        $(lsb_release -cs) \
+        stable" && \
     apt-get update && \
-    apt-get install -y --no-install-recommends docker-ce && \
-    apt-get clean autoclean && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -f /var/cache/apt/archives/*.deb
+    apt-get install -y docker-ce docker-ce-cli containerd.io
 
 WORKDIR /workspace
