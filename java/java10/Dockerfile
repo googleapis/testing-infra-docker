@@ -59,7 +59,6 @@ RUN apt-get update && apt-get install -y \
         ca-certificates \
         curl \
         gnupg-agent \
-        lsb-release \
         software-properties-common && \
     curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     add-apt-repository \
