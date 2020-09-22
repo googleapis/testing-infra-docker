@@ -1,0 +1,110 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+timeout: 7200s # 2 hours
+steps:
+  # Java 7 build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/java7", "."]
+    dir: java/java7
+    id: java7-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      ["-i", "gcr.io/$PROJECT_ID/java7", "--config", "java/java7.yaml", "-v"]
+    waitFor: ["java7-build"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+        "tag",
+        "gcr.io/$PROJECT_ID/java7",
+        "gcr.io/cloud-devrel-public-resources/java7",
+      ]
+    waitFor: ["java7-build"]
+
+  # Java 8 build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/java8", "."]
+    dir: java/java8
+    id: java8-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      ["-i", "gcr.io/$PROJECT_ID/java8", "--config", "java/java8.yaml", "-v"]
+    waitFor: ["java8-build"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+        "tag",
+        "gcr.io/$PROJECT_ID/java8",
+        "gcr.io/cloud-devrel-public-resources/java8",
+      ]
+    waitFor: ["java8-build"]
+
+  # Java 9 build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/java9", "."]
+    dir: java/java9
+    id: java9-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      ["-i", "gcr.io/$PROJECT_ID/java9", "--config", "java/java9.yaml", "-v"]
+    waitFor: ["java9-build"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+        "tag",
+        "gcr.io/$PROJECT_ID/java9",
+        "gcr.io/cloud-devrel-public-resources/java9",
+      ]
+    waitFor: ["java9-build"]
+
+  # Java 10 build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/java10", "."]
+    dir: java/java10
+    id: java10-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      ["-i", "gcr.io/$PROJECT_ID/java10", "--config", "java/java10.yaml", "-v"]
+    waitFor: ["java10-build"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+        "tag",
+        "gcr.io/$PROJECT_ID/java10",
+        "gcr.io/cloud-devrel-public-resources/java10",
+      ]
+    waitFor: ["java10-build"]
+
+  # Java 11 build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/java11", "."]
+    dir: java/java11
+    id: java11-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      ["-i", "gcr.io/$PROJECT_ID/java11", "--config", "java/java11.yaml", "-v"]
+    waitFor: ["java11-build"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+        "tag",
+        "gcr.io/$PROJECT_ID/java11",
+        "gcr.io/cloud-devrel-public-resources/java11",
+      ]
+    waitFor: ["java11-build"]
