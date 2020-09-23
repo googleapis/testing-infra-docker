@@ -80,7 +80,7 @@ RUN pyenv install 3.6.1 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install docker
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --force-yes \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -93,6 +93,6 @@ RUN apt-get update && apt-get install -y \
         $(lsb_release -cs) \
         stable" && \
     apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io
+    apt-get install -y --force-yes docker-ce
 
 WORKDIR /workspace
