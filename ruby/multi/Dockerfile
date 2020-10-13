@@ -16,7 +16,7 @@ FROM ubuntu:bionic
 
 ENTRYPOINT /bin/bash
 
-ENV RUBY_VERSIONS="2.4.10 2.5.8 2.6.6 2.7.1" \
+ENV RUBY_VERSIONS="2.4.10 2.5.8 2.6.6 2.7.2" \
     DEFAULT_RUBY_VERSION=2.6.6 \
     BUNDLER1_VERSION=1.17.3 \
     BUNDLER2_VERSION=2.1.4 \
@@ -108,7 +108,7 @@ RUN git clone --depth=1 https://github.com/pyenv/pyenv.git ~/.pyenv \
 ENV PATH /root/.pyenv/shims:/root/.pyenv/bin:$PATH
 RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc
 RUN echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc
-RUN echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
+RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 
 # Install python
 RUN pyenv install ${PYTHON_VERSION} \
