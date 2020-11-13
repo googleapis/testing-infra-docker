@@ -73,10 +73,10 @@ RUN mkdir /tmp/gpg \
 
 ENV GNUPGHOME /tmp/gpg
 # Fetch keys for verifying python installations
-# See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
 # Do this early so the build fails quickly if the keyserver is unavilable
 # Consider one of the alternatives here if this continues to be flaky:
 # https://github.com/docker-library/faq#openpgp--gnupg-keys-and-verification
+# See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
 RUN set -ex \
   && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
       # 2.7.17 (Benjamin Peterson)
@@ -177,7 +177,4 @@ RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
 ENV PATH /google-cloud-sdk/bin:$PATH
 
-# Enable redis-server on boot.
-RUN sudo systemctl enable redis-server.service
-
-CMD ["python3.6"]
+CMD sudo systemctl enable redis-server.service
