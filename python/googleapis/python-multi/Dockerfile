@@ -68,11 +68,12 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
-RUN mkdir /tmp/gpg
+RUN mkdir /tmp/gpg \
+&& echo "disable-ipv6" >> /tmp/gpg/dirmngr.conf
 
 ENV GNUPGHOME /tmp/gpg
 # Fetch keys for verifying python installations
-# See https://www.python.org/downloads/ 'OpenPGP Public Keys'
+# See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
 # Do this early so the build fails quickly if the keyserver is unavilable
 # Consider one of the alternatives here if this continues to be flaky:
 # https://github.com/docker-library/faq#openpgp--gnupg-keys-and-verification
