@@ -37,7 +37,7 @@ steps:
 
 # googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
-  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
+  args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
   dir: 'python/googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
@@ -54,10 +54,3 @@ steps:
 - name: gcr.io/cloud-builders/docker
   args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python', 'gcr.io/cloud-devrel-public-resources/python']
   waitFor: ['python']
-
-# googleapis/silver-python2
-# - name: gcr.io/cloud-builders/docker
-#  args: ['build', '-t', 'gcr.io/silver-python2/python-worker', '.']
-#  dir: 'googleapis/silver-python2'
-#  waitFor: ['-']
-
