@@ -68,6 +68,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
+# https://github.com/f-secure-foundry/usbarmory-debian-base_image/issues/9
 RUN mkdir /tmp/gpg \
 && echo "disable-ipv6" >> /tmp/gpg/dirmngr.conf
 
@@ -177,6 +178,5 @@ RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
 ENV PATH /google-cloud-sdk/bin:$PATH
 
-#CMD sudo systemctl enable redis-server.service
 # Enable redis-server on boot.
 RUN redis-server /etc/redis/redis.conf
