@@ -24,7 +24,7 @@ RUN apt update \
     libmagickwand-dev \
     libmemcached-dev \
     libmysqlclient-dev \
-    libpng12-dev \
+    libpng-dev \
     libpq-dev \
     libssl-dev \
     libxml2-dev \
@@ -51,6 +51,6 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 ENV PATH ~/.local/bin:/root/.local/bin:$PATH
 
 # Install the current version of nox.
-RUN python3 -m pip install --user --no-cache-dir nox==2019.11.9
+RUN python3 -m pip install --user --no-cache-dir nox==2020.8.22
 
 CMD ["nox"]
