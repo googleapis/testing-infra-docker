@@ -21,29 +21,20 @@ steps:
   dir: 'python/cloud-devrel-kokoro-resources/google-cloud-python/autosynth'
   waitFor: ['-']
   id: 'autosynth'
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-python/autosynth', 'gcr.io/cloud-devrel-public-resources/google-cloud-python/autosynth']
-  waitFor: ['autosynth']
 
 # cloud-devrel-kokoro-resources/python-base
 - name: gcr.io/cloud-builders/docker
-  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
+  args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
   dir: 'python/cloud-devrel-kokoro-resources/python-base'
   waitFor: ['-']
   id: 'python-base'
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-base', 'gcr.io/cloud-devrel-public-resources/python-base']
-  waitFor: ['python-base']
 
 # googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
-  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
+  args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
   dir: 'python/googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', 'gcr.io/cloud-devrel-public-resources/python-multi']
-  waitFor: ['python-multi']
 
 # cloud-devrel-kokoro-resources/python
 - name: gcr.io/cloud-builders/docker
@@ -51,13 +42,3 @@ steps:
   dir: 'python/cloud-devrel-kokoro-resources/python'
   waitFor: ['python-base']
   id: 'python'
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python', 'gcr.io/cloud-devrel-public-resources/python']
-  waitFor: ['python']
-
-# googleapis/silver-python2
-# - name: gcr.io/cloud-builders/docker
-#  args: ['build', '-t', 'gcr.io/silver-python2/python-worker', '.']
-#  dir: 'googleapis/silver-python2'
-#  waitFor: ['-']
-
