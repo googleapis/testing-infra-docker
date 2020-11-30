@@ -61,7 +61,7 @@ RUN mkdir /tmp/gpg \
 
 ENV GNUPGHOME /tmp/gpg
 # Fetch keys for verifying python installations
-# Do this early so the build fails quickly if the keyserver is unavilable
+# Do this early so the build fails quickly if the keyserver is unavailable
 # Consider one of the alternatives here if this continues to be flaky:
 # https://github.com/docker-library/faq#openpgp--gnupg-keys-and-verification
 # See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
@@ -74,7 +74,9 @@ RUN set -ex \
       # 3.6.12, 3.7.9 (Ned Deily)
       0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
       # 3.8.6 and 3.9.0 (Łukasz Langa)
-      E3FF2839C048B25C084DEBE9B26995E310250568
+      E3FF2839C048B25C084DEBE9B26995E310250568 \
+      # 3.10.x and 3.11.x (Pablo Galindo Salgado)
+      A035C8C19219BA821ECEA86B64E628F8D684696D
 
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
