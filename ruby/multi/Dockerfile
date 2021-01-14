@@ -16,7 +16,7 @@ FROM ubuntu:bionic
 
 ENTRYPOINT /bin/bash
 
-ENV RUBY_VERSIONS="2.4.10 2.5.8 2.6.6 2.7.2" \
+ENV RUBY_VERSIONS="2.4.10 2.5.8 2.6.6 2.7.2 3.0.0" \
     DEFAULT_RUBY_VERSION=2.6.6 \
     BUNDLER1_VERSION=1.17.3 \
     BUNDLER2_VERSION=2.1.4 \
@@ -129,3 +129,9 @@ RUN mkdir -p "$(nodenv root)"/plugins \
 # Install nodejs
 RUN nodenv install ${NODEJS_VERSION} \
     && nodenv global ${NODEJS_VERSION}
+
+# Install phantomjs for ruby-docs-samples
+RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 \
+    && tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/ \
+    && ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/ \
+    && rm phantomjs-2.1.1-linux-x86_64.tar.bz2
