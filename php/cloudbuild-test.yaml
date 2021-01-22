@@ -32,3 +32,9 @@ steps:
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php74', '.']
   dir: 'php/php74'
   waitFor: ['-']
+
+# PHP 8.0
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php80', '.']
+  dir: 'php/php80'
+  waitFor: ['-']

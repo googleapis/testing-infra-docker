@@ -8,6 +8,7 @@ This image is available at `gcr.io/cloud-devrel-kokoro-resources/php##`.  You ca
 $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php72
 $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php73
 $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php74
+$ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php80
 ```
 
 ## Questions
