@@ -98,7 +98,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
 RUN apt purge -y php7.0-common
 
 # Install phpunit globally
-RUN composer global require phpunit/phpunit:^7.0
+RUN composer global require phpunit/phpunit:^8.0
 
 # Install Google Cloud SDK
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
