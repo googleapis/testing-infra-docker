@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
 # install / enable PHP extensions
 RUN pecl install grpc \
     && echo "extension=grpc.so" >> /opt/php72/lib/conf.d/ext-grpc.ini \
-    && echo "extension=bcmath.so" >> /opt/php72/lib/conf.d/ext-bcmath.ini
+    && echo "extension=bcmath.so" >> /opt/php72/lib/conf.d/ext-bcmath.ini \
+    && echo "extension=imagick.so" >> /opt/php72/lib/conf.d/ext-imagick.ini
 
 # Install phpunit globally
 RUN composer global require phpunit/phpunit:^7.0
