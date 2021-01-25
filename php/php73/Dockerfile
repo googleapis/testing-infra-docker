@@ -119,7 +119,7 @@ RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql
     && mv cloud_sql_proxy /usr/local/bin
 
 # Make composer and gcloud bins available via the PATH variable
-ENV PATH="$PATH:/root/.composer/vendor/bin:/root/google-cloud-sdk/bin"
+ENV PATH="$PATH:/root/.config/composer/vendor/bin:/root/google-cloud-sdk/bin"
 
 # Configure Google Cloud SDK
 RUN gcloud config set app/promote_by_default false && \
