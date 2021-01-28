@@ -42,10 +42,10 @@ RUN apt-get update && \
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
-    wget http://us1.php.net/get/php-8.0.0.tar.bz2/from/this/mirror \
-         -O php-8.0.0.tar.bz2 && \
-    tar jxf php-8.0.0.tar.bz2 && \
-    cd php-8.0.0 && \
+    wget http://us1.php.net/get/php-8.0.1.tar.bz2/from/this/mirror \
+         -O php-8.0.1.tar.bz2 && \
+    tar jxf php-8.0.1.tar.bz2 && \
+    cd php-8.0.1 && \
     ./configure \
         --prefix=${PHP_DIR} \
         --with-config-file-scan-dir=${PHP_DIR}/lib/conf.d \
