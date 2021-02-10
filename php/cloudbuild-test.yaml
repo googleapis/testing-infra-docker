@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM googleapis/python-multi:latest
+timeout: 7200s  # 2 hours
+steps:
 
-# Install openssl (needed for CI services).
-RUN apt-get update \
-  && apt-get install -y openssl \
-  && rm -rf /var/lib/apt/lists/*
+# PHP 7.2
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php72', '.']
+  dir: 'php/php72'
+  waitFor: ['-']
 
-# Install the current version of nox.
-RUN pip install --no-cache-dir nox-automation==0.18.2
+# PHP 7.3
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php73', '.']
+  dir: 'php/php73'
+  waitFor: ['-']
 
-# By default, run nox.
-CMD ["nox"]
+# PHP 7.4
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php74', '.']
+  dir: 'php/php74'
+  waitFor: ['-']

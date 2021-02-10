@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -34,8 +34,10 @@ RUN apt-get update \
     ca-certificates \
     dictionaries-common \
     curl \
+    dirmngr \
     enchant \
     git \
+    gpg-agent \
     graphviz \
     hunspell-en-us \
     libbz2-dev \
@@ -66,6 +68,29 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
+# https://github.com/f-secure-foundry/usbarmory-debian-base_image/issues/9
+RUN mkdir /tmp/gpg \
+&& echo "disable-ipv6" >> /tmp/gpg/dirmngr.conf
+
+ENV GNUPGHOME /tmp/gpg
+# Fetch keys for verifying python installations
+# Do this early so the build fails quickly if the keyserver is unavailable
+# Consider one of the alternatives here if this continues to be flaky:
+# https://github.com/docker-library/faq#openpgp--gnupg-keys-and-verification
+# See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
+RUN set -ex \
+  && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
+      # 2.7.17 (Benjamin Peterson)
+      C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
+      # 3.4.10, 3.5.10 (Larry Hastings)
+      97FC712E4C024BBEA48A61ED3A5CA953F73C700D \
+      # 3.6.12, 3.7.9 (Ned Deily)
+      0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
+      # 3.8.6 and 3.9.0 (Łukasz Langa)
+      E3FF2839C048B25C084DEBE9B26995E310250568 \
+      # 3.10.x and 3.11.x (Pablo Galindo Salgado)
+      A035C8C19219BA821ECEA86B64E628F8D684696D
+
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
@@ -95,22 +120,12 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.17 3.4.10 3.5.9 3.6.9 3.7.5 3.8.0; do \
+RUN for PYTHON_VERSION in 2.7.17 3.4.10 3.5.10 3.6.12 3.7.9 3.8.6 3.9.0; do \
   set -ex \
-    && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-    && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
-      # 2.7.17 (Benjamin Peterson)
-      C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
-      # 3.4.10, 3.5.9 (Larry Hastings)
-      97FC712E4C024BBEA48A61ED3A5CA953F73C700D \
-      # 3.6.9, 3.7.5 (Ned Deily)
-      0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
-      # 3.8.0 (Łukasz Langa)
-      E3FF2839C048B25C084DEBE9B26995E310250568 \
+    && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
+    && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
     && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
-    && rm -r "$GNUPGHOME" python-${PYTHON_VERSION}.tar.xz.asc \
+    && rm -r python-${PYTHON_VERSION}.tar.xz.asc \
     && mkdir -p /usr/src/python-${PYTHON_VERSION} \
     && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
     && rm python-${PYTHON_VERSION}.tar.xz \
@@ -127,13 +142,14 @@ RUN for PYTHON_VERSION in 2.7.17 3.4.10 3.5.9 3.6.9 3.7.5 3.8.0; do \
     && ldconfig \
   ; done \
   && rm -rf /usr/src/python* \
-  && rm -rf ~/.cache/
+  && rm -rf ~/.cache/ \
+  && rm -r "$GNUPGHOME"
 
 
 # Install pip on Python 3.6 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 20.1.1
+ENV PYTHON_PIP_VERSION 20.2.4
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.6 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
 
@@ -147,8 +163,8 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   # https://github.com/docker-library/python/pull/100
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
-# Ensure Pip for 3.8.0
-RUN python3.8 /tmp/get-pip.py
+# Ensure Pip for 3.9
+RUN python3.9 /tmp/get-pip.py
 RUN rm /tmp/get-pip.py
 
 # Install "virtualenv", since the vast majority of users of this image
@@ -156,7 +172,7 @@ RUN rm /tmp/get-pip.py
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 272.0.0
+ENV CLOUD_SDK_VERSION 318.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
@@ -165,6 +181,4 @@ RUN /google-cloud-sdk/install.sh
 ENV PATH /google-cloud-sdk/bin:$PATH
 
 # Enable redis-server on boot.
-RUN sudo systemctl enable redis-server.service
-
-CMD ["python3.6"]
+RUN redis-server /etc/redis/redis.conf

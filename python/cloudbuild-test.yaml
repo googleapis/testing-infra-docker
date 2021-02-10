@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,19 +21,13 @@ steps:
   dir: 'python/cloud-devrel-kokoro-resources/google-cloud-python/autosynth'
   waitFor: ['-']
   id: 'autosynth'
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-python/autosynth', 'gcr.io/cloud-devrel-public-resources/google-cloud-python/autosynth']
-  waitFor: ['autosynth']
 
 # cloud-devrel-kokoro-resources/python-base
 - name: gcr.io/cloud-builders/docker
-  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
+  args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
   dir: 'python/cloud-devrel-kokoro-resources/python-base'
   waitFor: ['-']
   id: 'python-base'
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-base', 'gcr.io/cloud-devrel-public-resources/python-base']
-  waitFor: ['python-base']
 
 # googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
@@ -41,9 +35,6 @@ steps:
   dir: 'python/googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', 'gcr.io/cloud-devrel-public-resources/python-multi']
-  waitFor: ['python-multi']
 
 # cloud-devrel-kokoro-resources/python
 - name: gcr.io/cloud-builders/docker
@@ -51,16 +42,3 @@ steps:
   dir: 'python/cloud-devrel-kokoro-resources/python'
   waitFor: ['python-base']
   id: 'python'
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python', 'gcr.io/cloud-devrel-public-resources/python']
-  waitFor: ['python']
-
-images:
-  - gcr.io/cloud-devrel-kokoro-resources/google-cloud-python/autosynth
-  - gcr.io/cloud-devrel-kokoro-resources/python
-  - gcr.io/cloud-devrel-kokoro-resources/python-base
-  - gcr.io/cloud-devrel-kokoro-resources/python-multi
-  - gcr.io/cloud-devrel-public-resources/google-cloud-python/autosynth
-  - gcr.io/cloud-devrel-public-resources/python
-  - gcr.io/cloud-devrel-public-resources/python-base
-  - gcr.io/cloud-devrel-public-resources/python-multi
