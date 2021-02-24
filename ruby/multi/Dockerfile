@@ -60,6 +60,7 @@ RUN apt-get update \
       libssl1.0-dev \
       libyaml-dev \
       make \
+      memcached \
       pkg-config \
       python-openssl \
       software-properties-common \
