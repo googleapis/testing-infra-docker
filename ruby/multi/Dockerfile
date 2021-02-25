@@ -53,7 +53,9 @@ RUN apt-get update \
       libgdbm-dev \
       liblzma-dev \
       libmagickwand-dev \
+      libmysqlclient-dev \
       libncurses5-dev \
+      libpq-dev \
       libreadline-dev \
       libreadline6-dev \
       libsqlite3-dev \
@@ -61,7 +63,10 @@ RUN apt-get update \
       libyaml-dev \
       make \
       memcached \
+      mysql-server \
       pkg-config \
+      postgresql \
+      postgresql-contrib \
       python-openssl \
       software-properties-common \
       sqlite3 \
