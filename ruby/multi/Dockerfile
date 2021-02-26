@@ -59,7 +59,7 @@ RUN apt-get update \
       libreadline-dev \
       libreadline6-dev \
       libsqlite3-dev \
-      libssl1.0-dev \
+      libssl-dev \
       libyaml-dev \
       make \
       memcached \
