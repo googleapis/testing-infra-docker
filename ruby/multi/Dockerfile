@@ -16,10 +16,10 @@ FROM ubuntu:bionic
 
 ENTRYPOINT /bin/bash
 
-ENV RUBY_VERSIONS="2.4.10 2.5.8 2.6.6 2.7.2" \
+ENV RUBY_VERSIONS="2.5.8 2.6.6 2.7.2 3.0.0" \
     DEFAULT_RUBY_VERSION=2.6.6 \
     BUNDLER1_VERSION=1.17.3 \
-    BUNDLER2_VERSION=2.1.4 \
+    BUNDLER2_VERSION=2.2.11 \
     PYTHON_VERSION=3.8.5 \
     NODEJS_VERSION=12.18.3
 
@@ -53,14 +53,20 @@ RUN apt-get update \
       libgdbm-dev \
       liblzma-dev \
       libmagickwand-dev \
+      libmysqlclient-dev \
       libncurses5-dev \
+      libpq-dev \
       libreadline-dev \
       libreadline6-dev \
       libsqlite3-dev \
-      libssl1.0-dev \
+      libssl-dev \
       libyaml-dev \
       make \
+      memcached \
+      mysql-server \
       pkg-config \
+      postgresql \
+      postgresql-contrib \
       python-openssl \
       software-properties-common \
       sqlite3 \
