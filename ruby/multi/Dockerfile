@@ -141,3 +141,6 @@ RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x
     && tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/ \
     && ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/ \
     && rm phantomjs-2.1.1-linux-x86_64.tar.bz2
+
+# Allow non-root users read access to /root (for Trampoline V2)
+RUN chmod -v a+rx /root
