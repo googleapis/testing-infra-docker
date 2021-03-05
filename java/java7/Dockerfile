@@ -65,12 +65,12 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 RUN apt-get install -y --force-yes make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
-RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+RUN git clone https://github.com/pyenv/pyenv.git /pyenv
 
-ENV PATH /root/.pyenv/bin:$PATH
-ENV PATH /root/.pyenv/shims:$PATH
+ENV PATH /pyenv/bin:$PATH
+ENV PATH /pyenv/shims:$PATH
 
-RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
+RUN echo 'export PYENV_ROOT="/pyenv"' >> .bashrc && \
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
     echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
 
