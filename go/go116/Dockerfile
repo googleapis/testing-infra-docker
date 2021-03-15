@@ -14,8 +14,24 @@
 
 FROM golang:1.16
 
-# Install python3 for trampoline.
-RUN apt-get update && apt-get install -y python3 python3-pip && which python3
+# Install pyenv
+RUN apt-get update
+RUN apt-get install -y --force-yes make build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+
+ENV PATH /root/.pyenv/bin:$PATH
+ENV PATH /root/.pyenv/shims:$PATH
+
+RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
+    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
+
+# Install Python 3.8 for trampoline.
+RUN pyenv install 3.8.8 && \
+    pyenv global 3.8.8 && \
+    python3 -m pip install --upgrade pip setuptools
 
 # Install protoc
 RUN apt-get update && apt-get install -y unzip wget vim
