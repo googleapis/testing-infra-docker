@@ -28,10 +28,11 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
     echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
 
-# Install Python 3.8 for trampoline.
-RUN pyenv install 3.8.8 && \
-    pyenv global 3.8.8 && \
-    python3 -m pip install --upgrade pip setuptools
+# Install Python 3.7 & 3.8, defaults to 3.8
+RUN for PYTHON_VERSION in 3.7.10 3.8.8; do \
+    pyenv install ${PYTHON_VERSION} && \
+    pyenv global ${PYTHON_VERSION} && \
+    python3 -m pip install --upgrade pip setuptools; done
 
 # Install protoc
 RUN apt-get update && apt-get install -y unzip wget vim
