@@ -19,8 +19,23 @@ RUN set -ex; \
   apt-get update -y; \
   apt-get install -y \
     graphviz \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    lsb-release \
+    software-properties-common \
     ; \
   rm -rf /var/lib/apt/lists/*
+
+# Install docker
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        $(lsb_release -cs) \
+        stable" && \
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Setup protoc
 RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.10.1/protoc-3.10.1-linux-x86_64.zip > /tmp/protoc-3.10.1-linux-x86_64.zip && \
