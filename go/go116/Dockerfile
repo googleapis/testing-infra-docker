@@ -14,11 +14,27 @@
 
 FROM golang:1.16
 
-# Install pyenv
-RUN apt-get update
-RUN apt-get install -y --force-yes make build-essential libssl-dev zlib1g-dev libbz2-dev \
+# Install dependencies
+RUN set -ex; \
+  apt-get update -y; \
+  apt-get install -y \
+    make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
+    apt-transport-https ca-certificates curl gnupg-agent lsb-release software-properties-common \
+    unzip wget vim; \
+    rm -rf /var/lib/apt/lists/*
+
+# Install docker
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        $(lsb_release -cs) \
+        stable" && \
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io
+
+# Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
 ENV PATH /root/.pyenv/bin:$PATH
@@ -35,7 +51,6 @@ RUN for PYTHON_VERSION in 3.7.10 3.8.8; do \
     python3 -m pip install --upgrade pip setuptools; done
 
 # Install protoc
-RUN apt-get update && apt-get install -y unzip wget vim
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
 RUN unzip protoc-3.13.0-linux-x86_64.zip
 RUN mv bin/protoc /bin/protoc && which protoc
