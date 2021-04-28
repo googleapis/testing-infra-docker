@@ -24,7 +24,15 @@ steps:
   name: gcr.io/cloud-builders/docker
   env: [
       'BASE_TAG=$_BASE_TAG',
-      'CPP_COMMITISH=$_CPP_COMMITISH'
+      'CPP_COMMITISH=$_CPP_COMMITISH',
+#      pass through trigger env variables
+      'COMMIT_SHA=$COMMIT_SHA',
+      'REVISION_ID=$REVISION_ID',
+      'REPO_NAME=$REPO_NAME',
+      'BRANCH_NAME=$BRANCH_NAME',
+      'REF_NAME=$REF_NAME',
+      'SHORT_SHA=$SHORT_SHA',
+      'TRIGGER_NAME=$TRIGGER_NAME'
   ]
   entrypoint: 'bash'
   args: [
