@@ -28,7 +28,7 @@ steps:
   ]
   entrypoint: 'bash'
   args: [
-      'storage/retry/build-and-push-image.bash',
+      'conformance-tests/storage/retry/build-and-push-image.bash',
       'gcr.io/cloud-devrel-kokoro-resources/conformance-tests/storage/retry'
   ]
 
