@@ -38,7 +38,7 @@ commandTests:
   expectedError: ["using libxml version"]
 - name: "python"
   command: ["python", "--version"]
-  expectedOutput: ["Python 3.6.14"]
+  expectedOutput: ["Python 3.6.12"]
 - name: "docker"
   command: ["docker", "--version"]
   expectedOutput: ["Docker version *"]
