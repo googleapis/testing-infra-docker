@@ -11,3 +11,4 @@
 /node       @googleapis/yoshi-nodejs
 /python     @googleapis/yoshi-python
 /ruby       @googleapis/yoshi-ruby
+/conformance-tests  @googleapis/cloud-storage-dpes
