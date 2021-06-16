@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-timeout: 14400s  # 4 hours
+timeout: 18000s  # 5 hours
 steps:
 
 # PHP 7.2
@@ -39,8 +39,15 @@ steps:
   dir: 'php/php80'
   waitFor: ['-']
 
+# PHP 7.3 / 7.4 / 8.0
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php', '.']
+  dir: 'php/php'
+  waitFor: ['-']
+
 images:
   - gcr.io/cloud-devrel-kokoro-resources/php72
   - gcr.io/cloud-devrel-kokoro-resources/php73
   - gcr.io/cloud-devrel-kokoro-resources/php74
   - gcr.io/cloud-devrel-kokoro-resources/php80
+  - gcr.io/cloud-devrel-kokoro-resources/php
