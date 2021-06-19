@@ -62,7 +62,7 @@ RUN mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
-RUN apt-get install -y --force-yes make build-essential libssl-dev zlib1g-dev libbz2-dev \
+RUN apt-get install -y --no-install-recommends --force-yes make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv

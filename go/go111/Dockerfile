@@ -15,7 +15,7 @@
 FROM golang:1.11
 
 # Install python3 for trampoline.
-RUN apt-get update && apt-get install -y python3 python3-pip && which python3
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-pip && which python3
 
 # Install protoc
 RUN apt-get update && apt-get install -y unzip wget vim

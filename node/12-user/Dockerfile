@@ -17,7 +17,7 @@ FROM node:12-stretch
 # Add Graphviz
 RUN set -ex; \
   apt-get update -y; \
-  apt-get install -y \
+  apt-get install -y --no-install-recommends \
     graphviz \
     apt-transport-https \
     ca-certificates \
