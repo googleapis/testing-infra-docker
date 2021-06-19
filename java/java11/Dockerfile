@@ -69,7 +69,7 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
 # Install python
 RUN pyenv install 3.6.12 && \
     pyenv global 3.6.12 && \
-    python3 -m pip install --upgrade pip setuptools
+    python3 -m pip install --no-cache-dir --upgrade pip setuptools
 
 # Add Graphviz
 RUN apt-get update -y && \

@@ -18,6 +18,6 @@ WORKDIR /opt/storage-emulator
 
 COPY google-cloud-cpp/google/cloud/storage/emulator /opt/storage-emulator/
 
-RUN python3 -m pip install -r requirements.txt
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
 CMD ["gunicorn", "--bind", "localhost:9000", "--worker-class", "sync", "emulator:run()"]

@@ -20,5 +20,5 @@ ENTRYPOINT /bin/bash
 RUN pyenv install 3.7.2
 RUN pyenv global 3.7.2
 
-RUN python3 -m pip install nox
+RUN python3 -m pip install --no-cache-dir nox
 RUN pyenv rehash

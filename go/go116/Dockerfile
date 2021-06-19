@@ -48,7 +48,7 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
 RUN for PYTHON_VERSION in 3.7.10 3.8.8; do \
     pyenv install ${PYTHON_VERSION} && \
     pyenv global ${PYTHON_VERSION} && \
-    python3 -m pip install --upgrade pip setuptools; done
+    python3 -m pip install --no-cache-dir --upgrade pip setuptools; done
 
 # Install protoc
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
