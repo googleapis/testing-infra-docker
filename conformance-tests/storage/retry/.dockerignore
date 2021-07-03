@@ -1,0 +1,5 @@
+Dockerfile
+.dockerignore
+google-cloud-cpp/google/cloud/storage/emulator/README.md
+google-cloud-cpp/google/cloud/storage/emulator/tests/
+google-cloud-cpp/google/cloud/storage/emulator/BUILD

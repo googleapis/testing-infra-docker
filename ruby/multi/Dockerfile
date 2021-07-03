@@ -16,12 +16,14 @@ FROM ubuntu:bionic
 
 ENTRYPOINT /bin/bash
 
-ENV RUBY_VERSIONS="2.5.8 2.6.6 2.7.2 3.0.0" \
-    DEFAULT_RUBY_VERSION=2.6.6 \
+ENV RUBY_VERSIONS="2.5.9 2.6.7 2.7.3 3.0.1" \
+    OLDEST_RUBY_VERSION=2.5.9 \
+    NEWEST_RUBY_VERSION=3.0.1 \
+    DEFAULT_RUBY_VERSION=2.6.7 \
     BUNDLER1_VERSION=1.17.3 \
-    BUNDLER2_VERSION=2.2.11 \
-    PYTHON_VERSION=3.8.5 \
-    NODEJS_VERSION=12.18.3
+    BUNDLER2_VERSION=2.2.17 \
+    PYTHON_VERSION=3.8.10 \
+    NODEJS_VERSION=14.17.0
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -85,11 +87,12 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubunt
     && apt-get -y autoclean
 
 # Install rbenv
-RUN git clone --depth=1 https://github.com/rbenv/rbenv.git /root/.rbenv \
-    && cd /root/.rbenv \
+ENV RBENV_ROOT=/root/.rbenv
+RUN git clone --depth=1 https://github.com/rbenv/rbenv.git $RBENV_ROOT \
+    && cd $RBENV_ROOT \
     && src/configure \
     && make -C src
-ENV PATH /root/.rbenv/shims:/root/.rbenv/bin:$PATH
+ENV PATH $RBENV_ROOT/shims:$RBENV_ROOT/bin:$PATH
 RUN echo 'eval "$(rbenv init -)"' >> /etc/profile
 RUN echo 'eval "$(rbenv init -)"' >> .bashrc
 RUN mkdir -p "$(rbenv root)"/plugins \
@@ -107,11 +110,12 @@ RUN for version in ${RUBY_VERSIONS}; do \
     && rbenv global ${DEFAULT_RUBY_VERSION}
 
 # Install pyenv
-RUN git clone --depth=1 https://github.com/pyenv/pyenv.git ~/.pyenv \
-    && cd /root/.pyenv \
+ENV PYENV_ROOT=/root/.pyenv
+RUN git clone --depth=1 https://github.com/pyenv/pyenv.git $PYENV_ROOT \
+    && cd $PYENV_ROOT \
     && src/configure \
     && make -C src
-ENV PATH /root/.pyenv/shims:/root/.pyenv/bin:$PATH
+ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc
 RUN echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc
 RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
@@ -122,11 +126,12 @@ RUN pyenv install ${PYTHON_VERSION} \
     && ln -s $(which python) /bin/python3
 
 # Install nodenv
-RUN git clone --depth=1 https://github.com/nodenv/nodenv.git ~/.nodenv \
-    && cd /root/.nodenv \
+ENV NODENV_ROOT=/root/.nodenv
+RUN git clone --depth=1 https://github.com/nodenv/nodenv.git $NODENV_ROOT \
+    && cd $NODENV_ROOT \
     && src/configure \
     && make -C src
-ENV PATH /root/.nodenv/shims:/root/.nodenv/bin:$PATH
+ENV PATH $NODENV_ROOT/shims:$NODENV_ROOT/bin:$PATH
 RUN echo 'export PATH="$HOME/.nodenv/bin:$PATH"' >> ~/.bashrc
 RUN echo 'eval "$(nodenv init -)"' >> ~/.bashrc
 RUN mkdir -p "$(nodenv root)"/plugins \
