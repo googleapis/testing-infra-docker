@@ -28,6 +28,7 @@ RUN apt-get update && \
             libxml2-dev \
             libxslt1-dev \
             libzip-dev \
+            unixodbc-dev \
             php-imagick \
             python-ipaddr \
             wget \
@@ -88,11 +89,12 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --enable-fpm && \
         make && \
         make install && \
-        pecl install grpc imagick && \
+        pecl install grpc imagick pdo_sqlsrv && \
         cp php.ini-production ${PHP_DIR}/lib/php.ini && \
         echo 'zend_extension=opcache.so' >> ${PHP_DIR}/lib/php.ini && \
         echo 'extension=grpc.so' >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
         echo 'extension=imagick.so' >> ${PHP_DIR}/lib/conf.d/ext-imagick.ini && \
+        echo 'extension=pdo_sqlsrv.so' >> ${PHP_DIR}/lib/conf.d/ext-pdo_sqlsrv.ini && \
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
         php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
