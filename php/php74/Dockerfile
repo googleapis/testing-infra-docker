@@ -37,8 +37,10 @@ RUN apt-get update && \
             pkg-config \
             sqlite3 \
             libsqlite3-dev \
-            libonig-dev \
-            php-pear
+            libonig-dev
+
+# Remove old version of PHP
+RUN apt purge -y php7.0-common
 
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
@@ -86,7 +88,8 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --with-xsl \
         --with-zip \
         --with-kerberos \
-        --enable-fpm && \
+        --enable-fpm \
+        --with-pear && \
         make && \
         make install && \
         pecl install grpc imagick pdo_sqlsrv && \
@@ -98,9 +101,6 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
         php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
-
-# Remove old version of PHP
-RUN apt purge -y php7.0-common
 
 # Install phpunit globally
 RUN composer global require phpunit/phpunit:^7.0
