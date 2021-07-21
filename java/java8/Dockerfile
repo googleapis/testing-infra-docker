@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This appears to be from a newer source than AdoptOpenJDK
 FROM openjdk:8-jdk
 
 RUN apt-get update && \
@@ -25,12 +26,12 @@ RUN wget -q http://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-ma
     rm /tmp/maven.tar.gz && \
     ln -s $JAVA_HOME/lib $JAVA_HOME/conf
 
-RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
+RUN wget -q https://services.gradle.org/distributions/gradle-6.9-bin.zip -O /tmp/gradle.zip && \
     mkdir -p /usr/local/lib/gradle && \
     unzip -q /tmp/gradle.zip -d /usr/local/lib/gradle && \
     rm /tmp/gradle.zip
 
-ENV PATH $PATH:/usr/local/lib/maven/bin:/usr/local/lib/gradle/gradle-4.9/bin
+ENV PATH $PATH:/usr/local/lib/maven/bin:/usr/local/lib/gradle/gradle-6.9/bin
 
 # Install gcloud SDK
 RUN mkdir -p /usr/local/gcloud && \
@@ -48,7 +49,7 @@ RUN mkdir -p /tmp/playservices && \
         -Dpackaging=jar
 
 # Install the appengine SDK
-RUN mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
+RUN mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.90
 
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
