@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y libxml2-utils make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl graphviz imagemagick unzip \
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl graphviz imagemagick unzip git \
     apt-transport-https ca-certificates gnupg-agent lsb-release software-properties-common && \
     rm -rf /var/cache/apt && \
     rm -rf /var/lib/apt/lists/*
