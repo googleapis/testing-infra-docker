@@ -16,8 +16,12 @@ FROM adoptopenjdk:8-jdk
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends libxml2-utils && \
-    rm -rf /var/cache/apt
+    apt-get install -y libxml2-utils make build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl graphviz imagemagick unzip \
+    apt-transport-https ca-certificates gnupg-agent lsb-release software-properties-common && \
+    rm -rf /var/cache/apt && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://mirrors.advancedhosters.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz -o /tmp/maven.tar.gz && \
     mkdir -p /usr/local/lib/maven && \
@@ -54,13 +58,9 @@ RUN mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
-RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
-    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
-ENV PATH /root/.pyenv/bin:$PATH
-ENV PATH /root/.pyenv/shims:$PATH
+ENV PATH /root/.pyenv/shims:/root/.pyenv/bin:$PATH
 
 RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
@@ -72,14 +72,7 @@ RUN pyenv install 3.6.12 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install docker
-RUN apt-get update && apt-get install -y \
-        apt-transport-https \
-        ca-certificates \
-        curl \
-        gnupg-agent \
-        lsb-release \
-        software-properties-common && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     add-apt-repository \
         "deb [arch=amd64] https://download.docker.com/linux/debian \
         $(lsb_release -cs) \
