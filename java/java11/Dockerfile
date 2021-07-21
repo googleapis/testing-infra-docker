@@ -12,15 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# openjdk appears to be a newer source than AdoptOpenJDK, even though they both come from the same server.
-FROM openjdk:11-jdk
+FROM adoptopenjdk:11-jdk
 
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y --no-install-recommends libxml2-utils && \
     rm -rf /var/cache/apt
 
-RUN wget -q http://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -O /tmp/maven.tar.gz && \
+RUN wget -q https://mirrors.advancedhosters.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz -O /tmp/maven.tar.gz && \
     mkdir -p /usr/local/lib/maven && \
     tar xzf /tmp/maven.tar.gz -C /usr/local/lib/maven --strip-components=1 && \
     rm /tmp/maven.tar.gz && \
