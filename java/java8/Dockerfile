@@ -23,13 +23,13 @@ RUN apt-get update && \
     rm -rf /var/cache/apt && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -sS https://mirrors.advancedhosters.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz -o /tmp/maven.tar.gz && \
+RUN curl -sSL https://mirrors.advancedhosters.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.tar.gz -o /tmp/maven.tar.gz && \
     mkdir -p /usr/local/lib/maven && \
     tar xzf /tmp/maven.tar.gz -C /usr/local/lib/maven --strip-components=1 && \
     rm /tmp/maven.tar.gz && \
     ln -s $JAVA_HOME/lib $JAVA_HOME/conf
 
-RUN curl -sS https://services.gradle.org/distributions/gradle-6.9-bin.zip -o /tmp/gradle.zip && \
+RUN curl -sSL https://services.gradle.org/distributions/gradle-6.9-bin.zip -o /tmp/gradle.zip && \
     mkdir -p /usr/local/lib/gradle && \
     unzip -q /tmp/gradle.zip -d /usr/local/lib/gradle && \
     rm /tmp/gradle.zip
@@ -42,7 +42,7 @@ RUN mkdir -p /usr/local/gcloud && \
 
 # Install google-play-services version 1
 RUN mkdir -p /tmp/playservices && \
-    curl -sS https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar -o /tmp/play-services-basement.aar && \
+    curl -sSL https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar -o /tmp/play-services-basement.aar && \
     unzip -q /tmp/play-services-basement.aar -d /tmp/playservices && \
     mvn install:install-file \
         -Dfile=/tmp/playservices/classes.jar \
