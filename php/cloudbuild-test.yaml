@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-timeout: 10800s  # 2.5 hours
+timeout: 14400s  # 4 hours
 steps:
 
 # PHP 7.2
