@@ -16,13 +16,13 @@ FROM openjdk:11-jdk
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends libxml2-utils && \
+    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
     rm -rf /var/cache/apt
 
-RUN wget -q http://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -O /tmp/maven.tar.gz && \
-    mkdir -p /usr/local/lib/maven && \
-    tar xzf /tmp/maven.tar.gz -C /usr/local/lib/maven --strip-components=1 && \
-    rm /tmp/maven.tar.gz && \
+RUN wget -q https://mirrors.advancedhosters.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
+    unzip /tmp/maven.zip -d /tmp/maven && \
+    mv /tmp/maven/apache-maven-3.8.1 /usr/local/lib/maven && \
+    rm /tmp/maven.zip && \
     ln -s $JAVA_HOME/lib $JAVA_HOME/conf
 
 RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
@@ -33,8 +33,9 @@ RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp
 ENV PATH $PATH:/usr/local/lib/maven/bin:/usr/local/lib/gradle/gradle-4.9/bin
 
 # Install gcloud SDK
-RUN mkdir -p /usr/local/gcloud && \
-    curl -sSL https://sdk.cloud.google.com | bash -s -- --install-dir=/usr/local/gcloud
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
+    apt-get install google-cloud-sdk -y
 
 # Install google-play-services version 1
 RUN mkdir -p /tmp/playservices && \
