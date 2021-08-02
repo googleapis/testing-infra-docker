@@ -44,17 +44,23 @@ RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.10.
 
 USER node
 
-RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+# Install pyenv
+RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
-RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile
-RUN echo 'export PATH="/home/node/.pyenv/shims:$PATH"' >> ~/.profile
-RUN echo 'eval "$(pyenv init -)"' >> ~/.profile
-RUN echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.profile
+RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
+    echo 'export PATH="/home/node/.pyenv/shims:$PATH"' >> ~/.profile && \
+    echo 'eval "$(pyenv init -)"' >> ~/.profile && \
+    echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.profile
 
 ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
 
-RUN pyenv install 3.7.4
-RUN pyenv global 3.7.4
+# Install python
+RUN pyenv install 3.7.4 && \
+    pyenv global 3.7.4 && \
+    python3 -m pip install --upgrade pip setuptools
 
 # Setup Cloud SDK
 WORKDIR /home/node
