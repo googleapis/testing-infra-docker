@@ -42,13 +42,14 @@ RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.10.
     cd /usr/local && unzip /tmp/protoc-3.10.1-linux-x86_64.zip && rm -f /tmp/protoc-3.10.1-linux-x86_64.zip && \
     chmod -R o+rX /usr/local/include/google /usr/local/bin/protoc
 
-USER node
-
-
-# Install pyenv
+# Install pyenv dependencies
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+
+USER node
+
+# Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
 RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
