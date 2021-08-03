@@ -84,3 +84,5 @@ images:
 - gcr.io/$PROJECT_ID/go114
 - gcr.io/$PROJECT_ID/go115
 - gcr.io/$PROJECT_ID/go116
+
+timeout: 7200s

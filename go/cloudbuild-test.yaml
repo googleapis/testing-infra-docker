@@ -76,3 +76,5 @@ steps:
 - name: gcr.io/gcp-runtimes/structure_test
   args: ['-i', 'gcr.io/$PROJECT_ID/go116', '--config', '/workspace/go/go116.yaml', '-v']
   waitFor: ['go116-build']
+
+timeout: 7200s
