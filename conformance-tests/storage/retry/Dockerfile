@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM python:3.8@sha256:ff8ae88abfe6c829c188cc54737139f7c583279009ba34c96034e0e66053ac3f
+FROM python:3.8@sha256:aef1d606440651be2646d439240b8c456b84d9ac6895a94b9eb1afa093d20804
 
 EXPOSE 9000
 WORKDIR /opt/storage-emulator
