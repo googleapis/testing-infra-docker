@@ -16,8 +16,8 @@ FROM golang:1.12
 
 # Install dependencies
 RUN set -ex; \
-  apt-get update -y; \
-  apt-get install -y \
+    apt-get update -y; \
+    apt-get install -y \
     make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
@@ -28,9 +28,9 @@ RUN set -ex; \
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     add-apt-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/debian \
-        $(lsb_release -cs) \
-        stable" && \
+    "deb [arch=amd64] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) \
+    stable" && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
@@ -59,5 +59,8 @@ RUN mv bin/protoc /bin/protoc && which protoc
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
     apt-get install google-cloud-sdk -y
+
+# Install test tools
+RUN GO111MODULE=on go get github.com/jstemmer/go-junit-report@latest
 
 WORKDIR $GOPATH
