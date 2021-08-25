@@ -79,7 +79,7 @@ steps:
 
 # Go 1.17 build
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/go116', '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/go117', '.']
   dir: go/go117
   id: go117-build
   waitFor: ['-']
