@@ -11,13 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM python:3.9@sha256:acb4e43d0c66c168e72ceaba5913cde472e4a17017cec9346969c9725a1fea94
 
-EXPOSE 9000
-WORKDIR /opt/storage-emulator
-
-COPY google-cloud-cpp/google/cloud/storage/emulator /opt/storage-emulator/
-
-RUN python3 -m pip install -r requirements.txt
-
-CMD ["gunicorn", "--bind", "localhost:9000", "--worker-class", "sync", "emulator:run()"]
+schemaVersion: 1.0.0
+commandTests:
+- name: "version"
+  command: ["go", "version"]
+  expectedOutput: ["go version go1.17"]
+- name: "gcloud"
+  command: ["gcloud", "version"]
+  expectedOutput: ["Google Cloud SDK"]
