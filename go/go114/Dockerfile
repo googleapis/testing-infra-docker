@@ -15,7 +15,9 @@
 FROM golang:1.14
 
 # Install python3 for trampoline.
-RUN apt-get update && apt-get install -y python3 python3-pip && which python3
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip apt-transport-https ca-certificates gnupg && \
+    which python3
 
 # Install protoc
 RUN apt-get update && apt-get install -y unzip wget vim
@@ -24,13 +26,12 @@ RUN unzip protoc-3.7.1-linux-x86_64.zip
 RUN mv bin/protoc /bin/protoc && which protoc
 
 # Install gcloud SDK
-RUN mkdir -p /usr/local/gcloud && \
-    curl -sSL https://sdk.cloud.google.com | bash -s -- --install-dir=/usr/local/gcloud
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
+    apt-get install google-cloud-sdk -y
 
 # Install tools used in build
-RUN GO111MODULE=on go get honnef.co/go/tools/cmd/staticcheck@latest
-
-# Adding the package path to local
-ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
+RUN GO111MODULE=on go get honnef.co/go/tools/cmd/staticcheck@latest && \
+    go get github.com/jstemmer/go-junit-report@latest
 
 WORKDIR $GOPATH
