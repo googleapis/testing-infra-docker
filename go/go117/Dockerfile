@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.15
-
+FROM golang:1.17-buster
 
 # Install dependencies
 RUN set -ex; \
@@ -52,8 +51,8 @@ RUN for PYTHON_VERSION in 3.7.10 3.8.8; do \
     python3 -m pip install --upgrade pip setuptools; done
 
 # Install protoc
-RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.7.1/protoc-3.7.1-linux-x86_64.zip
-RUN unzip protoc-3.7.1-linux-x86_64.zip
+RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
+RUN unzip protoc-3.13.0-linux-x86_64.zip
 RUN mv bin/protoc /bin/protoc && which protoc
 
 # Install gcloud SDK
@@ -62,7 +61,9 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
     apt-get install google-cloud-sdk -y
 
 # Install tools used in build
-RUN GO111MODULE=on go get honnef.co/go/tools/cmd/staticcheck@latest && \
-    go get github.com/jstemmer/go-junit-report@latest
+RUN go install honnef.co/go/tools/cmd/staticcheck@latest && \
+    go install github.com/jstemmer/go-junit-report@latest && \
+    go install golang.org/x/lint/golint@latest && \
+    go install golang.org/x/tools/cmd/goimports@latest
 
 WORKDIR $GOPATH
