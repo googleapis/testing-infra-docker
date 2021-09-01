@@ -79,7 +79,7 @@ ENV GNUPGHOME /tmp/gpg
 # https://github.com/docker-library/faq#openpgp--gnupg-keys-and-verification
 # See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
 RUN set -ex \
-  && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
+  && gpg --keyserver keyserver.ubuntu.com --recv-keys \
       # 2.7.17 (Benjamin Peterson)
       C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
       # 3.4.10, 3.5.10 (Larry Hastings)
