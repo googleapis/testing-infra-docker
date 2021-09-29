@@ -14,18 +14,17 @@
 
 FROM ghcr.io/graalvm/graalvm-ce:ol7-java11-21.2.0
 
-RUN gu install native-image
-
-RUN yum update -y && \
-    yum install -y wget unzip git
-
-RUN wget -q https://mirrors.advancedhosters.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
+RUN gu install native-image && \
+    yum update -y && \
+    yum install -y wget unzip git && \
+    # Install maven, do not upgrade to 3.8.2
+    wget -q https://mirrors.advancedhosters.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
     unzip /tmp/maven.zip -d /tmp/maven && \
     mv /tmp/maven/apache-maven-3.8.1 /usr/local/lib/maven && \
     rm /tmp/maven.zip && \
-    ln -s $JAVA_HOME/lib $JAVA_HOME/conf
-
-RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
+    ln -s $JAVA_HOME/lib $JAVA_HOME/conf && \
+    # Install Gradle
+    wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
     mkdir -p /usr/local/lib/gradle && \
     unzip -q /tmp/gradle.zip -d /usr/local/lib/gradle && \
     rm /tmp/gradle.zip
