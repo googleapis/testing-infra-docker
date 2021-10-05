@@ -18,7 +18,7 @@ RUN gu install native-image && \
     yum update -y && \
     yum install -y wget unzip git && \
     # Install maven, do not upgrade to 3.8.2
-    wget -q https://mirrors.advancedhosters.com/apache/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
+    wget -q https://archive.apache.org/dist/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
     unzip /tmp/maven.zip -d /tmp/maven && \
     mv /tmp/maven/apache-maven-3.8.1 /usr/local/lib/maven && \
     rm /tmp/maven.zip && \
