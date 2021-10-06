@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -79,14 +79,14 @@ ENV GNUPGHOME /tmp/gpg
 # https://github.com/docker-library/faq#openpgp--gnupg-keys-and-verification
 # See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
 RUN set -ex \
-  && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys \
-      # 2.7.17 (Benjamin Peterson)
+  && gpg --keyserver keyserver.ubuntu.com --recv-keys \
+      # 2.7.18 (Benjamin Peterson)
       C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
       # 3.4.10, 3.5.10 (Larry Hastings)
       97FC712E4C024BBEA48A61ED3A5CA953F73C700D \
-      # 3.6.12, 3.7.9 (Ned Deily)
+      # 3.6.15, 3.7.12 (Ned Deily)
       0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
-      # 3.8.6 and 3.9.0 (Łukasz Langa)
+      # 3.8.12 and 3.9.7 (Łukasz Langa)
       E3FF2839C048B25C084DEBE9B26995E310250568 \
       # 3.10.x and 3.11.x (Pablo Galindo Salgado)
       A035C8C19219BA821ECEA86B64E628F8D684696D
@@ -109,7 +109,7 @@ RUN apt-get update \
 
 # Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+  && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
   && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
     msodbcsql17 \
@@ -120,7 +120,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.17 3.4.10 3.5.10 3.6.12 3.7.9 3.8.6 3.9.0; do \
+RUN for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.12 3.9.7 3.10.0; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
