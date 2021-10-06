@@ -31,7 +31,6 @@ RUN apt update \
     libxslt1-dev \
     openssl \
     portaudio19-dev \
-    python-pyaudio \
     zlib1g-dev \
  && apt clean
 
@@ -39,9 +38,9 @@ RUN python --version
 RUN which python
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 318.0.0
+ENV CLOUD_SDK_VERSION 360.0.0
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON /usr/bin/python
+ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
@@ -51,6 +50,6 @@ ENV PATH /google-cloud-sdk/bin:$PATH
 ENV PATH ~/.local/bin:/root/.local/bin:$PATH
 
 # Install the current version of nox.
-RUN python3 -m pip install --user --no-cache-dir nox==2020.8.22
+RUN python3 -m pip install --user --no-cache-dir nox==2021.10.1
 
 CMD ["nox"]
