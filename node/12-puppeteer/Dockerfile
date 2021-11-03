@@ -1,7 +1,7 @@
 FROM node:12
 
 # Taken from
-# https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#running-puppeteer-in-docker
+# https://github.com/GoogleChrome/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-in-docker
 
 # See https://crbug.com/795759
 RUN apt-get update && apt-get install -yq libgconf-2-4
