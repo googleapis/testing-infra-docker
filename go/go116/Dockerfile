@@ -20,7 +20,7 @@ RUN set -ex; \
     apt-get install -y \
     make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl \
     apt-transport-https ca-certificates gnupg curl gnupg-agent lsb-release software-properties-common \
     unzip wget vim; \
     rm -rf /var/lib/apt/lists/*
