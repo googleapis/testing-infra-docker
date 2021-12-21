@@ -62,7 +62,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
     apt-get install google-cloud-sdk -y
 
 # Install tools used in build
-RUN GO111MODULE=on go get honnef.co/go/tools/cmd/staticcheck@latest && \
-    go get github.com/jstemmer/go-junit-report@latest
+RUN GO111MODULE=on go get honnef.co/go/tools/cmd/staticcheck@latest
+RUN GO111MODULE=on go get github.com/jstemmer/go-junit-report@latest
 
 WORKDIR $GOPATH
