@@ -2,7 +2,8 @@
 > The docker images for running PHP Kokoro builds for Cloud repositories.
 
 ## Docker Registry
-This image is available at `gcr.io/cloud-devrel-kokoro-resources/php##`.  You can try it out by running:
+The images for individual versions of PHP are available at `gcr.io/cloud-devrel-kokoro-resources/php##`.
+You can try them out by running:
 
 ```sh
 $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php72
@@ -10,6 +11,23 @@ $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php73
 $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php74
 $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php80
 ```
+
+An image containing all [supported versions][php-version-support] of PHP is available
+at `gcr.io/cloud-devrel-kokoro-resources/php`. You can try it out by running"
+
+```sh
+$ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php
+```
+
+When using the image, switching between versions of PHP is done using [PHPBrew][phpbrew]:
+
+```sh
+# Switch to PHP 8.0
+phpbrew switch $(phpbrew list | grep 8.0)
+```
+
+[php-version-support]: https://www.php.net/supported-versions.php
+[phpbrew]: https://github.com/phpbrew/phpbrew
 
 ## Questions
 Please reach out to `php-cloud@google.com` with any questions!
