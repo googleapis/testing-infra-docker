@@ -43,6 +43,10 @@ steps:
   args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
                 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release']
   waitFor: ['build-multi']
+- name: gcr.io/cloud-builders/docker
+  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
+                'gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi']
+  waitFor: ['build-multi']
 
 # Results
 images:
@@ -52,3 +56,4 @@ images:
   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/release
   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi
   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release
+  - gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi
