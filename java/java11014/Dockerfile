@@ -20,28 +20,22 @@ RUN apt-get update && \
     apt-get install unzip && \
     apt -y install git && \
     apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
-    rm -rf /var/cache/apt
-
-RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.zip -O /tmp/maven.zip && \
+    rm -rf /var/cache/apt && \
+    wget -q https://archive.apache.org/dist/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.zip -O /tmp/maven.zip && \
     unzip /tmp/maven.zip -d /tmp/maven && \
     mv /tmp/maven/apache-maven-3.8.4 /usr/local/lib/maven && \
     rm /tmp/maven.zip && \
-    ln -s $JAVA_HOME/lib $JAVA_HOME/conf
-
-RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
+    ln -s $JAVA_HOME/lib $JAVA_HOME/conf && \
+    wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
     mkdir -p /usr/local/lib/gradle && \
     unzip -q /tmp/gradle.zip -d /usr/local/lib/gradle && \
-    rm /tmp/gradle.zip
-
-ENV PATH $PATH:/usr/local/lib/maven/bin:/usr/local/lib/gradle/gradle-4.9/bin
-
-# Install gcloud SDK
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    rm /tmp/gradle.zip  && \
+    # Install gcloud SDK
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
-    apt-get install google-cloud-sdk -y
-
-# Install google-play-services version 1
-RUN mkdir -p /tmp/playservices && \
+    apt-get install google-cloud-sdk -y  && \
+    # Install google-play-services version 1
+    mkdir -p /tmp/playservices && \
     wget -q https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar -O /tmp/play-services-basement.aar && \
     unzip -q /tmp/play-services-basement.aar -d /tmp/playservices && \
     mvn install:install-file \
@@ -49,11 +43,11 @@ RUN mkdir -p /tmp/playservices && \
         -DgroupId=com.google.android.google-play-services \
         -DartifactId=google-play-services \
         -Dversion=1 \
-        -Dpackaging=jar
+        -Dpackaging=jar  && \
+    # Install the appengine SDK
+    mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
 
-# Install the appengine SDK
-RUN mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
-
+ENV PATH $PATH:/usr/local/lib/maven/bin:/usr/local/lib/gradle/gradle-4.9/bin
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
@@ -68,15 +62,13 @@ ENV PATH /root/.pyenv/shims:$PATH
 
 RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
-    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
-
-# Install python
-RUN pyenv install 3.6.12 && \
+    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc && \
+    # Install python
+    pyenv install 3.6.12 && \
     pyenv global 3.6.12 && \
-    python3 -m pip install --upgrade pip setuptools
-
-# Install docker
-RUN apt-get update && apt-get install -y \
+    python3 -m pip install --upgrade pip setuptools  && \
+    # Install docker
+    apt-get update && apt-get install -y \
         apt-transport-https \
         ca-certificates \
         curl \
