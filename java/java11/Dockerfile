@@ -63,7 +63,7 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
     echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc  && \
     # Install python
-    RUN pyenv install 3.6.12 && \
+    pyenv install 3.6.12 && \
     pyenv global 3.6.12 && \
     python3 -m pip install --upgrade pip setuptools  && \
     # Add Graphviz
