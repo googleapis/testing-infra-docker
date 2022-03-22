@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.11
+FROM golang:1.18-buster
 
 # Install dependencies
 RUN set -ex; \
-  apt-get update -y; \
-  apt-get install -y \
+    apt-get update -y; \
+    apt-get install -y \
     make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
@@ -28,9 +28,9 @@ RUN set -ex; \
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     add-apt-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/debian \
-        $(lsb_release -cs) \
-        stable" && \
+    "deb [arch=amd64] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) \
+    stable" && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
@@ -51,8 +51,8 @@ RUN for PYTHON_VERSION in 3.7.10 3.8.8; do \
     python3 -m pip install --upgrade pip setuptools; done
 
 # Install protoc
-RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.7.1/protoc-3.7.1-linux-x86_64.zip
-RUN unzip protoc-3.7.1-linux-x86_64.zip
+RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
+RUN unzip protoc-3.13.0-linux-x86_64.zip
 RUN mv bin/protoc /bin/protoc && which protoc
 
 # Install gcloud SDK
@@ -60,7 +60,10 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
     apt-get install google-cloud-sdk -y
 
-# Install testing tools
-RUN go get github.com/jstemmer/go-junit-report
+# Install tools used in build
+RUN go install honnef.co/go/tools/cmd/staticcheck@latest && \
+    go install github.com/jstemmer/go-junit-report@latest && \
+    go install golang.org/x/lint/golint@latest && \
+    go install golang.org/x/tools/cmd/goimports@latest
 
 WORKDIR $GOPATH
