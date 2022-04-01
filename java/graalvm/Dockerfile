@@ -39,7 +39,6 @@ RUN yum install -y google-cloud-sdk
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install docker
-RUN docker --version
 RUN yum install -y docker-engine docker-cli
 
 WORKDIR /workspace
