@@ -39,7 +39,6 @@ RUN yum install -y google-cloud-sdk
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install docker
-# Install docker
 RUN apt-get update && apt-get install -y \
         apt-transport-https \
         ca-certificates \
