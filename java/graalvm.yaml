@@ -27,3 +27,6 @@ commandTests:
   - name: "gcloud"
     command: ["gcloud", "version"]
     expectedOutput: ["Google Cloud SDK"]
+  - name: "docker"
+    command: ["docker", "--version"]
+    expectedOutput: ["Docker version *"]
