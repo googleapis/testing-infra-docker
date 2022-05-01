@@ -118,3 +118,5 @@ images:
   - gcr.io/cloud-devrel-public-resources/graalvm
   - gcr.io/$PROJECT_ID/java11014
   - gcr.io/cloud-devrel-public-resources/java11014
+  - gcr.io/$PROJECT_ID/java17
+  - gcr.io/cloud-devrel-public-resources/java17
