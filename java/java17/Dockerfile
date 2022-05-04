@@ -21,7 +21,10 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
     rm -rf /var/cache/apt
 
-RUN add-apt-repository ppa:git-core/ppa && \
+# Install latest version of git
+RUN apt install software-properties-common && \
+    apt update && \
+    add-apt-repository ppa:git-core/ppa && \
     apt update && \
     sudo apt install git && \
     rm -rf /var/cache/apt
