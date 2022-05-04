@@ -22,7 +22,7 @@ RUN apt-get update && \
     rm -rf /var/cache/apt
 
 # Install latest version of git
-RUN apt install software-properties-common && \
+RUN apt install -y software-properties-common && \
     apt update && \
     add-apt-repository ppa:git-core/ppa && \
     apt update && \
