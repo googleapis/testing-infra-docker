@@ -26,7 +26,7 @@ RUN apt install software-properties-common && \
     apt update && \
     add-apt-repository ppa:git-core/ppa && \
     apt update && \
-    sudo apt install git && \
+    apt install -y git && \
     rm -rf /var/cache/apt
 
 RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.zip -O /tmp/maven.zip && \
