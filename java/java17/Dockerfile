@@ -75,6 +75,16 @@ RUN pyenv install 3.6.12 && \
     pyenv global 3.6.12 && \
     python3 -m pip install --upgrade pip setuptools
 
+# Add Graphviz for Cloud Run samples
+RUN apt-get update -y && \
+    apt-get install -y graphviz && \
+    rm -rf /var/lib/apt/lists/*
+    
+# Add imagemagick for Cloud Run samples
+RUN apt-get update -y && \
+    apt-get install -y imagemagick && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install docker
 RUN apt-get update && apt-get install -y \
         apt-transport-https \
