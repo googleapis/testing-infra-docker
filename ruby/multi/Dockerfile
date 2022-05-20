@@ -12,18 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 ENTRYPOINT /bin/bash
 
-ENV RUBY_VERSIONS="2.5.9 2.6.7 2.7.3 3.0.1" \
-    OLDEST_RUBY_VERSION=2.5.9 \
-    NEWEST_RUBY_VERSION=3.0.1 \
-    DEFAULT_RUBY_VERSION=2.6.7 \
+ENV RUBY_25_VERSION=2.5.9 \
+    RUBY_26_VERSION=2.6.10 \
+    RUBY_27_VERSION=2.7.6 \
+    RUBY_30_VERSION=3.0.4 \
+    RUBY_31_VERSION=3.1.2 \
     BUNDLER1_VERSION=1.17.3 \
-    BUNDLER2_VERSION=2.2.17 \
-    PYTHON_VERSION=3.8.10 \
-    NODEJS_VERSION=14.17.0
+    BUNDLER2_VERSION=2.3.14 \
+    PYTHON_VERSION=3.9.13 \
+    NODEJS_VERSION=16.15.0
+
+ENV OLDEST_RUBY_VERSION=$RUBY_26_VERSION \
+    NEWEST_RUBY_VERSION=$RUBY_31_VERSION \
+    DEFAULT_RUBY_VERSION=$RUBY_30_VERSION \
+    RUBY_VERSIONS="$RUBY_25_VERSION $RUBY_26_VERSION $RUBY_27_VERSION $RUBY_30_VERSION $RUBY_31_VERSION"
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -51,7 +57,6 @@ RUN apt-get update \
       imagemagick \
       libbz2-dev \
       libffi-dev \
-      libgdbm5 \
       libgdbm-dev \
       liblzma-dev \
       libmagickwand-dev \
@@ -62,6 +67,7 @@ RUN apt-get update \
       libreadline6-dev \
       libsqlite3-dev \
       libssl-dev \
+      libvips-dev \
       libyaml-dev \
       make \
       memcached \
@@ -80,7 +86,7 @@ RUN apt-get update \
 
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" \
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" \
     && apt-get update \
     && apt-get install -y --no-install-recommends docker-ce \
     && apt-get -y autoremove \
@@ -105,7 +111,7 @@ RUN for version in ${RUBY_VERSIONS}; do \
       rbenv install "$version" \
         && rbenv global "$version" \
         && gem update --system \
-        && gem install bundler:${BUNDLER1_VERSION} bundler:${BUNDLER2_VERSION} rake; \
+        && gem install bundler:${BUNDLER2_VERSION} rake toys; \
     done \
     && rbenv global ${DEFAULT_RUBY_VERSION}
 
@@ -122,8 +128,7 @@ RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 
 # Install python
 RUN pyenv install ${PYTHON_VERSION} \
-    && pyenv global ${PYTHON_VERSION} \
-    && ln -s $(which python) /bin/python3
+    && pyenv global ${PYTHON_VERSION}
 
 # Install nodenv
 ENV NODENV_ROOT=/root/.nodenv
