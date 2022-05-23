@@ -87,4 +87,12 @@ RUN apt-get update && apt-get install -y \
         stable" && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
+
+# Installing JDK 11 to build projects that depend on graal-sdk 22.1.0 or higher
+# (requiring Java 11+). Still we target Java 8 for the compiled class files.
+RUN apt-get install -y openjdk-11-jdk
+# JDK 11 is used only when explicitly selected in the build file
+ENV JAVA8_HOME=/usr/local/openjdk-8
+ENV JAVA11_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+
 WORKDIR /workspace
