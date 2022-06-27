@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:14-stretch
+FROM node:17-stretch
 
 # Add Graphviz
 RUN set -ex; \
