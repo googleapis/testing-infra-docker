@@ -15,7 +15,7 @@
 # Dockerfile derived from googleapis/python-multi (the image used by the client
 # libraries tests). We modify this to ensure that all standard library
 # features are available and only build Python 2.7 and 3.6.
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
