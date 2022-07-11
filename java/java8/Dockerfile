@@ -88,6 +88,12 @@ RUN apt-get update && apt-get install -y \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
+# Install Terraform
+RUN apt-get update && apt-get install -y gnupg software-properties-common curl && \
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
+    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
+    apt-get update && apt-get install terraform
+
 # Installing JDK 11 to build projects that depend on graal-sdk 22.1.0 or higher
 # (requiring Java 11+). Still we target Java 8 for the compiled class files.
 RUN apt-get install -y openjdk-11-jdk
