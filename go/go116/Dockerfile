@@ -61,7 +61,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
     apt-get install google-cloud-sdk -y
 
 # Install tools used in build
-RUN go install honnef.co/go/tools/cmd/staticcheck@latest && \
+RUN go install honnef.co/go/tools/cmd/staticcheck@v0.3.1 && \
     go install github.com/jstemmer/go-junit-report@latest && \
     go install golang.org/x/lint/golint@latest && \
     go install golang.org/x/tools/cmd/goimports@latest
