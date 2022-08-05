@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.16
+FROM golang:1.19-buster
 
 # Install dependencies
 RUN set -ex; \
@@ -20,7 +20,7 @@ RUN set -ex; \
     apt-get install -y \
     make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl \
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
     apt-transport-https ca-certificates gnupg curl gnupg-agent lsb-release software-properties-common \
     unzip wget vim; \
     rm -rf /var/lib/apt/lists/*
@@ -61,7 +61,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
     apt-get install google-cloud-sdk -y
 
 # Install tools used in build
-RUN go install honnef.co/go/tools/cmd/staticcheck@v0.2.2 && \
+RUN go install honnef.co/go/tools/cmd/staticcheck@latest && \
     go install github.com/jstemmer/go-junit-report@latest && \
     go install golang.org/x/lint/golint@latest && \
     go install golang.org/x/tools/cmd/goimports@latest
