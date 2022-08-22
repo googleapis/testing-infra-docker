@@ -21,3 +21,9 @@ gcloud builds submit \
     --project=cloud-devrel-kokoro-resources \
     --config=go/cloudbuild.yaml .
 ```
+
+## Updating python requirements
+
+- Install base-tooling-requirements.txt: `pip install --require-hashes -r base-tooling-requirements.txt`
+- Add everything required to `requirements.in`
+- Generate `requirements.txt`: `pip-compile requirements.in --generate-hashes`

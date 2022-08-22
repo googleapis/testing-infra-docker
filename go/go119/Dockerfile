@@ -12,43 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.19-buster
+FROM golang:1.19
 
 # Install dependencies
 RUN set -ex; \
     apt-get update -y; \
     apt-get install -y \
-    make build-essential libssl-dev zlib1g-dev libbz2-dev \
-    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
-    apt-transport-https ca-certificates gnupg curl gnupg-agent lsb-release software-properties-common \
+    python3 python3-pip python3-venv \
     unzip wget vim; \
     rm -rf /var/lib/apt/lists/*
-
-# Install docker
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
-    add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/debian \
-    $(lsb_release -cs) \
-    stable" && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io
-
-# Install pyenv
-RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-
-ENV PATH /root/.pyenv/bin:$PATH
-ENV PATH /root/.pyenv/shims:$PATH
-
-RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
-    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
-    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
-
-# Install Python 3.7 & 3.8, defaults to 3.8
-RUN for PYTHON_VERSION in 3.7.10 3.8.8; do \
-    pyenv install ${PYTHON_VERSION} && \
-    pyenv global ${PYTHON_VERSION} && \
-    python3 -m pip install --upgrade pip setuptools; done
 
 # Install protoc
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
@@ -60,10 +32,34 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
     apt-get install google-cloud-sdk -y
 
+# Install docker
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    lsb-release \
+    software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) \
+    stable" && \
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io
+
 # Install tools used in build
 RUN go install honnef.co/go/tools/cmd/staticcheck@latest && \
     go install github.com/jstemmer/go-junit-report@latest && \
     go install golang.org/x/lint/golint@latest && \
     go install golang.org/x/tools/cmd/goimports@latest
+
+## Install tools for generating/verifying hashes
+ADD base-tooling-requirements.txt .
+RUN pip install --require-hashes -r base-tooling-requirements.txt
+
+## Install python tool required at runtime
+ADD requirements.txt .
+RUN pip install --require-hashes -r requirements.txt
 
 WORKDIR $GOPATH
