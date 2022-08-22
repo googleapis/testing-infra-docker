@@ -60,9 +60,13 @@ RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
 ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
 
 # Install python
-RUN pyenv install 3.7.1 && \
-    pyenv global 3.7.1 && \
+RUN pyenv install 3.7.4 && \
+    pyenv global 3.7.4 && \
     python3 -m pip install --upgrade pip setuptools
+
+# Install gcp-uploader and gcp-releasetool and their dependencies.
+COPY requirements.txt requirements.txt
+RUN python3 -m pip install --require-hashes -r requirements.txt
 
 # Setup Cloud SDK
 WORKDIR /home/node
