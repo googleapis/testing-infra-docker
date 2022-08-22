@@ -27,36 +27,6 @@ steps:
   args: ['-i', 'gcr.io/$PROJECT_ID/go115', '--config', '/workspace/go/go115.yaml', '-v']
   waitFor: ['go115-build']
 
-  # Go 1.16 build
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/go116', '.']
-  dir: go/go116
-  id: go116-build
-  waitFor: ['-']
-- name: gcr.io/gcp-runtimes/structure_test
-  args: ['-i', 'gcr.io/$PROJECT_ID/go116', '--config', '/workspace/go/go116.yaml', '-v']
-  waitFor: ['go116-build']
-
-# Go 1.17 build
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/go117', '.']
-  dir: go/go117
-  id: go117-build
-  waitFor: ['-']
-- name: gcr.io/gcp-runtimes/structure_test
-  args: ['-i', 'gcr.io/$PROJECT_ID/go117', '--config', '/workspace/go/go117.yaml', '-v']
-  waitFor: ['go117-build']
-
-  # Go 1.18 build
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/go118', '.']
-  dir: go/go118
-  id: go118-build
-  waitFor: ['-']
-- name: gcr.io/gcp-runtimes/structure_test
-  args: ['-i', 'gcr.io/$PROJECT_ID/go118', '--config', '/workspace/go/go118.yaml', '-v']
-  waitFor: ['go118-build']
-
   # Go 1.19 build
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/go119', '.']
@@ -69,9 +39,6 @@ steps:
 
 images:
 - gcr.io/$PROJECT_ID/go115
-- gcr.io/$PROJECT_ID/go116
-- gcr.io/$PROJECT_ID/go117
-- gcr.io/$PROJECT_ID/go118
 - gcr.io/$PROJECT_ID/go119
 
 timeout: 7200s
