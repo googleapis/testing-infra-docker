@@ -82,8 +82,6 @@ RUN set -ex \
   && gpg --keyserver keyserver.ubuntu.com --recv-keys \
       # 2.7.18 (Benjamin Peterson)
       C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
-      # 3.4.10, 3.5.10 (Larry Hastings)
-      97FC712E4C024BBEA48A61ED3A5CA953F73C700D \
       # 3.6.15, 3.7.12 (Ned Deily)
       0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
       # 3.8.12 and 3.9.7 (Łukasz Langa)
@@ -120,7 +118,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.12 3.9.7 3.10.0; do \
+RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.12 3.9.7 3.10.0; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -146,12 +144,12 @@ RUN for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.12 3.9.7 3.10.0; do \
   && rm -r "$GNUPGHOME"
 
 
-# Install pip on Python 3.6 only.
+# Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 21.3.1
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
-    && python3.6 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
+    && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
 
 
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
@@ -163,12 +161,18 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   # https://github.com/docker-library/python/pull/100
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
-# Ensure Pip for 3.10
-RUN python3.10 /tmp/get-pip.py
+# Ensure Pip for all python3 versions
+RUN python3.7 /tmp/get-pip.py
+RUN python3.8 /tmp/get-pip.py
+RUN python3.9 /tmp/get-pip.py
 RUN rm /tmp/get-pip.py
 
 # Test Pip
 RUN python3 -m pip
+RUN python3.7 -m pip
+RUN python3.8 -m pip
+RUN python3.9 -m pip
+RUN python3.10 -m pip
 
 # Install "virtualenv", since the vast majority of users of this image
 # will want it.
@@ -177,7 +181,7 @@ RUN pip install --no-cache-dir virtualenv
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 360.0.0
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.6
+ENV CLOUDSDK_PYTHON python3.7
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
