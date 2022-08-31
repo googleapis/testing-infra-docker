@@ -174,6 +174,10 @@ RUN python3.8 -m pip
 RUN python3.9 -m pip
 RUN python3.10 -m pip
 
+# Use python 3.9 by default
+RUN python3.9 -m venv /venv
+ENV PATH /venv/bin:$PATH
+
 # Install "virtualenv", since the vast majority of users of this image
 # will want it.
 RUN pip install --no-cache-dir virtualenv
