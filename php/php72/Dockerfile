@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
 
 # install / enable PHP extensions
 RUN pecl install grpc \
+    && sed -i 's/memory_limit = .*/memory_limit = 256M/' /opt/php72/lib/php.ini \
     && echo "extension=grpc.so" >> /opt/php72/lib/conf.d/ext-grpc.ini \
     && echo "extension=bcmath.so" >> /opt/php72/lib/conf.d/ext-bcmath.ini \
     && echo "extension=imagick.so" >> /opt/php72/lib/conf.d/ext-imagick.ini
