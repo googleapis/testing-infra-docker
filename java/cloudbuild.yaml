@@ -68,7 +68,7 @@ steps:
     args:
       [
           "tag",
-          "gcr.io/$PROJECT_ID/graalvm",
+          "gcr.io/$PROJECT_ID/graalvm:${_GRAALVM_IMAGE_TAG}",
           "gcr.io/cloud-devrel-public-resources/graalvm:${_GRAALVM_IMAGE_TAG}",
       ]
     waitFor: ["graalvm-build"]
@@ -136,8 +136,8 @@ images:
   - gcr.io/cloud-devrel-public-resources/java8
   - gcr.io/$PROJECT_ID/java11
   - gcr.io/cloud-devrel-public-resources/java11
-  - gcr.io/$PROJECT_ID/graalvm
-  - gcr.io/cloud-devrel-public-resources/graalvm
+  - gcr.io/$PROJECT_ID/graalvm:${_GRAALVM_IMAGE_TAG}
+  - gcr.io/cloud-devrel-public-resources/graalvm:${_GRAALVM_IMAGE_TAG}
   - gcr.io/$PROJECT_ID/graalvm17
   - gcr.io/cloud-devrel-public-resources/graalvm17
   - gcr.io/$PROJECT_ID/java11014
