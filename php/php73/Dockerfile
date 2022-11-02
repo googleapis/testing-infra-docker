@@ -95,7 +95,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         make install && \
         pecl install grpc imagick pdo_sqlsrv && \
         cp php.ini-production ${PHP_DIR}/lib/php.ini && \
-        sed -i 's/memory_limit = .*/memory_limit = 256M/' ${PHP_DIR}/lib/php.ini && \
+        sed -i 's/memory_limit = 128M/memory_limit = -1/' ${PHP_DIR}/lib/php.ini && \
         echo 'zend_extension=opcache.so' >> ${PHP_DIR}/lib/php.ini && \
         echo 'extension=grpc.so' >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
         echo 'extension=imagick.so' >> ${PHP_DIR}/lib/conf.d/ext-imagick.ini && \
