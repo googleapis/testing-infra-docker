@@ -71,7 +71,7 @@ steps:
       ]
     waitFor: ["graalvm-build"]
   substitutions:
-      _GRAALVM_IMAGE_TAG: v22.2.0
+      _GRAALVM_IMAGE_TAG: 'v22.2.0'
 
   # GraalVM JDK 17 build
   - name: gcr.io/cloud-builders/docker
