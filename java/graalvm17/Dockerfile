@@ -41,4 +41,7 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 # Install docker
 RUN yum install -y docker-engine docker-cli
 
+# Install terraform
+RUN yum -y install terraform
+
 WORKDIR /workspace
