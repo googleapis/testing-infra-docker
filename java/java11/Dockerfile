@@ -105,6 +105,6 @@ RUN apt-get update && apt-get install -y gnupg software-properties-common curl &
     apt-get update && apt-get install terraform
 
 # Install jq
-RUN apt-get install jq
+RUN apt-get -y install jq
 
 WORKDIR /workspace
