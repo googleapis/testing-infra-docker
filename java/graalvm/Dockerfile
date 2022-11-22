@@ -44,4 +44,7 @@ RUN yum install -y docker-engine docker-cli
 # Install terraform
 RUN yum -y install terraform
 
+# Install jq
+RUN yum -y install jq
+
 WORKDIR /workspace
