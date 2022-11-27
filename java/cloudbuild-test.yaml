@@ -14,7 +14,7 @@
 
 timeout: 7200s # 2 hours
 substitutions:
-  _GRAALVM_IMAGE_TAG: 'v22.2.0'
+  _GRAALVM_IMAGE_TAG: '22.2.0'
 steps:
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
@@ -56,7 +56,7 @@ steps:
 
   # GraalVM build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "gcr.io/$PROJECT_ID/graalvm:${_GRAALVM_IMAGE_TAG}", "."]
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/graalvm:${_GRAALVM_IMAGE_TAG}", "--build-arg=GRAALVM_VERSION=$_GRAALVM_IMAGE_TAG", "."]
     dir: java/graalvm
     id: graalvm-build
     waitFor: ["-"]
@@ -76,7 +76,7 @@ steps:
 
   # GraalVM JDK 17 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "gcr.io/$PROJECT_ID/graalvm17:${_GRAALVM_IMAGE_TAG}", "."]
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/graalvm17:${_GRAALVM_IMAGE_TAG}", "--build-arg=GRAALVM_VERSION=$_GRAALVM_IMAGE_TAG", "."]
     dir: java/graalvm17
     id: graalvm17-build
     waitFor: ["-"]
