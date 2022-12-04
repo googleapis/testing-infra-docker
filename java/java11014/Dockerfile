@@ -72,8 +72,7 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
 
 # Install python
 RUN pyenv install 3.6.12 && \
-    pyenv global 3.6.12 && \
-    python3 -m pip install --upgrade pip setuptools
+    pyenv global 3.6.12
 
 # Install docker
 RUN apt-get update && apt-get install -y \

@@ -61,8 +61,7 @@ ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
 
 # Install python
 RUN pyenv install 3.7.1 && \
-    pyenv global 3.7.1 && \
-    python3 -m pip install --upgrade pip setuptools
+    pyenv global 3.7.1
 
 # Setup Cloud SDK
 WORKDIR /home/node
