@@ -71,8 +71,8 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
     echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
 
 # Install python
-RUN pyenv install 3.6.12 && \
-    pyenv global 3.6.12 && \
+RUN pyenv install 3.11.0 && \
+    pyenv global 3.11.0 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Add Graphviz for Cloud Run samples
