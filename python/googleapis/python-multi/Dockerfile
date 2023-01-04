@@ -118,7 +118,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5; do \
+RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -165,6 +165,8 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
 RUN python3.7 /tmp/get-pip.py
 RUN python3.8 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
+RUN python3.11 /tmp/get-pip.py
+
 RUN rm /tmp/get-pip.py
 
 # Test Pip
@@ -173,6 +175,7 @@ RUN python3.7 -m pip
 RUN python3.8 -m pip
 RUN python3.9 -m pip
 RUN python3.10 -m pip
+RUN python3.11 -m pip
 
 # Use python 3.9 by default
 RUN python3.9 -m venv /venv
