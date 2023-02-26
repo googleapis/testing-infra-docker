@@ -14,7 +14,7 @@
 
 timeout: 7200s # 2 hours
 substitutions:
-  _GRAALVM_VERSION: '22.3.0'
+  _GRAALVM_VERSION: '22.3.1'
 steps:
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
