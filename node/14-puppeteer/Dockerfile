@@ -22,6 +22,9 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 
+# Run everything after as non-privileged user.
+USER node
+
 # Setup Cloud SDK
 WORKDIR /home/node
 ENV CLOUD_SDK_VERSION=303.0.0 \
@@ -37,8 +40,5 @@ RUN set -ex; \
     gcloud config set component_manager/disable_update_check true; \
     gcloud --quiet components update; \
     gcloud --quiet components install beta
-
-# Run everything after as non-privileged user.
-USER node
 
 ENTRYPOINT ["dumb-init", "--"]
