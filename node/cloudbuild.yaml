@@ -33,16 +33,16 @@ steps:
   dir: 'node/12-puppeteer'
   waitFor: ['-']
 
-# Node 14-puppeteer
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:14-puppeteer', '-t', 'gcr.io/cloud-devrel-public-resources/node:14-puppeteer', '.']
-  dir: 'node/14-puppeteer'
-  waitFor: ['-']
-
 # Node 14
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:14-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:14-user', '.']
   dir: 'node/14-user'
+  waitFor: ['-']
+
+# Node 14-puppeteer
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:14-puppeteer', '-t', 'gcr.io/cloud-devrel-public-resources/node:14-puppeteer', '.']
+  dir: 'node/14-puppeteer'
   waitFor: ['-']
 
 # Node 16
