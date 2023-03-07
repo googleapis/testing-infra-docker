@@ -22,7 +22,7 @@ ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_a
 RUN chmod +x /usr/local/bin/dumb-init
 
 # Install pyenv dependencies
-RUN aapt-get update && pt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+RUN apt-get update && apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 
