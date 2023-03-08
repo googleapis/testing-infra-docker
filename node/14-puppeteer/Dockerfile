@@ -1,4 +1,4 @@
-FROM node:14-stretch
+FROM node:14
 
 # Taken from
 # https://github.com/GoogleChrome/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-in-docker
@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
     && apt-get update \
     && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 libxtst6 \
       --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /src/*.deb
 
 # It's a good idea to use dumb-init to help prevent zombie chrome processes.
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
