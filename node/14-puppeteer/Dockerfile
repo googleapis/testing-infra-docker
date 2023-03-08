@@ -28,6 +28,9 @@ RUN apt-get update && apt-get install -y make build-essential libssl-dev zlib1g-
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 
+# Run everything after as non-privileged user.
+USER node
+
 # Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
@@ -59,8 +62,5 @@ RUN set -ex; \
     gcloud --quiet components update; \
     gcloud --quiet components install beta
 
-
-# Run everything after as non-privileged user.
-USER node
 
 ENTRYPOINT ["dumb-init", "--"]
