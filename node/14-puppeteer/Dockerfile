@@ -22,6 +22,44 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 
+
+# Install pyenv dependencies
+RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+
+# Install pyenv
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+
+RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
+    echo 'export PATH="/home/node/.pyenv/shims:$PATH"' >> ~/.profile && \
+    echo 'eval "$(pyenv init -)"' >> ~/.profile && \
+    echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.profile
+
+ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
+
+# Install python
+RUN pyenv install 3.7.4 && \
+    pyenv global 3.7.4 && \
+    python3 -m pip install --upgrade pip setuptools
+
+# Setup Cloud SDK
+WORKDIR /home/node
+ENV CLOUD_SDK_VERSION=303.0.0 \
+    CLOUDSDK_PYTHON=/usr/bin/python \
+    PATH=/home/node/google-cloud-sdk/bin:$PATH
+RUN set -ex; \
+    curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz; \
+    tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz; \
+    rm google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
+RUN set -ex; \
+    ./google-cloud-sdk/install.sh; \
+    gcloud config set core/disable_usage_reporting true; \
+    gcloud config set component_manager/disable_update_check true; \
+    gcloud --quiet components update; \
+    gcloud --quiet components install beta
+
+
 # Run everything after as non-privileged user.
 USER node
 
