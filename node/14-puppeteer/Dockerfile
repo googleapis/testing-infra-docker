@@ -17,10 +17,6 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
 
-# It's a good idea to use dumb-init to help prevent zombie chrome processes.
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
-
 # Install pyenv dependencies
 RUN apt-get update && apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
@@ -62,5 +58,10 @@ RUN set -ex; \
     gcloud config set component_manager/disable_update_check true; \
     gcloud --quiet components update; \
     gcloud --quiet components install beta
+
+
+# It's a good idea to use dumb-init to help prevent zombie chrome processes.
+ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64 /usr/local/bin/dumb-init
+RUN chmod +x /usr/local/bin/dumb-init
 
 ENTRYPOINT ["dumb-init", "--"]
