@@ -29,14 +29,14 @@ steps:
 
 # PHP 8.1
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php80', '.']
-  dir: 'php/php80'
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '.']
+  dir: 'php/php81'
   waitFor: ['-']
 
 # PHP 8.2
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php80', '.']
-  dir: 'php/php80'
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '.']
+  dir: 'php/php82'
   waitFor: ['-']
 
 # PHP 7.3 / 7.4 / 8.0

@@ -15,18 +15,6 @@
 timeout: 21600s  # 6 hours
 steps:
 
-# PHP 7.2
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php72', '.']
-  dir: 'php/php72'
-  waitFor: ['-']
-
-# PHP 7.3
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php73', '.']
-  dir: 'php/php73'
-  waitFor: ['-']
-
 # PHP 7.4
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php74', '.']
@@ -39,15 +27,28 @@ steps:
   dir: 'php/php80'
   waitFor: ['-']
 
-# PHP 7.3 / 7.4 / 8.0
+# PHP 8.0
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php', '.']
-  dir: 'php/php'
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '.']
+  dir: 'php/php81'
   waitFor: ['-']
 
+# PHP 8.0
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '.']
+  dir: 'php/php82'
+  waitFor: ['-']
+
+# PHP 7.3 / 7.4 / 8.0
+# (do not build this for now, as it is not in use)
+#- name: gcr.io/cloud-builders/docker
+#  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php', '.']
+#  dir: 'php/php'
+#  waitFor: ['-']
+
 images:
-  - gcr.io/cloud-devrel-kokoro-resources/php72
-  - gcr.io/cloud-devrel-kokoro-resources/php73
   - gcr.io/cloud-devrel-kokoro-resources/php74
   - gcr.io/cloud-devrel-kokoro-resources/php80
-  - gcr.io/cloud-devrel-kokoro-resources/php
+  - gcr.io/cloud-devrel-kokoro-resources/php81
+  - gcr.io/cloud-devrel-kokoro-resources/php82
+  # - gcr.io/cloud-devrel-kokoro-resources/php
