@@ -40,7 +40,7 @@ RUN apt-get update && \
             libonig-dev
 
 # Remove old version of PHP
-RUN apt purge -y php7.0-common
+RUN apt purge -y php7.4-common
 
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
