@@ -1,7 +1,8 @@
-FROM gcr.io/gcp-runtimes/ubuntu_16_0_4
+FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
 ENV PHP_DIR=/opt/php80
 ENV PHP_SRC_DIR=/usr/local/src/php80-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
+ENV PHP_VERISON=8.0.28
 
 RUN apt-get update && \
     apt-get -y install \
@@ -17,12 +18,11 @@ RUN apt-get update && \
             libfcgi0ldbl \
             libfreetype6-dev \
             libicu-dev \
-            libjpeg62-dbg \
             libjpeg-dev \
             libkrb5-dev \
             libmcrypt-dev \
             libmagickwand-dev \
-            libpng12-dev \
+            libpng-dev \
             libpq-dev \
             libssl-dev \
             libxml2-dev \
@@ -30,7 +30,7 @@ RUN apt-get update && \
             libzip-dev \
             unixodbc-dev \
             php-imagick \
-            python-ipaddr \
+            python-ipaddress \
             wget \
             zip \
             zlib1g-dev \
@@ -39,16 +39,13 @@ RUN apt-get update && \
             libsqlite3-dev \
             libonig-dev
 
-# Remove old version of PHP
-RUN apt purge -y php7.0-common
-
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
-    wget http://us1.php.net/get/php-8.0.1.tar.bz2/from/this/mirror \
-         -O php-8.0.1.tar.bz2 && \
-    tar jxf php-8.0.1.tar.bz2 && \
-    cd php-8.0.1 && \
+    wget http://us1.php.net/get/php-$PHP_VERISON.tar.bz2/from/this/mirror \
+         -O php-$PHP_VERISON.tar.bz2 && \
+    tar jxf php-$PHP_VERISON.tar.bz2 && \
+    cd php-$PHP_VERISON && \
     ./configure \
         --prefix=${PHP_DIR} \
         --with-config-file-scan-dir=${PHP_DIR}/lib/conf.d \

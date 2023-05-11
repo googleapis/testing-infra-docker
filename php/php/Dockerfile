@@ -1,4 +1,4 @@
-FROM gcr.io/gcp-runtimes/ubuntu_18_0_4
+FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
 
 ENV PHPBREW_ROOT /root/.phpbrew
 ENV PHPBREW_HOME /root/.phpbrew

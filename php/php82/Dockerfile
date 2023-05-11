@@ -1,4 +1,4 @@
-FROM gcr.io/gcp-runtimes/ubuntu_16_0_4
+FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
 ENV PHP_DIR=/opt/php82
 ENV PHP_SRC_DIR=/usr/local/src/php80-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
@@ -18,12 +18,11 @@ RUN apt-get update && \
             libfcgi0ldbl \
             libfreetype6-dev \
             libicu-dev \
-            libjpeg62-dbg \
             libjpeg-dev \
             libkrb5-dev \
             libmcrypt-dev \
             libmagickwand-dev \
-            libpng12-dev \
+            libpng-dev \
             libpq-dev \
             libssl-dev \
             libxml2-dev \
@@ -31,7 +30,7 @@ RUN apt-get update && \
             libzip-dev \
             unixodbc-dev \
             php-imagick \
-            python-ipaddr \
+            python-ipaddress \
             wget \
             zip \
             zlib1g-dev \
