@@ -27,13 +27,13 @@ steps:
   dir: 'php/php80'
   waitFor: ['-']
 
-# PHP 8.0
+# PHP 8.1
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '.']
   dir: 'php/php81'
   waitFor: ['-']
 
-# PHP 8.0
+# PHP 8.2
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '.']
   dir: 'php/php82'
