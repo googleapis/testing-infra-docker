@@ -29,6 +29,7 @@ RUN apt-get update && \
             libxslt1-dev \
             libzip-dev \
             unixodbc-dev \
+            php-imagick \
             python-ipaddress \
             wget \
             zip \
@@ -37,6 +38,9 @@ RUN apt-get update && \
             sqlite3 \
             libsqlite3-dev \
             libonig-dev
+
+# Remove old version of PHP
+RUN apt purge -y php7.4-common
 
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
