@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:16
 
 # Taken from
 # https://github.com/GoogleChrome/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-in-docker
