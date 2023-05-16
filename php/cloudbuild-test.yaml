@@ -13,6 +13,8 @@
 # limitations under the License.
 
 timeout: 28800s  # 6 hours
+options:
+ machineType: 'E2_HIGHCPU_8'
 steps:
 
 # PHP 8.0
