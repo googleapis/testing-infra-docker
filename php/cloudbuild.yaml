@@ -15,12 +15,6 @@
 timeout: 21600s  # 6 hours
 steps:
 
-# PHP 7.4
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php74', '.']
-  dir: 'php/php74'
-  waitFor: ['-']
-
 # PHP 8.0
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php80', '.']
@@ -47,7 +41,6 @@ steps:
 #  waitFor: ['-']
 
 images:
-  - gcr.io/cloud-devrel-kokoro-resources/php74
   - gcr.io/cloud-devrel-kokoro-resources/php80
   - gcr.io/cloud-devrel-kokoro-resources/php81
   - gcr.io/cloud-devrel-kokoro-resources/php82
