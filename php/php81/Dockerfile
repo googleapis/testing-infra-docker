@@ -1,7 +1,8 @@
-FROM gcr.io/gcp-runtimes/ubuntu_16_0_4
-ENV PHP_DIR=/opt/php73
-ENV PHP_SRC_DIR=/usr/local/src/php73-build
+FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
+ENV PHP_DIR=/opt/php81
+ENV PHP_SRC_DIR=/usr/local/src/php81-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
+ENV PHP_VERISON=8.1.18
 
 RUN apt-get update && \
     apt-get -y install \
@@ -17,12 +18,11 @@ RUN apt-get update && \
             libfcgi0ldbl \
             libfreetype6-dev \
             libicu-dev \
-            libjpeg62-dbg \
             libjpeg-dev \
             libkrb5-dev \
             libmcrypt-dev \
             libmagickwand-dev \
-            libpng12-dev \
+            libpng-dev \
             libpq-dev \
             libssl-dev \
             libxml2-dev \
@@ -30,33 +30,36 @@ RUN apt-get update && \
             libzip-dev \
             unixodbc-dev \
             php-imagick \
-            python-ipaddr \
+            python-ipaddress \
             wget \
             zip \
-            zlib1g-dev
+            zlib1g-dev \
+            pkg-config \
+            sqlite3 \
+            libsqlite3-dev \
+            libonig-dev
+
+# Remove old version of PHP
+RUN apt purge -y php7.4-common
 
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
-    wget http://us1.php.net/get/php-7.3.0.tar.bz2/from/this/mirror \
-         -O php-7.3.0.tar.bz2 && \
-    tar jxf php-7.3.0.tar.bz2 && \
-    cd php-7.3.0 && \
+    wget http://us1.php.net/get/php-$PHP_VERISON.tar.bz2/from/this/mirror \
+         -O php-$PHP_VERISON.tar.bz2 && \
+    tar jxf php-$PHP_VERISON.tar.bz2 && \
+    cd php-$PHP_VERISON && \
     ./configure \
         --prefix=${PHP_DIR} \
         --with-config-file-scan-dir=${PHP_DIR}/lib/conf.d \
         --with-pdo-pgsql \
         --with-zlib-dir \
-        --with-freetype-dir \
         --enable-mbstring \
-        --with-libxml-dir=/usr \
         --enable-soap \
         --enable-intl \
         --enable-calendar \
         --with-curl \
-        --with-mcrypt \
         --with-zlib \
-        --with-gd \
         --with-pgsql \
         --disable-rpath \
         --enable-inline-optimization \
@@ -71,14 +74,8 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --enable-exif \
         --enable-bcmath \
         --with-mhash \
-        --enable-zip \
-        --with-pcre-regex \
-        --with-mysql \
         --with-pdo-mysql \
         --with-mysqli \
-        --with-jpeg-dir=/usr \
-        --with-png-dir=/usr \
-        --enable-gd-native-ttf \
         --with-openssl \
         --with-fpm-user=www-data \
         --with-fpm-group=www-data \
@@ -89,15 +86,17 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --with-gettext \
         --with-xmlrpc \
         --with-xsl \
+        --with-zip \
         --with-kerberos \
-        --enable-fpm && \
+        --enable-fpm \
+        --with-pear && \
         make && \
         make install && \
-        pecl install grpc imagick pdo_sqlsrv && \
+        pecl install grpc pdo_sqlsrv && \
         cp php.ini-production ${PHP_DIR}/lib/php.ini && \
-        sed -i 's/memory_limit = 128M/mempory_limit = -1/' ${PHP_DIR}/lib/php.ini && \
         echo 'zend_extension=opcache.so' >> ${PHP_DIR}/lib/php.ini && \
         echo 'extension=grpc.so' >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
+        git clone https://github.com/Imagick/imagick /tmp/imagick && cd /tmp/imagick && phpize && ./configure && make && make install && cd - && \
         echo 'extension=imagick.so' >> ${PHP_DIR}/lib/conf.d/ext-imagick.ini && \
         echo 'extension=pdo_sqlsrv.so' >> ${PHP_DIR}/lib/conf.d/ext-pdo_sqlsrv.ini && \
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
@@ -105,7 +104,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
 
 # Install phpunit globally
-RUN composer global require phpunit/phpunit:^7.0
+RUN composer global require phpunit/phpunit:^8.0
 
 # Install Google Cloud SDK
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
