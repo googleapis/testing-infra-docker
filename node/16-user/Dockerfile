@@ -16,6 +16,7 @@ FROM node:16-stretch
 
 # Add Graphviz
 RUN set -ex; \
+  apt-get autoclean \
   apt-get update -y; \
   apt-get install -y \
     graphviz \
