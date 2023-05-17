@@ -1,4 +1,4 @@
-FROM node:12-buster
+FROM node:12
 
 # Taken from
 # https://github.com/GoogleChrome/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-in-docker
