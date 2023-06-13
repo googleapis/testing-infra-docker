@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:8-jdk
+FROM eclipse-temurin:8-jdk
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
+    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg unzip && \
     rm -rf /var/cache/apt
 
 RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
@@ -34,7 +34,8 @@ ENV PATH $PATH:/usr/local/lib/maven/bin:/usr/local/lib/gradle/gradle-4.9/bin
 
 # Install gcloud SDK
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+    apt-get update -y && \
     apt-get install google-cloud-sdk -y
 
 # Install google-play-services version 1
@@ -57,7 +58,7 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 # Install pyenv
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
 ENV PATH /root/.pyenv/bin:$PATH
@@ -80,28 +81,37 @@ RUN apt-get update && apt-get install -y \
         gnupg-agent \
         lsb-release \
         software-properties-common && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     add-apt-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
         $(lsb_release -cs) \
         stable" && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Install Terraform
-RUN apt-get update && apt-get install -y gnupg software-properties-common curl && \
+RUN apt-get update && \
+    apt-get install -y gnupg software-properties-common curl && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
-    apt-get update && apt-get install terraform
+    apt-get update && \
+    apt-get install terraform
 
 # Install jq
 RUN apt-get -y install jq
 
 # Installing JDK 11 to build projects that depend on graal-sdk 22.1.0 or higher
 # (requiring Java 11+). Still we target Java 8 for the compiled class files.
-RUN apt-get install -y openjdk-11-jdk
+RUN wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public \
+        | tee /etc/apt/keyrings/adoptium.asc && \
+    eval "$(grep VERSION_CODENAME /etc/os-release)" && \
+    echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $VERSION_CODENAME main" \
+        | tee /etc/apt/sources.list.d/adoptium.list && \
+    apt-get update -y && \
+    apt-get install -y temurin-11-jdk
+
 # JDK 11 is used only when explicitly selected in the build file
-ENV JAVA8_HOME=/usr/local/openjdk-8
-ENV JAVA11_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV JAVA8_HOME=/usr/local/openjdk
+ENV JAVA11_HOME=/usr/lib/jvm/temurin-11-jdk-amd64
 
 WORKDIR /workspace

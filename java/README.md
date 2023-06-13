@@ -6,7 +6,7 @@ on Kokoro via Trampoline.
 
 ## Supported Versions
 
-Our Java client libraries currently support Java 6+.
+Our Java client libraries currently support Java 8+.
 
 ## Supported Tools
 
