@@ -18,7 +18,8 @@ commandTests:
   command: ["java", "-version"]
   # java -version outputs to stderr...
   expectedError: ["openjdk version \"1.8.*\""]
-- command: ["$JAVA11_HOME/bin/java", "-version"]
+- name: "java11 version"
+  command: ["$JAVA11_HOME/bin/java", "-version"]
   # java -version outputs to stderr...
   expectedError: ["openjdk version \"11.*\""]
 - name: "maven"
