@@ -61,6 +61,7 @@ RUN apt-get update \
     tk \
     tk-dev \
     uuid-dev \
+    vi \
     wget \
     zlib1g-dev \
   && apt-get clean autoclean \
@@ -184,6 +185,9 @@ ENV PATH /venv/bin:$PATH
 # Install "virtualenv", since the vast majority of users of this image
 # will want it.
 RUN pip install --no-cache-dir virtualenv
+
+# Install "nox", to enable troubleshooting of package installations
+RUN pip install --no-cache-dir nox
 
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 420.0.0
