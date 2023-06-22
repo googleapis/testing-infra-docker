@@ -61,7 +61,7 @@ RUN apt-get update \
     tk \
     tk-dev \
     uuid-dev \
-    vi \
+    vim \
     wget \
     zlib1g-dev \
   && apt-get clean autoclean \
