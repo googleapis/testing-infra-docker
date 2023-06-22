@@ -152,7 +152,6 @@ ENV PYTHON_PIP_VERSION 21.3.1
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
 
-
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
   # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
   # https://github.com/docker-library/python/pull/143#issuecomment-241032683
@@ -182,12 +181,8 @@ RUN python3.11 -m pip
 RUN python3.9 -m venv /venv
 ENV PATH /venv/bin:$PATH
 
-# Install "virtualenv", since the vast majority of users of this image
-# will want it.
-RUN pip install --no-cache-dir virtualenv
-
-# Install "nox", to enable troubleshooting of package installations
-RUN pip install --no-cache-dir nox
+COPY requirements.txt /requirements.txt
+RUN pip install --require-hashes --no-cache-dir -r /requirements.txt
 
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 420.0.0
