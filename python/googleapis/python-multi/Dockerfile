@@ -144,6 +144,11 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
   && rm -rf ~/.cache/ \
   && rm -r "$GNUPGHOME"
 
+# Install a version of conda/mamba package manager.
+# This is used to help test conda installs of client libraries such as:
+# google-cloud-bigquery (python-bigquery)
+RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge-$(uname)-$(uname -m).sh
 
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
@@ -180,6 +185,8 @@ RUN python3.11 -m pip
 # Use python 3.9 by default
 RUN python3.9 -m venv /venv
 ENV PATH /venv/bin:$PATH
+
+
 
 COPY requirements.txt /requirements.txt
 RUN pip install --require-hashes --no-cache-dir -r /requirements.txt
