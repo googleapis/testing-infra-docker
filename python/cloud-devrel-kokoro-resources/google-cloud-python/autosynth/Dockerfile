@@ -21,6 +21,6 @@ RUN pyenv install 3.7.2
 RUN pyenv global 3.7.2
 
 COPY requirements.txt /requirements.txt
-RUN python -m pip install --user --require-hashes --no-cache-dir -r /requirements.txt
+RUN python -m pip install --require-hashes --no-cache-dir -r /requirements.txt
 
 RUN pyenv rehash
