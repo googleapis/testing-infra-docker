@@ -123,7 +123,6 @@ COPY requirements.txt /requirements.txt
 RUN /usr/local/bin/python3 -m pip \
   install \
   --no-cache-dir \
-  --upgrade pip \
   --require-hashes \
   -r /requirements.txt
 
