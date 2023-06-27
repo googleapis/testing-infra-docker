@@ -41,7 +41,8 @@ RUN which python
 ENV CLOUD_SDK_VERSION 420.0.0
 
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.6
+ENV CLOUDSDK_PYTHON python3.11
+# ENV CLOUDSDK_PYTHON python3.6
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
@@ -52,6 +53,6 @@ ENV PATH ~/.local/bin:/root/.local/bin:$PATH
 
 # Install the current version of nox.
 COPY requirements.txt /requirements.txt
-RUN python -m pip install --user --require-hashes --no-cache-dir -r /requirements.txt
+RUN python -m pip install --require-hashes --no-cache-dir -r /requirements.txt
 
 CMD ["nox"]
