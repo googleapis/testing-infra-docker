@@ -120,6 +120,7 @@ RUN for PYTHON_VERSION in 2.7.18 3.6.15; do \
 # Make sure the Python 3 version of pip is up-to-date and install virtualenv
 COPY requirements.txt /requirements.txt
 
+RUN /usr/local/bin/python3 -m pip install --upgrade pip
 RUN /usr/local/bin/python3 -m pip \
   install \
   --no-cache-dir \
