@@ -53,6 +53,6 @@ ENV PATH ~/.local/bin:/root/.local/bin:$PATH
 
 # Install the current version of nox.
 COPY requirements.txt /requirements.txt
-RUN python -m pip install --require-hashes --no-cache-dir -r /requirements.txt
+RUN python3 -m pip install --require-hashes --no-cache-dir -r /requirements.txt
 
 CMD ["nox"]
