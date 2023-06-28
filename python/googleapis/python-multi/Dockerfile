@@ -186,15 +186,13 @@ RUN python3.11 -m pip
 RUN python3.9 -m venv /venv
 ENV PATH /venv/bin:$PATH
 
-
-
 COPY requirements.txt /requirements.txt
 RUN pip install --require-hashes --no-cache-dir -r /requirements.txt
 
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 420.0.0
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.8
+ENV CLOUDSDK_PYTHON python3.9
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
