@@ -40,10 +40,10 @@ steps:
   waitFor: ['-']
 
 # Node 16
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:16-user', '.']
-  dir: 'node/16-user'
-  waitFor: ['-']
+# - name: gcr.io/cloud-builders/docker
+#   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:16-user', '.']
+#   dir: 'node/16-user'
+#   waitFor: ['-']
 
 # Node 16-puppeteer
 - name: gcr.io/cloud-builders/docker
