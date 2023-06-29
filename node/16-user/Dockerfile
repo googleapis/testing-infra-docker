@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:16-bookworm
+FROM node:16-stretch
 
 # Add Graphviz
 RUN set -ex; \
-  apt-get autoclean \
   apt-get update -y; \
   apt-get install -y \
     graphviz \
@@ -61,8 +60,8 @@ RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
 ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
 
 # Install python
-RUN pyenv install 3.8.16 && \
-    pyenv global 3.8.16 && \
+RUN pyenv install 3.7.4 && \
+    pyenv global 3.7.4 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install gcp-uploader and gcp-releasetool and their dependencies.
