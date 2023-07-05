@@ -144,6 +144,11 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
   && rm -rf ~/.cache/ \
   && rm -r "$GNUPGHOME"
 
+# Install a version of conda/mamba package manager.
+# This is used to help test conda installs of client libraries such as:
+# google-cloud-bigquery (python-bigquery)
+RUN curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge-$(uname)-$(uname -m).sh -b
 
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
@@ -187,7 +192,7 @@ RUN pip install --require-hashes --no-cache-dir -r /requirements.txt
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 420.0.0
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.8
+ENV CLOUDSDK_PYTHON python3.9
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
