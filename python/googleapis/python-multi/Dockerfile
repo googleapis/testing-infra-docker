@@ -150,6 +150,7 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
 
 RUN curl micro.mamba.pm/install.sh | bash
 RUN ~/.local/bin/micromamba shell init -s bash -p ~/micromamba
+RUN alias mamba=micromamba
 
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
