@@ -114,11 +114,43 @@ RUN for PYTHON_VERSION in 3.7.17 3.8.17 3.9.17 3.10.12 3.11.4; do \
   && rm -rf ~/.cache/ \
   && rm -r "$GNUPGHOME"
 
-# Make sure the Python 3 version of pip is up-to-date and install
-# python packages
+# Install pip on Python 3.11
+# If the environment variable is called "PIP_VERSION", pip explodes with
+# "ValueError: invalid truth value '<VERSION>'"
+ENV PYTHON_PIP_VERSION 23.1.2
+RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+    && python3.11 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
+
+  # we use "--force-reinstall" for the case where the version of pip we're trying to install is the
+  # same as the version bundled with Python
+  # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
+  # https://github.com/docker-library/python/pull/143#issuecomment-241032683
+    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+
+  # then we use "pip list" to ensure we don't have more than one pip version installed
+  # https://github.com/docker-library/python/pull/100
+    && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
+
+# Ensure Pip for all python3 versions
+RUN python3.7 /tmp/get-pip.py
+RUN python3.8 /tmp/get-pip.py
+RUN python3.9 /tmp/get-pip.py
+RUN python3.10 /tmp/get-pip.py
+
+RUN rm /tmp/get-pip.py
+
+# Test Pip
+RUN python3 -m pip
+RUN python3.7 -m pip
+RUN python3.8 -m pip
+RUN python3.9 -m pip
+RUN python3.10 -m pip
+RUN python3.11 -m pip
+
+
+# Install Python packages
 COPY requirements.txt /requirements.txt
 
-RUN /usr/local/bin/python3 -m pip install --upgrade pip
 RUN /usr/local/bin/python3 -m pip \
   install \
   --no-cache-dir \
