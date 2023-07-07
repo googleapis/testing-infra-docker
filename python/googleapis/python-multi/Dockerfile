@@ -147,10 +147,11 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
 # Install a version of conda/mamba package manager called micromamba.
 # This is used to help test conda installs of client libraries such as:
 # google-cloud-bigquery (python-bigquery)
-
-RUN curl micro.mamba.pm/install.sh | bash
-RUN ~/.local/bin/micromamba shell init -s bash -p ~/micromamba
-RUN alias mamba=micromamba
+RUN curl -L -o Mambaforge.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge.sh -b -p "${HOME}/conda"
+RUN echo ". ${HOME}/conda/etc/profile.d/conda.sh" >> "${HOME}/.bashrc"
+RUN echo ". ${HOME}/conda/etc/profile.d/mamba.sh" >> "${HOME}/.bashrc"
+RUN echo "conda activate" >> "${HOME}/.bashrc"
 
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
