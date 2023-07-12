@@ -34,8 +34,8 @@ RUN apt update \
     zlib1g-dev \
  && apt clean
 
-RUN python --version
-RUN which python
+RUN python3 --version
+RUN which python3
 
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 420.0.0
