@@ -48,8 +48,8 @@ RUN pyenv install 3.7.4 && \
 
 # Setup Cloud SDK
 WORKDIR /home/node
-ENV CLOUD_SDK_VERSION=303.0.0 \
-    CLOUDSDK_PYTHON=/usr/bin/python \
+ENV CLOUD_SDK_VERSION=438.0.0 \
+    CLOUDSDK_PYTHON=/usr/bin/python3 \
     PATH=/home/node/google-cloud-sdk/bin:$PATH
 RUN set -ex; \
     curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz; \
