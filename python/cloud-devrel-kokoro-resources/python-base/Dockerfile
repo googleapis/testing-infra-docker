@@ -93,7 +93,8 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.18 3.6.15; do \
+# RUN for PYTHON_VERSION in 2.7.18 3.6.15; do \
+RUN for PYTHON_VERSION in 2.7.18 3.9.17; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -118,11 +119,13 @@ RUN for PYTHON_VERSION in 2.7.18 3.6.15; do \
   && rm -r "$GNUPGHOME"
 
 # Make sure the Python 3 version of pip is up-to-date and install virtualenv
+COPY requirements.txt /requirements.txt
+
+RUN /usr/local/bin/python3 -m pip install --upgrade pip
 RUN /usr/local/bin/python3 -m pip \
   install \
   --no-cache-dir \
-  --upgrade \
-  pip \
-  virtualenv
+  --require-hashes \
+  -r /requirements.txt
 
 CMD ["python3.6"]
