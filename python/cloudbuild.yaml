@@ -55,6 +55,9 @@ steps:
   args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python', 'gcr.io/cloud-devrel-public-resources/python']
   waitFor: ['python']
 
+options:
+  machineType: 'E2_HIGHCPU_8'
+
 images:
   - gcr.io/cloud-devrel-kokoro-resources/google-cloud-python/autosynth
   - gcr.io/cloud-devrel-kokoro-resources/python
