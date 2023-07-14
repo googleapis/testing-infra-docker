@@ -131,3 +131,15 @@ RUN gcloud config set app/promote_by_default false && \
 
 # Build php-cs-fixer
 RUN composer global require friendsofphp/php-cs-fixer
+
+# Install Python3
+RUN wget https://www.python.org/ftp/python/3.9.14/Python-3.9.14.tgz \
+    && tar -xvf Python-3.9.14.tgz \
+    && ./Python-3.9.14/configure --enable-optimizations \
+    && make altinstall
+
+# Install pip
+RUN wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+  && python3.9 /tmp/get-pip.py \
+  && rm /tmp/get-pip.py \
+  && python3.9 -m pip
