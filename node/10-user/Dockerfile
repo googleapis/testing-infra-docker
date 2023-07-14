@@ -50,6 +50,9 @@ RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
 
 USER node
 
+# Update npm
+RUN npm install -g npm
+
 # Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \

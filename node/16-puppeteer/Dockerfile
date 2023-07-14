@@ -31,6 +31,9 @@ RUN apt-get update && apt-get install -y make build-essential libssl-dev zlib1g-
 # Run everything after as non-privileged user.
 USER node
 
+# Update npm
+RUN npm install -g npm
+
 # Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
