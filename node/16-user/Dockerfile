@@ -49,7 +49,7 @@ RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 
 # Update npm
-RUN npm install -g npm
+RUN npm install -g npm@9
 
 USER node
 
