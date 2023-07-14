@@ -61,6 +61,7 @@ RUN apt-get update \
     tk \
     tk-dev \
     uuid-dev \
+    vim \
     wget \
     zlib1g-dev \
   && apt-get clean autoclean \
@@ -143,6 +144,14 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
   && rm -rf ~/.cache/ \
   && rm -r "$GNUPGHOME"
 
+# Install a version of conda/mamba package manager called micromamba.
+# This is used to help test conda installs of client libraries such as:
+# google-cloud-bigquery (python-bigquery)
+RUN curl -L -o Mambaforge.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+RUN bash Mambaforge.sh -b -p "${HOME}/conda"
+RUN echo ". ${HOME}/conda/etc/profile.d/conda.sh" >> "${HOME}/.bashrc"
+RUN echo ". ${HOME}/conda/etc/profile.d/mamba.sh" >> "${HOME}/.bashrc"
+RUN echo "conda activate" >> "${HOME}/.bashrc"
 
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
@@ -150,7 +159,6 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
 ENV PYTHON_PIP_VERSION 21.3.1
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
-
 
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
   # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
@@ -181,14 +189,13 @@ RUN python3.11 -m pip
 RUN python3.9 -m venv /venv
 ENV PATH /venv/bin:$PATH
 
-# Install "virtualenv", since the vast majority of users of this image
-# will want it.
-RUN pip install --no-cache-dir virtualenv
+COPY requirements.txt /requirements.txt
+RUN pip install --require-hashes --no-cache-dir -r /requirements.txt
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 360.0.0
+ENV CLOUD_SDK_VERSION 420.0.0
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.8
+ENV CLOUDSDK_PYTHON python3.9
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh

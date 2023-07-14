@@ -1,7 +1,8 @@
-FROM gcr.io/gcp-runtimes/ubuntu_16_0_4
-ENV PHP_DIR=/opt/php74
-ENV PHP_SRC_DIR=/usr/local/src/php74-build
+FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
+ENV PHP_DIR=/opt/php82
+ENV PHP_SRC_DIR=/usr/local/src/php80-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
+ENV PHP_VERISON=8.2.6
 
 RUN apt-get update && \
     apt-get -y install \
@@ -17,12 +18,11 @@ RUN apt-get update && \
             libfcgi0ldbl \
             libfreetype6-dev \
             libicu-dev \
-            libjpeg62-dbg \
             libjpeg-dev \
             libkrb5-dev \
             libmcrypt-dev \
             libmagickwand-dev \
-            libpng12-dev \
+            libpng-dev \
             libpq-dev \
             libssl-dev \
             libxml2-dev \
@@ -30,7 +30,7 @@ RUN apt-get update && \
             libzip-dev \
             unixodbc-dev \
             php-imagick \
-            python-ipaddr \
+            python-ipaddress \
             wget \
             zip \
             zlib1g-dev \
@@ -40,15 +40,15 @@ RUN apt-get update && \
             libonig-dev
 
 # Remove old version of PHP
-RUN apt purge -y php7.0-common
+RUN apt purge -y php7.4-common
 
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
-    wget http://us1.php.net/get/php-7.4.0.tar.bz2/from/this/mirror \
-         -O php-7.4.0.tar.bz2 && \
-    tar jxf php-7.4.0.tar.bz2 && \
-    cd php-7.4.0 && \
+    wget http://us1.php.net/get/php-$PHP_VERISON.tar.bz2/from/this/mirror \
+         -O php-$PHP_VERISON.tar.bz2 && \
+    tar jxf php-$PHP_VERISON.tar.bz2 && \
+    cd php-$PHP_VERISON && \
     ./configure \
         --prefix=${PHP_DIR} \
         --with-config-file-scan-dir=${PHP_DIR}/lib/conf.d \
@@ -92,10 +92,11 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --with-pear && \
         make && \
         make install && \
-        pecl install grpc imagick pdo_sqlsrv && \
+        pecl install grpc pdo_sqlsrv && \
         cp php.ini-production ${PHP_DIR}/lib/php.ini && \
         echo 'zend_extension=opcache.so' >> ${PHP_DIR}/lib/php.ini && \
         echo 'extension=grpc.so' >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
+        git clone https://github.com/Imagick/imagick /tmp/imagick && cd /tmp/imagick && phpize && ./configure && make && make install && cd - && \
         echo 'extension=imagick.so' >> ${PHP_DIR}/lib/conf.d/ext-imagick.ini && \
         echo 'extension=pdo_sqlsrv.so' >> ${PHP_DIR}/lib/conf.d/ext-pdo_sqlsrv.ini && \
         php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
@@ -103,7 +104,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
 
 # Install phpunit globally
-RUN composer global require phpunit/phpunit:^7.0
+RUN composer global require phpunit/phpunit:^8.0
 
 # Install Google Cloud SDK
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
