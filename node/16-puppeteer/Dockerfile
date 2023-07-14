@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:16
 
 # Taken from
 # https://github.com/GoogleChrome/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-in-docker
@@ -42,8 +42,8 @@ RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
 ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
 
 # Install python
-RUN pyenv install 3.7.4 && \
-    pyenv global 3.7.4 && \
+RUN pyenv install 3.8.16 && \
+    pyenv global 3.8.16 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Setup Cloud SDK
