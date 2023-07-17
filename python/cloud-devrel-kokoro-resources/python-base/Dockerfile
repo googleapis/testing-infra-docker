@@ -14,8 +14,8 @@
 
 # Dockerfile derived from googleapis/python-multi (the image used by the client
 # libraries tests). We modify this to ensure that all standard library
-# features are available and only build Python 2.7 and 3.6.
-FROM ubuntu:18.04
+# features are available.
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -65,13 +65,13 @@ ENV GNUPGHOME /tmp/gpg
 # Consider one of the alternatives here if this continues to be flaky:
 # https://github.com/docker-library/faq#openpgp--gnupg-keys-and-verification
 # See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
+# The hashes below are the fingerprints for the keys of the key signers
+# and are not specific to any version of Python
 RUN set -ex \
   && gpg --keyserver keyserver.ubuntu.com --recv-keys \
-      # 2.7.18 (Benjamin Peterson)
-      C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
-      # 3.6.15, 3.7.12 (Ned Deily)
+      # 3.6.x, 3.7.x (Ned Deily)
       0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
-      # 3.8.12 and 3.9.7 (Łukasz Langa)
+      # 3.8.x and 3.9.x (Łukasz Langa)
       E3FF2839C048B25C084DEBE9B26995E310250568 \
       # 3.10.x and 3.11.x (Pablo Galindo Salgado)
       A035C8C19219BA821ECEA86B64E628F8D684696D
@@ -93,8 +93,7 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-# RUN for PYTHON_VERSION in 2.7.18 3.6.15; do \
-RUN for PYTHON_VERSION in 2.7.18 3.9.17; do \
+RUN for PYTHON_VERSION in 3.7.17 3.8.17 3.9.17 3.10.12 3.11.4; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -106,9 +105,6 @@ RUN for PYTHON_VERSION in 2.7.18 3.9.17; do \
     && cd /usr/src/python-${PYTHON_VERSION} \
     && ./configure \
         --enable-shared \
-      # This works only on Python 2.7 and throws a warning on every other
-      # version, but seems otherwise harmless.
-        --enable-unicode=ucs4 \
         --with-system-ffi \
     && make -j$(nproc) \
     && make install \
@@ -118,14 +114,47 @@ RUN for PYTHON_VERSION in 2.7.18 3.9.17; do \
   && rm -rf ~/.cache/ \
   && rm -r "$GNUPGHOME"
 
-# Make sure the Python 3 version of pip is up-to-date and install virtualenv
+# Install pip on Python 3.11
+# If the environment variable is called "PIP_VERSION", pip explodes with
+# "ValueError: invalid truth value '<VERSION>'"
+ENV PYTHON_PIP_VERSION 23.1.2
+RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+    && python3.11 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
+
+  # we use "--force-reinstall" for the case where the version of pip we're trying to install is the
+  # same as the version bundled with Python
+  # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
+  # https://github.com/docker-library/python/pull/143#issuecomment-241032683
+    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+
+  # then we use "pip list" to ensure we don't have more than one pip version installed
+  # https://github.com/docker-library/python/pull/100
+    && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
+
+# Ensure Pip for all python3 versions
+RUN python3.7 /tmp/get-pip.py
+RUN python3.8 /tmp/get-pip.py
+RUN python3.9 /tmp/get-pip.py
+RUN python3.10 /tmp/get-pip.py
+
+RUN rm /tmp/get-pip.py
+
+# Test Pip
+RUN python3 -m pip
+RUN python3.7 -m pip
+RUN python3.8 -m pip
+RUN python3.9 -m pip
+RUN python3.10 -m pip
+RUN python3.11 -m pip
+
+
+# Install Python packages
 COPY requirements.txt /requirements.txt
 
-RUN /usr/local/bin/python3 -m pip install --upgrade pip
 RUN /usr/local/bin/python3 -m pip \
   install \
   --no-cache-dir \
   --require-hashes \
   -r /requirements.txt
 
-CMD ["python3.6"]
+CMD ["python3.11"]
