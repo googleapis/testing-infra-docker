@@ -39,6 +39,7 @@ RUN apt-get update \
     git \
     gpg-agent \
     libbz2-dev \
+    libffi-dev \
     libreadline-dev \
     libsqlite3-dev \
     libssl-dev \
