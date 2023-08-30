@@ -75,6 +75,7 @@ RUN apt-get update \
       postgresql \
       postgresql-contrib \
       python-openssl \
+      qt5-qmake \
       software-properties-common \
       sqlite3 \
       wget \
