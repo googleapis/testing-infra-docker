@@ -18,7 +18,9 @@ FROM golang:1.20
 RUN set -ex; \
     apt-get update -y; \
     apt-get install -y \
-    unzip wget vim
+    unzip wget vim \
+    # for docker
+    apt-transport-https ca-certificates gnupg-agent lsb-release software-properties-common
 
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     add-apt-repository \
