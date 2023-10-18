@@ -18,8 +18,17 @@ FROM golang:1.19
 RUN set -ex; \
     apt-get update -y; \
     apt-get install -y \
-    unzip wget vim; \
-    rm -rf /var/lib/apt/lists/*
+    unzip wget vim
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) \
+    stable" && \
+    apt-get update && \
+    apt-get install -y docker-ce docker-ce-cli containerd.io
+
+RUN rm -rf /var/lib/apt/lists/*
 
 # Install protoc
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
