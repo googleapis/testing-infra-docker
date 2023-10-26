@@ -82,7 +82,7 @@ RUN apt-get update \
       xz-utils \
       zlib1g-dev \
       jq \
-      libatk-bridge \
+      libatk-bridge2.0-0 \
       libdrm-dev \
       libgbm-dev \
       libxkbcommon-dev \
