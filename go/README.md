@@ -10,6 +10,7 @@ You can manually run the Docker images on Cloud Build:
 ```shell
 gcloud builds submit --config=cloudbuild.yaml .
 ```
+
 ## Publishing images
 
 You can manually publish the images:
@@ -32,15 +33,16 @@ considerations require that all pip commands enable checksums by passing the
 See [#222](https://github.com/googleapis/testing-infra-docker/pull/222)
 for more detail.
 
-1. Obtain the latest version of `base-tooling-requirements.txt`. This content is available internally.
-1. Install the Python tools dependencies, including `pip-compile`:
+- Obtain the latest version of `base-tooling-requirements.txt`. This content is available internally.
+- Install the Python tools dependencies, including `pip-compile`:
 
-   ```sh
-   pip install --require-hashes -r base-tooling-requirements.txt
-   ```
-2. Verify that the contents of `requirements.in` reflect the current dependencies required by the image. (These should be fairly stable.)
-3. Re-generate `requirements.txt` from `requirements.in`:
+```sh
+pip install --require-hashes -r base-tooling-requirements.txt
+```
 
-   ```sh
-   pip-compile requirements.in --generate-hashes
-   ```
+- Verify that the contents of `requirements.in` reflect the current dependencies required by the image. (These should be fairly stable.)
+- Re-generate `requirements.txt` from `requirements.in`:
+
+```sh
+pip-compile requirements.in --generate-hashes
+```

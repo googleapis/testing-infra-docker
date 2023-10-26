@@ -38,3 +38,9 @@ steps:
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:16-puppeteer', '.']
   dir: 'node/16-puppeteer'
   waitFor: ['-']
+
+# Node 18
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:18-user', '.']
+  dir: 'node/18-user'
+  waitFor: ['-']

@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,43 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.18-buster
+FROM golang:1.21
 
 # Install dependencies
 RUN set -ex; \
     apt-get update -y; \
     apt-get install -y \
-    make build-essential libssl-dev zlib1g-dev libbz2-dev \
-    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl \
-    apt-transport-https ca-certificates gnupg curl gnupg-agent lsb-release software-properties-common \
-    unzip wget vim; \
-    rm -rf /var/lib/apt/lists/*
+    unzip wget vim \
+    # for docker
+    ca-certificates curl gnupg
 
-# Install docker
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
-    add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/debian \
-    $(lsb_release -cs) \
-    stable" && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io
+RUN install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    chmod a+r /etc/apt/keyrings/docker.gpg && \
+    echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update
+RUN apt-get install -y docker-ce docker-ce-cli containerd.io
 
-# Install pyenv
-RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-
-ENV PATH /root/.pyenv/bin:$PATH
-ENV PATH /root/.pyenv/shims:$PATH
-
-RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
-    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
-    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
-
-# Install Python 3.7 & 3.8, defaults to 3.8
-RUN for PYTHON_VERSION in 3.7.10 3.8.8; do \
-    pyenv install ${PYTHON_VERSION} && \
-    pyenv global ${PYTHON_VERSION} && \
-    python3 -m pip install --upgrade pip setuptools; done
+RUN rm -rf /var/lib/apt/lists/*
 
 # Install protoc
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip
