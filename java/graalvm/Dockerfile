@@ -52,26 +52,32 @@ RUN yum -y install terraform
 RUN yum -y install jq
 
 # Install chrome dependencies.
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libnss3 libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev libgconf-2-4 && \
-    rm -rf /var/lib/apt/lists/*
+RUN yum update -y && \
+    yum install -y libnss libnss-devel gdk-pixbuf2 gtk3 xorg-x11-server-Xvfb GConf2 && \
+    yum clean all
 
 # Install Chrome.
-RUN curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub \
-  && cat /tmp/google.pub | apt-key add -; rm /tmp/google.pub \
-  && echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list \
-  && mkdir -p /usr/share/desktop-directories \
-  && apt-get -y update && apt-get install -y google-chrome-stable
+RUN wget -q https://dl-ssl.google.com/linux/linux_signing_key.pub -O /tmp/google.pub && \
+    rpm --import /tmp/google.pub && rm /tmp/google.pub && \
+    echo '[google-chrome]' > /etc/yum.repos.d/google-chrome.repo && \
+    echo 'name=google-chrome' >> /etc/yum.repos.d/google-chrome.repo && \
+    echo 'baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64' >> /etc/yum.repos.d/google-chrome.repo && \
+    echo 'enabled=1' >> /etc/yum.repos.d/google-chrome.repo && \
+    echo 'gpgcheck=1' >> /etc/yum.repos.d/google-chrome.repo && \
+    yum -y update && \
+    yum install -y google-chrome-stable && \
+    yum clean all
 
 # Disable the SUID sandbox so that Chrome can launch without being in a privileged container.
-RUN dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome \
+RUN mv /opt/google/chrome/google-chrome /opt/google/chrome/google-chrome.real \
   && echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome \
   && chmod 755 /opt/google/chrome/google-chrome \
   && ln -fs /opt/google/chrome/google-chrome /usr/bin/google-chrome
 
 # Install chrome driver.
 RUN mkdir -p /opt/selenium \
-  && curl http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip -o /opt/selenium/chromedriver_linux64.zip \
-  && cd /opt/selenium; unzip /opt/selenium/chromedriver_linux64.zip; rm -rf chromedriver_linux64.zip; ln -fs /opt/selenium/chromedriver /usr/local/bin/chromedriver;
+  && LATEST_RELEASE=$(curl -sS http://chromedriver.storage.googleapis.com/LATEST_RELEASE) \
+  && wget -O /opt/selenium/chromedriver_linux64.zip http://chromedriver.storage.googleapis.com/$LATEST_RELEASE/chromedriver_linux64.zip \
+  && cd /opt/selenium && unzip /opt/selenium/chromedriver_linux64.zip && rm -rf /opt/selenium/chromedriver_linux64.zip && ln -fs /opt/selenium/chromedriver /usr/local/bin/chromedriver
 
 WORKDIR /workspace
