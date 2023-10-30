@@ -50,8 +50,9 @@ RUN yum -y install terraform
 RUN yum -y install jq
 
 # Install chrome dependencies.
-RUN echo "Y" | apt install libnss3
-RUN echo "Y" | apt install libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev libgconf-2-4
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libnss3 libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev libgconf-2-4 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Chrome.
 RUN curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub \
