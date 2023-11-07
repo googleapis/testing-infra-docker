@@ -108,8 +108,9 @@ RUN apt-get update && apt-get install -y gnupg software-properties-common curl &
 RUN apt-get -y install jq
 
 # Install chrome dependencies.
-RUN echo "Y" | apt install libnss3
-RUN echo "Y" | apt install libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev libgconf-2-4
+RUN echo "Y" | apt install libnss3 \
+  && echo "Y" | apt install libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev libgconf-2-4 \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install Chrome.
 RUN curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub \
