@@ -88,7 +88,9 @@ RUN set -ex \
       # 3.8.12 and 3.9.7 (Łukasz Langa)
       E3FF2839C048B25C084DEBE9B26995E310250568 \
       # 3.10.x and 3.11.x (Pablo Galindo Salgado)
-      A035C8C19219BA821ECEA86B64E628F8D684696D
+      A035C8C19219BA821ECEA86B64E628F8D684696D \
+      # 3.12.x and 3.13.x (Thomas Wouters)
+      7169605F62C751356D054A26A821E680E5FA6305
 
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -119,7 +121,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.18 3.7.12 3.8.13 3.9.13 3.10.5 3.11.1; do \
+RUN for PYTHON_VERSION in 2.7.18 3.7.17 3.8.18 3.9.18 3.10.13 3.11.6 3.12.0; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -174,6 +176,7 @@ RUN python3.7 /tmp/get-pip.py
 RUN python3.8 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
+RUN python3.12 /tmp/get-pip.py
 
 RUN rm /tmp/get-pip.py
 
@@ -184,6 +187,7 @@ RUN python3.8 -m pip
 RUN python3.9 -m pip
 RUN python3.10 -m pip
 RUN python3.11 -m pip
+RUN python3.12 -m pip
 
 # Use python 3.9 by default
 RUN python3.9 -m venv /venv
