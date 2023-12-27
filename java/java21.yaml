@@ -1,0 +1,44 @@
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+schemaVersion: 1.0.0
+commandTests:
+- name: "version"
+  command: ["java", "-version"]
+  # java -version outputs to stderr...
+  expectedError: ["(java|openjdk) version \"21.*\""]
+- name: "maven"
+  command: ["mvn", "-version"]
+  expectedOutput: ["Apache Maven 3.8.*"]
+- name: "gradle"
+  command: ["gradle", "-version"]
+  expectedOutput: ["Gradle 4.9"]
+- name: "gcloud"
+  command: ["gcloud", "version"]
+  expectedOutput: ["Google Cloud SDK"]
+- name: "AppEngine SDK"
+  command: ["mvn", "dependency:get", "-Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65", "-o", "-DremoteRepositories=file:~/.m2"]
+  expectedOutput: ["BUILD SUCCESS"]
+- name: "Google Play Services"
+  command: ["mvn", "dependency:get", "-Dartifact=com.google.android.google-play-services:google-play-services:1", "-o", "-DremoteRepositories=file:~/.m2"]
+  expectedOutput: ["BUILD SUCCESS"]
+- name: "xmllint tool"
+  command: ["xmllint", "--version"]
+  expectedError: ["using libxml version"]
+- name: "python"
+  command: ["python", "--version"]
+  expectedOutput: ["Python 3.9.13"]
+- name: "docker"
+  command: ["docker", "--version"]
+  expectedOutput: ["Docker version *"]
