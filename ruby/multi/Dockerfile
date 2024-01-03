@@ -81,6 +81,11 @@ RUN apt-get update \
       wget \
       xz-utils \
       zlib1g-dev \
+      jq \
+      libatk-bridge2.0-0 \
+      libdrm-dev \
+      libgbm-dev \
+      libxkbcommon-dev \
     && apt-get -y autoremove \
     && apt-get -y autoclean
 
@@ -152,23 +157,21 @@ RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x
     && ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/ \
     && rm phantomjs-2.1.1-linux-x86_64.tar.bz2
 
-# Install Chrome.
-RUN curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub \
-    && cat /tmp/google.pub | apt-key add -; rm /tmp/google.pub \
-    && echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list \
-    && mkdir -p /usr/share/desktop-directories \
-    && apt-get -y update && apt-get install -y google-chrome-stable
-
-# Disable the SUID sandbox so that Chrome can launch without being in a privileged container.
-RUN dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome \
-    && echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome \
-    && chmod 755 /opt/google/chrome/google-chrome
-
-# Install Chrome Driver.
-RUN mkdir -p /opt/selenium \
-    && curl http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip -o /opt/selenium/chromedriver_linux64.zip \
+# Install latest Chrome for testing
+RUN CHROME_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r '.channels.Stable.downloads.chrome[] | select(.platform == "linux64") | .url') \
+    && curl -sSLf --retry 3 --output /tmp/chrome-linux64.zip "$CHROME_URL" \
     && apt-get install unzip \
-    && cd /opt/selenium; unzip /opt/selenium/chromedriver_linux64.zip; rm -rf chromedriver_linux64.zip; ln -fs /opt/selenium/chromedriver /usr/local/bin/chromedriver;
+    && unzip /tmp/chrome-linux64.zip -d /opt \
+    && ln -s /opt/chrome-linux64/chrome /usr/local/bin/chrome \
+    && rm /tmp/chrome-linux64.zip
+
+# Install latest chromedriver
+RUN CHROMEDRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r '.channels.Stable.downloads.chromedriver[] | select(.platform == "linux64") | .url') \
+    && curl -sSLf --retry 3 --output /tmp/chromedriver-linux64.zip "$CHROMEDRIVER_URL" \
+    && unzip -o /tmp/chromedriver-linux64.zip -d /tmp \
+    && rm -rf /tmp/chromedriver-linux64.zip \
+    && mv -f /tmp/chromedriver-linux64/chromedriver "/usr/local/bin/chromedriver" \
+    && chmod +x "/usr/local/bin/chromedriver"
 
 # Allow non-root users read access to /root (for Trampoline V2)
 RUN chmod -v a+rx /root
