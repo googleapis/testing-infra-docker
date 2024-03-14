@@ -31,13 +31,19 @@ RUN mkdir -p /opt/plt_builder
 WORKDIR /opt/plt_builder
 COPY plt_builder /opt/plt_builder
 
-RUN cp plts/elixir${SHORT_VERSION}/*.plt /root/.mix ; \
-    mix do deps.get, dialyzer --plt
+RUN for file in plts/elixir${SHORT_VERSION}/*.plt ; do \
+      if [ -f $file ] ; then \
+        cp $file /root/.mix ; \
+      fi ; \
+    done ; \
+    mix deps.get ; \
+    mix dialyzer --plt
 
 # Step 3: build the testing images with the pre-build plt files
 FROM core
 
-ARG NODEJS_VERSION=12.13.0
+ARG NODEJS_VERSION=20.11.1 \
+    DOCKER_VERSION=24.0.9
 
 COPY --from=plt-builder /root/.mix /root/.mix
 
@@ -45,7 +51,7 @@ RUN mkdir -p /opt/nodejs && \
     curl -s https://nodejs.org/dist/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-linux-x64.tar.gz \
         | tar xzf - --directory=/opt/nodejs --strip-components=1 && \
     mkdir -p /opt/docker/bin && \
-    curl -sL https://download.docker.com/linux/static/stable/x86_64/docker-19.03.4.tgz \
+    curl -sL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz \
         | tar xzf - --directory=/opt/docker/bin --strip-components=1
 
 ENV PATH=/opt/nodejs/bin:/opt/docker/bin:$PATH
