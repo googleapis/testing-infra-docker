@@ -6,7 +6,7 @@ on Kokoro via Trampoline.
 
 ## Supported Versions
 
-Our Elixir client libraries currently support Elixir 1.4+.
+Our Elixir client libraries currently support Elixir 1.6+.
 
 ## Building Images
 
@@ -17,4 +17,4 @@ You can build all of the test images by running:
 You can publish the images by running:
 
     gcloud builds submit --project=cloud-devrel-kokoro-resources \
-        --config=cloudbuild.yaml --machine-type=n1-highcpu-8 .
+        --config=cloudbuild.yaml --machine-type=e2-highcpu-8 .
