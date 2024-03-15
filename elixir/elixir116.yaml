@@ -17,11 +17,11 @@ commandTests:
 - name: "elixir version"
   command: "elixir"
   args: ["--version"]
-  expectedOutput: ["Elixir 1.9"]
+  expectedOutput: ["Elixir 1.16"]
 - name: "otp version"
   command: "elixir"
   args: ["--version"]
-  expectedOutput: ["Erlang/OTP 22"]
+  expectedOutput: ["Erlang/OTP 26"]
 - name: "node version"
   command: "node"
   args: ["--version"]

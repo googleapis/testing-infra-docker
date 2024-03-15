@@ -17,97 +17,177 @@ steps:
 
 # Fetch cached plt files
 - name: gcr.io/cloud-builders/gsutil
-  args: ['cp', '-r', 'gs://$PROJECT_ID/elixir-artifacts/elixir*', '/workspace/plt_builder/plts/']
+  args: ['cp', '-r', 'gs://$PROJECT_ID/elixir-artifacts/elixir*', '/workspace/elixir/plt_builder/plts/']
   id: load-plts
   waitFor: ['-']
 
-# Elixir 1.4 build
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir14', '--build-arg', 'BASE_IMAGE=elixir:1.4', '--build-arg', 'SHORT_VERSION=14', '.']
-  id: elixir14-build
-  waitFor: [load-plts]
-- name: gcr.io/gcp-runtimes/container-structure-test
-  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir14', '--config', '/workspace/elixir14.yaml']
-  id: elixir14-test
-  waitFor: ['elixir14-build']
-- name: gcr.io/$PROJECT_ID/elixir14
-  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/plt_builder/plts/elixir14']
-  id: elixir14-extract-plts
-  waitFor: ['elixir14-test']
+# # Elixir 1.6 build
+# - name: gcr.io/cloud-builders/docker
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir16', '--build-arg', 'BASE_IMAGE=elixir:1.6', '--build-arg', 'SHORT_VERSION=16', 'elixir/']
+#   id: elixir16-build
+#   waitFor: [load-plts]
+# - name: gcr.io/gcp-runtimes/container-structure-test
+#   args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir16', '--config', '/workspace/elixir/elixir16.yaml']
+#   id: elixir16-test
+#   waitFor: ['elixir16-build']
+# - name: gcr.io/$PROJECT_ID/elixir16
+#   args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir16']
+#   id: elixir16-extract-plts
+#   waitFor: ['elixir16-test']
 
-# Elixir 1.5 build
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir15', '--build-arg', 'BASE_IMAGE=elixir:1.5', '--build-arg', 'SHORT_VERSION=15', '.']
-  id: elixir15-build
-  waitFor: [load-plts]
-- name: gcr.io/gcp-runtimes/container-structure-test
-  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir15', '--config', '/workspace/elixir15.yaml']
-  id: elixir15-test
-  waitFor: ['elixir15-build']
-- name: gcr.io/$PROJECT_ID/elixir15
-  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/plt_builder/plts/elixir15']
-  id: elixir15-extract-plts
-  waitFor: ['elixir15-test']
+# # Elixir 1.7 build
+# - name: gcr.io/cloud-builders/docker
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir17', '--build-arg', 'BASE_IMAGE=elixir:1.7', '--build-arg', 'SHORT_VERSION=17', 'elixir/']
+#   id: elixir17-build
+#   waitFor: [load-plts]
+# - name: gcr.io/gcp-runtimes/container-structure-test
+#   args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir17', '--config', '/workspace/elixir/elixir17.yaml']
+#   id: elixir17-test
+#   waitFor: ['elixir17-build']
+# - name: gcr.io/$PROJECT_ID/elixir17
+#   args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir17']
+#   id: elixir17-extract-plts
+#   waitFor: ['elixir17-test']
 
-# Elixir 1.6 build
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir16', '--build-arg', 'BASE_IMAGE=elixir:1.6', '--build-arg', 'SHORT_VERSION=16', '.']
-  id: elixir16-build
-  waitFor: [load-plts]
-- name: gcr.io/gcp-runtimes/container-structure-test
-  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir16', '--config', '/workspace/elixir16.yaml']
-  id: elixir16-test
-  waitFor: ['elixir16-build']
-- name: gcr.io/$PROJECT_ID/elixir16
-  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/plt_builder/plts/elixir16']
-  id: elixir16-extract-plts
-  waitFor: ['elixir16-test']
+# # Elixir 1.8 build
+# - name: gcr.io/cloud-builders/docker
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir18', '--build-arg', 'BASE_IMAGE=elixir:1.8', '--build-arg', 'SHORT_VERSION=18', 'elixir/']
+#   id: elixir18-build
+#   waitFor: [load-plts]
+# - name: gcr.io/gcp-runtimes/container-structure-test
+#   args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir18', '--config', '/workspace/elixir/elixir18.yaml']
+#   id: elixir18-test
+#   waitFor: ['elixir18-build']
+# - name: gcr.io/$PROJECT_ID/elixir18
+#   args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir18']
+#   id: elixir18-extract-plts
+#   waitFor: ['elixir18-test']
 
-# Elixir 1.7 build
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir17', '--build-arg', 'BASE_IMAGE=elixir:1.7', '--build-arg', 'SHORT_VERSION=17', '.']
-  id: elixir17-build
-  waitFor: [load-plts]
-- name: gcr.io/gcp-runtimes/container-structure-test
-  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir17', '--config', '/workspace/elixir17.yaml']
-  id: elixir17-test
-  waitFor: ['elixir17-build']
-- name: gcr.io/$PROJECT_ID/elixir17
-  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/plt_builder/plts/elixir17']
-  id: elixir17-extract-plts
-  waitFor: ['elixir17-test']
+# # Elixir 1.9 build
+# - name: gcr.io/cloud-builders/docker
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir19', '--build-arg', 'BASE_IMAGE=elixir:1.9', '--build-arg', 'SHORT_VERSION=19', 'elixir/']
+#   id: elixir19-build
+#   waitFor: [load-plts]
+# - name: gcr.io/gcp-runtimes/container-structure-test
+#   args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir19', '--config', '/workspace/elixir/elixir19.yaml']
+#   id: elixir19-test
+#   waitFor: ['elixir19-build']
+# - name: gcr.io/$PROJECT_ID/elixir19
+#   args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir19']
+#   id: elixir19-extract-plts
+#   waitFor: ['elixir19-test']
 
-# Elixir 1.8 build
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir18', '--build-arg', 'BASE_IMAGE=elixir:1.8', '--build-arg', 'SHORT_VERSION=18', '.']
-  id: elixir18-build
-  waitFor: [load-plts]
-- name: gcr.io/gcp-runtimes/container-structure-test
-  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir18', '--config', '/workspace/elixir18.yaml']
-  id: elixir18-test
-  waitFor: ['elixir18-build']
-- name: gcr.io/$PROJECT_ID/elixir18
-  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/plt_builder/plts/elixir18']
-  id: elixir18-extract-plts
-  waitFor: ['elixir18-test']
+# # Elixir 1.10 build
+# - name: gcr.io/cloud-builders/docker
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir110', '--build-arg', 'BASE_IMAGE=elixir:1.10', '--build-arg', 'SHORT_VERSION=110', 'elixir/']
+#   id: elixir110-build
+#   waitFor: [load-plts]
+# - name: gcr.io/gcp-runtimes/container-structure-test
+#   args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir110', '--config', '/workspace/elixir/elixir110.yaml']
+#   id: elixir110-test
+#   waitFor: ['elixir110-build']
+# - name: gcr.io/$PROJECT_ID/elixir110
+#   args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir110']
+#   id: elixir110-extract-plts
+#   waitFor: ['elixir110-test']
 
-# Elixir 1.9 build
+# # Elixir 1.11 build
+# - name: gcr.io/cloud-builders/docker
+#   args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir111', '--build-arg', 'BASE_IMAGE=elixir:1.11', '--build-arg', 'SHORT_VERSION=111', 'elixir/']
+#   id: elixir111-build
+#   waitFor: [load-plts]
+# - name: gcr.io/gcp-runtimes/container-structure-test
+#   args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir111', '--config', '/workspace/elixir/elixir111.yaml']
+#   id: elixir111-test
+#   waitFor: ['elixir111-build']
+# - name: gcr.io/$PROJECT_ID/elixir111
+#   args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir111']
+#   id: elixir111-extract-plts
+#   waitFor: ['elixir111-test']
+
+# Elixir 1.12 build
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir19', '--build-arg', 'BASE_IMAGE=elixir:1.9', '--build-arg', 'SHORT_VERSION=19', '.']
-  id: elixir19-build
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir112', '--build-arg', 'BASE_IMAGE=elixir:1.12', '--build-arg', 'SHORT_VERSION=112', 'elixir/']
+  id: elixir112-build
   waitFor: [load-plts]
 - name: gcr.io/gcp-runtimes/container-structure-test
-  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir19', '--config', '/workspace/elixir19.yaml']
-  id: elixir19-test
-  waitFor: ['elixir19-build']
-- name: gcr.io/$PROJECT_ID/elixir19
-  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/plt_builder/plts/elixir19']
-  id: elixir19-extract-plts
-  waitFor: ['elixir19-test']
+  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir112', '--config', '/workspace/elixir/elixir112.yaml']
+  id: elixir112-test
+  waitFor: ['elixir112-build']
+- name: gcr.io/$PROJECT_ID/elixir112
+  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir112']
+  id: elixir112-extract-plts
+  waitFor: ['elixir112-test']
+
+# Elixir 1.13 build
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir113', '--build-arg', 'BASE_IMAGE=elixir:1.13', '--build-arg', 'SHORT_VERSION=113', 'elixir/']
+  id: elixir113-build
+  waitFor: [load-plts]
+- name: gcr.io/gcp-runtimes/container-structure-test
+  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir113', '--config', '/workspace/elixir/elixir113.yaml']
+  id: elixir113-test
+  waitFor: ['elixir113-build']
+- name: gcr.io/$PROJECT_ID/elixir113
+  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir113']
+  id: elixir113-extract-plts
+  waitFor: ['elixir113-test']
+
+# Elixir 1.14 build
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir114', '--build-arg', 'BASE_IMAGE=elixir:1.14', '--build-arg', 'SHORT_VERSION=114', 'elixir/']
+  id: elixir114-build
+  waitFor: [load-plts]
+- name: gcr.io/gcp-runtimes/container-structure-test
+  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir114', '--config', '/workspace/elixir/elixir114.yaml']
+  id: elixir114-test
+  waitFor: ['elixir114-build']
+- name: gcr.io/$PROJECT_ID/elixir114
+  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir114']
+  id: elixir114-extract-plts
+  waitFor: ['elixir114-test']
+
+# Elixir 1.15 build
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir115', '--build-arg', 'BASE_IMAGE=elixir:1.15', '--build-arg', 'SHORT_VERSION=115', 'elixir/']
+  id: elixir115-build
+  waitFor: [load-plts]
+- name: gcr.io/gcp-runtimes/container-structure-test
+  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir115', '--config', '/workspace/elixir/elixir115.yaml']
+  id: elixir115-test
+  waitFor: ['elixir115-build']
+- name: gcr.io/$PROJECT_ID/elixir115
+  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir115']
+  id: elixir115-extract-plts
+  waitFor: ['elixir115-test']
+
+# Elixir 1.16 build
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/elixir116', '--build-arg', 'BASE_IMAGE=elixir:1.16', '--build-arg', 'SHORT_VERSION=116', 'elixir/']
+  id: elixir116-build
+  waitFor: [load-plts]
+- name: gcr.io/gcp-runtimes/container-structure-test
+  args: ['test', '--image', 'gcr.io/$PROJECT_ID/elixir116', '--config', '/workspace/elixir/elixir116.yaml']
+  id: elixir116-test
+  waitFor: ['elixir116-build']
+- name: gcr.io/$PROJECT_ID/elixir116
+  args: ['/bin/bash', '-c', 'cp /root/.mix/*.plt /workspace/elixir/plt_builder/plts/elixir116']
+  id: elixir116-extract-plts
+  waitFor: ['elixir116-test']
 
 # Push cached plt files
 - name: gcr.io/cloud-builders/gsutil
-  args: ['cp', '-r', '/workspace/plt_builder/plts/elixir*', 'gs://$PROJECT_ID/elixir-artifacts/']
-  waitFor: ['elixir14-extract-plts', 'elixir15-extract-plts', 'elixir16-extract-plts', 'elixir17-extract-plts', 'elixir18-extract-plts', 'elixir19-extract-plts']
-
-timeout: 3600s
+  args: ['cp', '-r', '/workspace/elixir/plt_builder/plts/elixir*', 'gs://$PROJECT_ID/elixir-artifacts/']
+  waitFor: [
+    # 'elixir16-extract-plts',
+    # 'elixir17-extract-plts',
+    # 'elixir18-extract-plts',
+    # 'elixir19-extract-plts',
+    # 'elixir110-extract-plts',
+    # 'elixir111-extract-plts',
+    'elixir112-extract-plts',
+    'elixir113-extract-plts',
+    'elixir114-extract-plts',
+    'elixir115-extract-plts',
+    'elixir116-extract-plts',
+  ]
