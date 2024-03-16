@@ -39,7 +39,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java8",
-        "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-",
+        "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$SHORT_SHA",
       ]
     waitFor: ["java8-build"]
 
@@ -67,7 +67,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java11",
-        "gcr.io/cloud-devrel-public-resources/java11:infrastructure-public-image-",
+        "gcr.io/cloud-devrel-public-resources/java11:infrastructure-public-image-$SHORT_SHA",
       ]
     waitFor: ["java11-build"]
 
@@ -94,7 +94,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/graalvm:${_GRAALVM_VERSION}",
-        "gcr.io/cloud-devrel-public-resources/graalvm:infrastructure-public-image-",
+        "gcr.io/cloud-devrel-public-resources/graalvm:infrastructure-public-image-$SHORT_SHA",
       ]
     waitFor: ["graalvm-build"]
 
@@ -121,7 +121,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/graalvm17:${_GRAALVM_VERSION}",
-        "gcr.io/cloud-devrel-public-resources/graalvm17:infrastructure-public-image-",
+        "gcr.io/cloud-devrel-public-resources/graalvm17:infrastructure-public-image-$SHORT_SHA",
       ]
     waitFor: [ "graalvm17-build" ]
 
@@ -148,7 +148,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java11014",
-        "gcr.io/cloud-devrel-public-resources/java11014:infrastructure-public-image-",
+        "gcr.io/cloud-devrel-public-resources/java11014:infrastructure-public-image-$SHORT_SHA",
       ]
     waitFor: ["java11014-build"]
 
@@ -175,7 +175,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java17",
-        "gcr.io/cloud-devrel-public-resources/java17:infrastructure-public-image-",
+        "gcr.io/cloud-devrel-public-resources/java17:infrastructure-public-image-$SHORT_SHA",
       ]
     waitFor: ["java17-build"]
     # Java 21 build
@@ -201,7 +201,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java21",
-        "gcr.io/cloud-devrel-public-resources/java21:infrastructure-public-image-",
+        "gcr.io/cloud-devrel-public-resources/java21:infrastructure-public-image-$SHORT_SHA",
       ]
     waitFor: ["java21-build"]
 images:
