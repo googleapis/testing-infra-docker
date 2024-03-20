@@ -57,6 +57,7 @@ RUN apt-get update \
       git \
       gpg-agent \
       imagemagick \
+      libasound2 \
       libbz2-dev \
       libffi-dev \
       libgdbm-dev \
