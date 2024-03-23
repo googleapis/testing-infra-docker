@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:11-jdk
+FROM eclipse-temurin:11-jdk
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
+    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg unzip && \
     rm -rf /var/cache/apt
 
 RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
@@ -34,7 +34,8 @@ ENV PATH $PATH:/usr/local/lib/maven/bin:/usr/local/lib/gradle/gradle-4.9/bin
 
 # Install gcloud SDK
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+    apt-get update -y && \
     apt-get install google-cloud-sdk -y
 
 # Install google-play-services version 1
@@ -57,7 +58,7 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 # Install pyenv
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 
 ENV PATH /root/.pyenv/bin:$PATH
@@ -90,9 +91,9 @@ RUN apt-get update && apt-get install -y \
         gnupg-agent \
         lsb-release \
         software-properties-common && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     add-apt-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
         $(lsb_release -cs) \
         stable" && \
     apt-get update && \
