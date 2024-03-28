@@ -24,6 +24,7 @@ RUN apt-get update && \
             libmagickwand-dev \
             libpng-dev \
             libpq-dev \
+            libsodium-dev \
             libssl-dev \
             libxml2-dev \
             libxslt1-dev \
@@ -62,7 +63,6 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --with-zlib \
         --with-pgsql \
         --disable-rpath \
-        --enable-inline-optimization \
         --with-bz2 \
         --with-zlib \
         --enable-sockets \
@@ -75,6 +75,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --enable-bcmath \
         --with-mhash \
         --with-pdo-mysql \
+        --with-sodium=shared \
         --with-mysqli \
         --with-openssl \
         --with-fpm-user=www-data \
@@ -84,7 +85,6 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --with-imap \
         --with-imap-ssl \
         --with-gettext \
-        --with-xmlrpc \
         --with-xsl \
         --with-zip \
         --with-kerberos \
@@ -95,6 +95,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         pecl install grpc pdo_sqlsrv && \
         cp php.ini-production ${PHP_DIR}/lib/php.ini && \
         echo 'zend_extension=opcache.so' >> ${PHP_DIR}/lib/php.ini && \
+        echo 'extension=sodium' >> ${PHP_DIR}/lib/php.ini && \
         echo 'extension=grpc.so' >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
         git clone https://github.com/Imagick/imagick /tmp/imagick && cd /tmp/imagick && phpize && ./configure && make && make install && cd - && \
         echo 'extension=imagick.so' >> ${PHP_DIR}/lib/conf.d/ext-imagick.ini && \
