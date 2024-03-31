@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# note: all local files are placed under /workspace and are required in path
+
 timeout: 21600s  # 6 hours
 options:
  machineType: 'E2_HIGHCPU_8'
@@ -27,7 +29,7 @@ steps:
 
 - name: gcr.io/gcp-runtimes/structure_test
   args:
-    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php80', '--config', 'php/php80.yaml', '-v']
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php80', '--config', '/workspace/php/php80.yaml', '-v']
   waitFor: ['build-php80']
 
 # PHP 8.1
@@ -40,7 +42,7 @@ steps:
 
 - name: gcr.io/gcp-runtimes/structure_test
   args:
-    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php81', '--config', 'php/php81.yaml', '-v']
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php81', '--config', '/workspace/php/php81.yaml', '-v']
   waitFor: ['build-php81']
 
 # PHP 8.2
@@ -53,7 +55,7 @@ steps:
 
 - name: gcr.io/gcp-runtimes/structure_test
   args:
-    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php82', '--config', 'php/php82.yaml', '-v']
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php82', '--config', '/workspace/php/php82.yaml', '-v']
   waitFor: ['build-php82']
 
 images:
