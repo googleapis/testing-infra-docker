@@ -12,32 +12,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-timeout: 28800s  # 6 hours
+timeout: 28800s  # 8 hours
 options:
  machineType: 'E2_HIGHCPU_8'
 steps:
 
 # PHP 8.0
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php80', '.']
+- id: 'build-php80'
+  name: gcr.io/cloud-builders/docker
+  args:
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php80', '-t', 'gcr.io/cloud-devrel-public-resources/php80', '.']
   dir: 'php/php80'
   waitFor: ['-']
 
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php80', '--config', 'php/php80.yaml', '-v']
+  waitFor: ['build-php80']
+
 # PHP 8.1
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '.']
+- id: 'build-php81'
+  name: gcr.io/cloud-builders/docker
+  args:
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '-t', 'gcr.io/cloud-devrel-public-resources/php81', '.']
   dir: 'php/php81'
   waitFor: ['-']
 
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php81', '--config', 'php/php81.yaml', '-v']
+  waitFor: ['build-php81']
+
 # PHP 8.2
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '.']
+- id: 'build-php82'
+  name: gcr.io/cloud-builders/docker
+  args:
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '-t', 'gcr.io/cloud-devrel-public-resources/php82', '.']
   dir: 'php/php82'
   waitFor: ['-']
 
-# PHP 7.3 / 7.4 / 8.0
-# (do not build this for now, as it is not in use)
-# - name: gcr.io/cloud-builders/docker
-#   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php', '.']
-#   dir: 'php/php'
-#   waitFor: ['-']
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php82', '--config', 'php/php82.yaml', '-v']
+  waitFor: ['build-php82']
