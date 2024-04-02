@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# note: all local files are placed under /workspace and are required in path
+
 timeout: 21600s  # 6 hours
 options:
  machineType: 'E2_HIGHCPU_8'
@@ -20,36 +22,40 @@ steps:
 # PHP 8.0
 - id: 'build-php80'
   name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php80', '.']
+  args:
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php80', '-t', 'gcr.io/cloud-devrel-public-resources/php80', '.']
   dir: 'php/php80'
   waitFor: ['-']
+
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php80', '--config', '/workspace/php/php80.yaml', '-v']
+  waitFor: ['build-php80']
 
 # PHP 8.1
 - id: 'build-php81'
   name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '.']
+  args:
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '-t', 'gcr.io/cloud-devrel-public-resources/php81', '.']
   dir: 'php/php81'
   waitFor: ['-']
+
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php81', '--config', '/workspace/php/php81.yaml', '-v']
+  waitFor: ['build-php81']
 
 # PHP 8.2
 - id: 'build-php82'
   name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '.']
+  args:
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '-t', 'gcr.io/cloud-devrel-public-resources/php82', '.']
   dir: 'php/php82'
   waitFor: ['-']
 
-# Tag alternate names
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/php80',
-                'gcr.io/cloud-devrel-public-resources/php80']
-  waitFor: ['build-php80']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/php81',
-                'gcr.io/cloud-devrel-public-resources/php81']
-  waitFor: ['build-php81']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/php82',
-                'gcr.io/cloud-devrel-public-resources/php82']
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php82', '--config', '/workspace/php/php82.yaml', '-v']
   waitFor: ['build-php82']
 
 images:
