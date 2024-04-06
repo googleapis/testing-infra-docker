@@ -21,6 +21,7 @@ commandTests:
   command: ["php", "-m"]
   expectedOutput: ["grpc"]
   expectedOutput: ["sodium"]
+  expectedOutput: ["pdo_sqlsrv"]
 - name: "composer"
   command: ["composer", "about"]
   expectedOutput: ["Composer - Dependency Manager for PHP - version"]

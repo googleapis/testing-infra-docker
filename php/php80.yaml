@@ -20,6 +20,7 @@ commandTests:
 - name: "required php extentions"
   command: ["php", "-m"]
   expectedOutput: ["grpc"]
+  expectedOutput: ["pdo_sqlsrv"]
 - name: "composer"
   command: ["composer", "about"]
   expectedOutput: ["Composer - Dependency Manager for PHP - version"]
