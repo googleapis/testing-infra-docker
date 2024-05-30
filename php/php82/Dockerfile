@@ -1,6 +1,6 @@
 FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
 ENV PHP_DIR=/opt/php82
-ENV PHP_SRC_DIR=/usr/local/src/php80-build
+ENV PHP_SRC_DIR=/usr/local/src/php82-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
 ENV PHP_VERISON=8.2.6
 
