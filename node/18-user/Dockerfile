@@ -51,8 +51,8 @@ RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
 USER node
 
 # Install pyenv
-RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
+    echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
     echo 'export PATH="/home/node/.pyenv/shims:$PATH"' >> ~/.profile && \
     echo 'eval "$(pyenv init -)"' >> ~/.profile && \
     echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.profile
