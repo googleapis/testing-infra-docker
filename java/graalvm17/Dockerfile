@@ -43,10 +43,14 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 # Install docker
 RUN yum install -y docker-engine docker-cli
 
-# Install terraform
-RUN yum -y install terraform
+# Install Terraform
+RUN apt-get update && apt-get install -y gnupg software-properties-common curl && \
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
+    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
+    apt-get update && apt-get install terraform
 
-# Install jq
-RUN yum -y install jq
+# jq and xmlstarlet used to modify json and xml files
+RUN apt-get -y install jq
+RUN apt-get -y install xmlstarlet
 
 WORKDIR /workspace
