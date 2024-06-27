@@ -45,10 +45,20 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 # Install docker
 RUN yum install -y docker-engine docker-cli
 
-# Install terraform
+# Install Terraform (https://developer.hashicorp.com/terraform/install#linux)
+RUN yum install -y yum-utils
+RUN yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+
+# https://support.hashicorp.com/hc/en-us/articles/26015918890259-HashiCorp-RPM-releases-404-on-RHEL
+RUN sed -i -e "s/\$releasever/7/g" "/etc/yum.repos.d/hashicorp.repo"
+
 RUN yum -y install terraform
 
-# Install jq
+# jq and xmlstarlet used to modify json and xml files
 RUN yum -y install jq
+
+# xmlstarlet exists in EPEL (https://docs.fedoraproject.org/en-US/epel/)
+RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN yum -y install xmlstarlet
 
 WORKDIR /workspace

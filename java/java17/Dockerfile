@@ -107,7 +107,8 @@ RUN apt-get update && apt-get install -y gnupg software-properties-common curl &
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
     apt-get update && apt-get install terraform
 
-# Install jq
+# jq and xmlstarlet used to modify json and xml files
 RUN apt-get -y install jq
+RUN apt-get -y install xmlstarlet
 
 WORKDIR /workspace
