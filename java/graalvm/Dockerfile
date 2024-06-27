@@ -56,6 +56,9 @@ RUN yum -y install terraform
 
 # jq and xmlstarlet used to modify json and xml files
 RUN yum -y install jq
+
+# xmlstarlet exists in EPEL (https://docs.fedoraproject.org/en-US/epel/)
+yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN yum -y install xmlstarlet
 
 WORKDIR /workspace
