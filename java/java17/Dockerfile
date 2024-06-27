@@ -109,9 +109,6 @@ RUN apt-get update && apt-get install -y gnupg software-properties-common curl &
 
 # jq and xmlstarlet used to modify json and xml files
 RUN apt-get -y install jq
-
-# xmlstarlet exists in EPEL (https://docs.fedoraproject.org/en-US/epel/)
-RUN yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-RUN yum -y install xmlstarlet
+RUN apt-get -y install xmlstarlet
 
 WORKDIR /workspace
