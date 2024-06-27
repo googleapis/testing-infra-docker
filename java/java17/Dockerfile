@@ -111,7 +111,7 @@ RUN apt-get update && apt-get install -y gnupg software-properties-common curl &
 RUN apt-get -y install jq
 
 # xmlstarlet exists in EPEL (https://docs.fedoraproject.org/en-US/epel/)
-yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 RUN yum -y install xmlstarlet
 
 WORKDIR /workspace
