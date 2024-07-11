@@ -179,6 +179,7 @@ RUN python3.9 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 
+RUN rm /tmp/get-pip-3-7.py
 RUN rm /tmp/get-pip.py
 
 # Test Pip
