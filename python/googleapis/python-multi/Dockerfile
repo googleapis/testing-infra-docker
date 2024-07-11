@@ -159,7 +159,8 @@ RUN echo "conda activate" >> "${HOME}/.bashrc"
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 21.3.1
-RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
+    && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
 
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
@@ -172,7 +173,7 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
 # Ensure Pip for all python3 versions
-RUN python3.7 /tmp/get-pip.py
+RUN python3.7 /tmp/get-pip-3-7.py
 RUN python3.8 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
