@@ -146,15 +146,6 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.17 3.8.18 3.9.18 3.10.13 3.11.6 3.12.0; do 
   && rm -rf ~/.cache/ \
   && rm -r "$GNUPGHOME"
 
-# Install a version of conda/mamba package manager called micromamba.
-# This is used to help test conda installs of client libraries such as:
-# google-cloud-bigquery (python-bigquery)
-RUN curl -L -o Mambaforge.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
-RUN bash Mambaforge.sh -b -p "${HOME}/conda"
-RUN echo ". ${HOME}/conda/etc/profile.d/conda.sh" >> "${HOME}/.bashrc"
-RUN echo ". ${HOME}/conda/etc/profile.d/mamba.sh" >> "${HOME}/.bashrc"
-RUN echo "conda activate" >> "${HOME}/.bashrc"
-
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
