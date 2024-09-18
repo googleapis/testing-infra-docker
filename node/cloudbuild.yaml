@@ -15,24 +15,6 @@
 timeout: 7200s  # 2 hours
 steps:
 
-# Node 14
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:14-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:14-user', '.']
-  dir: 'node/14-user'
-  waitFor: ['-']
-
-# Node 16
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:16-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:16-user', '.']
-  dir: 'node/16-user'
-  waitFor: ['-']
-
-# Node 16-puppeteer
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:16-puppeteer', '-t', 'gcr.io/cloud-devrel-public-resources/node:16-puppeteer', '.']
-  dir: 'node/16-puppeteer'
-  waitFor: ['-']
-
 # Node 18
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:18-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-user', '.']

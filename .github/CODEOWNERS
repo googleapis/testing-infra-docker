@@ -11,3 +11,4 @@
 /node       @googleapis/yoshi-nodejs
 /python     @googleapis/yoshi-python
 /ruby       @googleapis/yoshi-ruby
+/php        @googleapis/yoshi-php

@@ -146,20 +146,12 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.17 3.8.18 3.9.18 3.10.13 3.11.6 3.12.0; do 
   && rm -rf ~/.cache/ \
   && rm -r "$GNUPGHOME"
 
-# Install a version of conda/mamba package manager called micromamba.
-# This is used to help test conda installs of client libraries such as:
-# google-cloud-bigquery (python-bigquery)
-RUN curl -L -o Mambaforge.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
-RUN bash Mambaforge.sh -b -p "${HOME}/conda"
-RUN echo ". ${HOME}/conda/etc/profile.d/conda.sh" >> "${HOME}/.bashrc"
-RUN echo ". ${HOME}/conda/etc/profile.d/mamba.sh" >> "${HOME}/.bashrc"
-RUN echo "conda activate" >> "${HOME}/.bashrc"
-
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 21.3.1
-RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
+    && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
 
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
@@ -172,12 +164,13 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
 # Ensure Pip for all python3 versions
-RUN python3.7 /tmp/get-pip.py
+RUN python3.7 /tmp/get-pip-3-7.py
 RUN python3.8 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 
+RUN rm /tmp/get-pip-3-7.py
 RUN rm /tmp/get-pip.py
 
 # Test Pip
