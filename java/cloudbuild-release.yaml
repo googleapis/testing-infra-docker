@@ -1,0 +1,44 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+timeout: 7200s # 2 hours
+steps:
+  # Java 8 build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "."]
+    dir: java/java8
+    id: java8-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "--config", "java/java8.yaml", "-v"]
+    waitFor: ["java8-build"]
+
+  # Java 17 build specifically for java-storage
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "."]
+    dir: java/java17
+    id: java17-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "--config", "java/java17.yaml", "-v"]
+    waitFor: ["java17-build"]
+
+images:
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17
+
+options:
+  logging: CLOUD_LOGGING_ONLY
