@@ -51,9 +51,9 @@ steps:
       ]
     waitFor: ["go123-build"]
 
-options:
-  logging: CLOUD_LOGGING_ONLY
-
 images:
   - gcr.io/$PROJECT_ID/go121
   - gcr.io/$PROJECT_ID/go123
+
+options:
+  logging: CLOUD_LOGGING_ONLY

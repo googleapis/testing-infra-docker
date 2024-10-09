@@ -24,3 +24,6 @@ steps:
 images:
   - gcr.io/cloud-devrel-kokoro-resources/node
   - gcr.io/cloud-devrel-public-resources/node
+
+options:
+  logging: CLOUD_LOGGING_ONLY

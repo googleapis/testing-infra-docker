@@ -219,3 +219,6 @@ images:
   - gcr.io/cloud-devrel-public-resources/java17
   - gcr.io/$PROJECT_ID/java21
   - gcr.io/cloud-devrel-public-resources/java21
+
+options:
+  logging: CLOUD_LOGGING_ONLY
