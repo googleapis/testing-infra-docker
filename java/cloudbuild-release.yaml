@@ -26,22 +26,6 @@ steps:
     args:
       ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "--config", "java/java8.yaml", "-v"]
     waitFor: ["java8-build"]
-  - name: gcr.io/cloud-builders/docker
-    args:
-      [
-        "tag",
-        "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8",
-        "gcr.io/cloud-devrel-public-resources/java8",
-      ]
-  - name: gcr.io/cloud-builders/docker
-    # The tag for image scanning (b/314943422)
-    args:
-      [
-        "tag",
-        "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8",
-        "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$SHORT_SHA",
-      ]
-    waitFor: ["java8-build"]
 
   # Java 17 build specifically for java-storage https://source.corp.google.com/piper///depot/google3/cloud/sdk/client_libraries/kokoro/java/googleapis/java-storage/release/common.cfg;l=12
   - name: gcr.io/cloud-builders/docker
@@ -53,28 +37,10 @@ steps:
     args:
       ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "--config", "java/java17.yaml", "-v"]
     waitFor: ["java17-build"]
-  - name: gcr.io/cloud-builders/docker
-    args:
-      [
-        "tag",
-        "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17",
-        "gcr.io/cloud-devrel-public-resources/java17",
-      ]
-  - name: gcr.io/cloud-builders/docker
-    # The tag for image scanning (b/314943422)
-    args:
-      [
-        "tag",
-        "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17",
-        "gcr.io/cloud-devrel-public-resources/java17:infrastructure-public-image-$SHORT_SHA",
-      ]
-    waitFor: ["java17-build"]
 
 images:
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8
-  - gcr.io/cloud-devrel-public-resources/java8
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17
-  - gcr.io/cloud-devrel-public-resources/java17
 
 options:
   logging: CLOUD_LOGGING_ONLY
