@@ -38,7 +38,7 @@ steps:
     args:
       [
         "tag",
-        "gcr.io/$PROJECT_ID/java8",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8",
         "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$SHORT_SHA",
       ]
     waitFor: ["java8-build"]
