@@ -54,3 +54,6 @@ steps:
 images:
   - gcr.io/$PROJECT_ID/go121
   - gcr.io/$PROJECT_ID/go123
+
+options:
+  logging: CLOUD_LOGGING_ONLY

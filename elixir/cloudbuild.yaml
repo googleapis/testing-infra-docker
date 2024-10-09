@@ -204,3 +204,6 @@ images:
 - gcr.io/$PROJECT_ID/elixir114
 - gcr.io/$PROJECT_ID/elixir115
 - gcr.io/$PROJECT_ID/elixir116
+
+options:
+  logging: CLOUD_LOGGING_ONLY
