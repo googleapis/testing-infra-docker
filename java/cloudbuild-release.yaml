@@ -13,8 +13,6 @@
 # limitations under the License.
 
 timeout: 7200s # 2 hours
-substitutions:
-  _GRAALVM_VERSION: '22.3.3'
 steps:
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
@@ -27,7 +25,7 @@ steps:
       ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "--config", "java/java8.yaml", "-v"]
     waitFor: ["java8-build"]
 
-  # Java 17 build specifically for java-storage https://source.corp.google.com/piper///depot/google3/cloud/sdk/client_libraries/kokoro/java/googleapis/java-storage/release/common.cfg;l=12
+  # Java 17 build specifically for java-storage
   - name: gcr.io/cloud-builders/docker
     args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "."]
     dir: java/java17
