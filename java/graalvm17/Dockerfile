@@ -48,7 +48,7 @@ RUN yum install -y yum-utils
 RUN yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 
 # https://support.hashicorp.com/hc/en-us/articles/26015918890259-HashiCorp-RPM-releases-404-on-RHEL
-RUN sed -i -e "s/\$releasever/7/g" "/etc/yum.repos.d/hashicorp.repo"
+RUN sed -i -e "s/\$releasever/8/g" "/etc/yum.repos.d/hashicorp.repo"
 
 RUN yum -y install terraform
 
