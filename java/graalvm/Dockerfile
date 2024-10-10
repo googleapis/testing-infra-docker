@@ -58,7 +58,7 @@ RUN yum -y install terraform
 RUN yum -y install jq
 
 # xmlstarlet exists in EPEL (https://docs.fedoraproject.org/en-US/epel/)
-RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 RUN yum -y install xmlstarlet
 
 WORKDIR /workspace
