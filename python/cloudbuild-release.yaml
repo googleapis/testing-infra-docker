@@ -20,9 +20,6 @@ steps:
   dir: 'python/googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi']
-  waitFor: ['python-multi']
 
 options:
   machineType: 'E2_HIGHCPU_8'
