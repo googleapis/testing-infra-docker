@@ -1,0 +1,37 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# note: all local files are placed under /workspace and are required in path
+
+timeout: 21600s  # 6 hours
+options:
+ machineType: 'E2_HIGHCPU_8'
+ logging: CLOUD_LOGGING_ONLY
+steps:
+
+# PHP 8.1
+- id: 'build-php81'
+  name: gcr.io/cloud-builders/docker
+  args:
+    ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/php81', '.']
+  dir: 'php/php81'
+  waitFor: ['-']
+
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/php81', '--config', '/workspace/php/php81.yaml', '-v']
+  waitFor: ['build-php81']
+
+images:
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/php81
