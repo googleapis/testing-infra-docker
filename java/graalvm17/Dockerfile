@@ -14,7 +14,7 @@
 
 ARG GRAALVM_VERSION
 
-FROM ghcr.io/graalvm/graalvm-ce:ol7-java17-$GRAALVM_VERSION-b1
+FROM ghcr.io/graalvm/graalvm-ce:ol8-java17-$GRAALVM_VERSION-b1
 
 RUN gu install native-image && \
     yum update -y && \
@@ -56,10 +56,7 @@ RUN yum -y install terraform
 RUN yum -y install jq
 
 # xmlstarlet exists in EPEL (https://docs.fedoraproject.org/en-US/epel/)
-RUN yum install epel-release
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-RUN yum -y install epel-release
 RUN yum -y install xmlstarlet
-RUN yum -y repolist
 
 WORKDIR /workspace
