@@ -18,13 +18,13 @@ steps:
 # Build Ruby multi-use image
 - id: 'build-release'
   name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/yoshi-ruby/release', '.']
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/ruby-multi', '.']
   dir: 'ruby/multi'
   waitFor: ['-']
 
 # Results
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/yoshi-ruby/release
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/ruby-multi
 
 options:
   logging: CLOUD_LOGGING_ONLY
