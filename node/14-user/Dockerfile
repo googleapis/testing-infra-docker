@@ -60,8 +60,8 @@ RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
 ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
 
 # Install python
-RUN pyenv install 3.7.4 && \
-    pyenv global 3.7.4 && \
+RUN pyenv install 3.10.13 && \
+    pyenv global 3.10.13 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install gcp-uploader and gcp-releasetool and their dependencies.
