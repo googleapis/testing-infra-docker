@@ -17,12 +17,12 @@ steps:
 
 # Node 14
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node:14-user', '.']
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node14', '.']
   dir: 'node/14-user'
   waitFor: ['-']
 
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node14
 
 options:
   logging: CLOUD_LOGGING_ONLY
