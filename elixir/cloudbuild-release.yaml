@@ -19,6 +19,7 @@ steps:
 - name: gcr.io/cloud-builders/gsutil
   args: ['cp', '-r', 'gs://release-image-cache/elixir-artifacts/elixir*', '/workspace/elixir/plt_builder/plts/']
   id: load-plts
+  allowFailure: true
   waitFor: ['-']
 
 # Elixir 1.14 build
