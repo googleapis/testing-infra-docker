@@ -24,7 +24,7 @@ steps:
 
 # Results
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/yoshi-ruby/ruby-multi
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/ruby-multi
 
 options:
   logging: CLOUD_LOGGING_ONLY
