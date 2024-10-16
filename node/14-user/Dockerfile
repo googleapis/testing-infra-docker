@@ -68,12 +68,9 @@ RUN pyenv install 3.10.13 && \
 COPY requirements.txt requirements.txt
 RUN python3 -m pip install --require-hashes -r requirements.txt
 
-RUN which python3
-
 # Setup Cloud SDK
 WORKDIR /home/node
 ENV CLOUD_SDK_VERSION=438.0.0 \
-    # CLOUDSDK_PYTHON="$(pyenv which python)" \
     PATH=/home/node/google-cloud-sdk/bin:$PATH
 RUN set -ex; \
     curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz; \
