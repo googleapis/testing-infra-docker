@@ -18,7 +18,7 @@ steps:
 # Build Ruby multi-use image
 - id: 'build-release'
   name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/yoshi-ruby/ruby-multi', '.']
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/ruby-multi', '.']
   dir: 'ruby/multi'
   waitFor: ['-']
 
