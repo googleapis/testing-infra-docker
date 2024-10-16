@@ -19,7 +19,7 @@ steps:
 - id: 'build-release'
   name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/yoshi-ruby/release', '.']
-  dir: 'ruby/release'
+  dir: 'ruby/multi'
   waitFor: ['-']
 
 # Results
