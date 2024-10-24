@@ -17,7 +17,7 @@ steps:
 
 # Fetch cached plt files
 - name: gcr.io/cloud-builders/gsutil
-  args: ['cp', '-r', 'gs://release-image-cache/elixir-artifacts/elixir*', '/workspace/elixir/plt_builder/plts/']
+  args: ['cp', '-r', 'gs://release-image-cache2/elixir-artifacts/elixir*', '/workspace/elixir/plt_builder/plts/']
   id: load-plts
   allowFailure: true
   waitFor: ['-']
@@ -38,7 +38,7 @@ steps:
 
 # Push cached plt files
 - name: gcr.io/cloud-builders/gsutil
-  args: ['cp', '-r', '/workspace/elixir/plt_builder/plts/elixir*', 'gs://release-image-cache/elixir-artifacts/']
+  args: ['cp', '-r', '/workspace/elixir/plt_builder/plts/elixir*', 'gs://release-image-cache2/elixir-artifacts/']
   waitFor: [
     'elixir114-extract-plts',
   ]
