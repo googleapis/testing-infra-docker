@@ -14,6 +14,11 @@
 
 FROM node:18-buster
 
+# Setup npm
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+RUN npm i -g npm@10
+RUN npm config set update-notifier false
+
 # Add Graphviz
 RUN set -ex; \
   apt-get update -y; \
