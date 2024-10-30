@@ -121,7 +121,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.18 3.7.17 3.8.18 3.9.18 3.10.13 3.11.6 3.12.0 3.13.0; do \
+RUN for PYTHON_VERSION in 2.7.18 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.13.0; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
