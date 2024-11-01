@@ -96,7 +96,7 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 3.7.17 3.8.18 3.9.18 3.10.13 3.11.6 3.12.0; do \
+RUN for PYTHON_VERSION in 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.13.0; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -141,6 +141,7 @@ RUN python3.8 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.10 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
+RUN python3.13 /tmp/get-pip.py
 
 RUN rm /tmp/get-pip-3-7.py
 RUN rm /tmp/get-pip.py
@@ -153,6 +154,7 @@ RUN python3.9 -m pip
 RUN python3.10 -m pip
 RUN python3.11 -m pip
 RUN python3.12 -m pip
+RUN python3.13 -m pip
 
 
 # Install Python packages
