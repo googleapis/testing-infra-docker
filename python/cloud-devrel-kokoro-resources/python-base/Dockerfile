@@ -15,7 +15,7 @@
 # Dockerfile derived from googleapis/python-multi (the image used by the client
 # libraries tests). We modify this to ensure that all standard library
 # features are available.
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -29,6 +29,7 @@ ENV LANG C.UTF-8
 
 # Install dependencies.
 RUN apt-get update \
+  && apt -y upgrade \
   && apt-get install -y --no-install-recommends \
     apt-transport-https \
     build-essential \
