@@ -1,1 +1,2 @@
 nox
+virtualenv==20.26.6
