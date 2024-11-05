@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.20
+FROM golang:1.23
 
 # Install dependencies
 RUN set -ex; \
@@ -44,9 +44,10 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
     apt-get install google-cloud-sdk -y
 
 # Install tools used in build
-RUN go install honnef.co/go/tools/cmd/staticcheck@latest && \
+RUN (export GOTOOLCHAIN='auto' && \
+    go install honnef.co/go/tools/cmd/staticcheck@latest && \
     go install github.com/jstemmer/go-junit-report@latest && \
     go install golang.org/x/lint/golint@latest && \
-    go install golang.org/x/tools/cmd/goimports@latest
+    go install golang.org/x/tools/cmd/goimports@latest)
 
 WORKDIR $GOPATH

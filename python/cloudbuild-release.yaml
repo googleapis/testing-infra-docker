@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
 
 timeout: 7200s  # 2 hours
 steps:
-
-# Node 18
+# googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:18-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-user', '.']
-  dir: 'node/18-user'
+  args: ['build',  '--cache-from', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi', '.']
+  dir: 'python/googleapis/python-multi'
+  id: 'python-multi'
   waitFor: ['-']
 
-images:
-  - gcr.io/cloud-devrel-kokoro-resources/node
-  - gcr.io/cloud-devrel-public-resources/node
-
 options:
+  machineType: 'E2_HIGHCPU_8'
   logging: CLOUD_LOGGING_ONLY
+
+images:
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi

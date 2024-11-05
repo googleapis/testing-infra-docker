@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ schemaVersion: 1.0.0
 commandTests:
   - name: "version"
     command: ["go", "version"]
-    expectedOutput: ["go version go1.20"]
+    expectedOutput: ["go version go1.23"]
   - name: "gcloud"
     command: ["gcloud", "version"]
     expectedOutput: ["Google Cloud SDK"]

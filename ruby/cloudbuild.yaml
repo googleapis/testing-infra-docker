@@ -57,3 +57,6 @@ images:
   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi
   - gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release
   - gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi
+
+options:
+  logging: CLOUD_LOGGING_ONLY

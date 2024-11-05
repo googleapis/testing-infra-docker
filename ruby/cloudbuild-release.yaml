@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,15 +15,16 @@
 timeout: 7200s  # 2 hours
 steps:
 
-# Node 18
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:18-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-user', '.']
-  dir: 'node/18-user'
+# Build Ruby multi-use image
+- id: 'build-release'
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/ruby-multi', '.']
+  dir: 'ruby/multi'
   waitFor: ['-']
 
+# Results
 images:
-  - gcr.io/cloud-devrel-kokoro-resources/node
-  - gcr.io/cloud-devrel-public-resources/node
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/ruby-multi
 
 options:
   logging: CLOUD_LOGGING_ONLY
