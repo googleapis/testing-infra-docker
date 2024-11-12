@@ -15,7 +15,8 @@
 FROM node:18-buster
 
 # Setup npm
-ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV HOME=h
+ENV NPM_CONFIG_PREFIX=${HOME}/.npm-global
 RUN npm i -g npm@10
 RUN npm config -g set update-notifier false
 
