@@ -17,26 +17,10 @@
 
 timeout: 7200s # 2 hours
 steps:
-  # Go 1.21 build
-  - name: gcr.io/cloud-builders/docker
-    args: [ "build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go121", "." ]
-    dir: go/go121
-    id: go121-build
-    waitFor: [ "-" ]
-  - name: gcr.io/gcp-runtimes/structure_test
-    args:
-      [
-        "-i",
-        "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go121",
-        "--config",
-        "/workspace/go/go121.yaml",
-        "-v",
-      ]
-    waitFor: [ "go121-build" ]
     # Go 1.23 build
   - name: gcr.io/cloud-builders/docker
     args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go123", "."]
-    dir: go/go123
+    dir: go/go123-release
     id: go123-build
     waitFor: ["-"]
   - name: gcr.io/gcp-runtimes/structure_test
@@ -51,7 +35,6 @@ steps:
     waitFor: ["go123-build"]
 
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go121
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go123
 
 options:
