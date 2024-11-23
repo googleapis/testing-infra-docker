@@ -16,8 +16,8 @@ FROM node:18-buster
 
 # Add Graphviz
 RUN set -ex; \
-    apt-get update -y; \
-    apt-get install -y \
+  apt-get update -y; \
+  apt-get install -y \
     graphviz \
     apt-transport-https \
     ca-certificates \
@@ -26,14 +26,14 @@ RUN set -ex; \
     lsb-release \
     software-properties-common \
     ; \
-    rm -rf /var/lib/apt/lists/*
+  rm -rf /var/lib/apt/lists/*
 
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/debian \
-    $(lsb_release -cs) \
-    stable" && \
+        "deb [arch=amd64] https://download.docker.com/linux/debian \
+        $(lsb_release -cs) \
+        stable" && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
