@@ -51,7 +51,7 @@ RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
 USER node
 
 # Setup npm's config
-ENV NPM_CONFIG_PREFIX=/home/node/.npm
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 RUN npm config -g set update-notifier false
 
 # Install pyenv
