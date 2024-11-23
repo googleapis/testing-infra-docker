@@ -14,8 +14,9 @@
 
 FROM node:18-buster
 
-# Setup npm's config
-ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+# Setup npm's config and allow anyone to write to it
+ENV NPM_CONFIG_PREFIX=/home/node/.npm
+RUN mkdir -p $NPM_CONFIG_PREFIX && chmod 777 $NPM_CONFIG_PREFIX
 RUN npm config -g set update-notifier false
 
 # Add Graphviz
