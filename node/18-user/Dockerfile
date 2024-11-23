@@ -14,15 +14,10 @@
 
 FROM node:18-buster
 
-# Setup npm's config and allow anyone to write to it
-ENV NPM_CONFIG_PREFIX=/home/node/.npm
-RUN mkdir -p $NPM_CONFIG_PREFIX && chmod 777 $NPM_CONFIG_PREFIX
-RUN npm config -g set update-notifier false
-
 # Add Graphviz
 RUN set -ex; \
-  apt-get update -y; \
-  apt-get install -y \
+    apt-get update -y; \
+    apt-get install -y \
     graphviz \
     apt-transport-https \
     ca-certificates \
@@ -31,14 +26,14 @@ RUN set -ex; \
     lsb-release \
     software-properties-common \
     ; \
-  rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     add-apt-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/debian \
-        $(lsb_release -cs) \
-        stable" && \
+    "deb [arch=amd64] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) \
+    stable" && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
@@ -54,6 +49,10 @@ RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 
 USER node
+
+# Setup npm's config and allow anyone to write to it
+ENV NPM_CONFIG_PREFIX=/home/node/.npm
+RUN npm config -g set update-notifier false
 
 # Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
