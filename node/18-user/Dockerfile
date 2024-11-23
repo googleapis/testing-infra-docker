@@ -53,6 +53,7 @@ USER node
 # Setup npm's config
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 RUN npm config -g set update-notifier false
+RUN npm i -g npm@`npm --version`
 
 # Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
