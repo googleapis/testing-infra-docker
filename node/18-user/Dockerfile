@@ -14,10 +14,6 @@
 
 FROM node:18-buster
 
-# Setup npm's config
-ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
-RUN npm config -g set update-notifier false
-
 # Add Graphviz
 RUN set -ex; \
   apt-get update -y; \
@@ -53,6 +49,12 @@ RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 
 USER node
+
+# Setup npm and ensure anyone can read/write to the global, shared config
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+RUN mkdir -p $NPM_CONFIG_PREFIX && chmod 777 $NPM_CONFIG_PREFIX
+RUN npm config -g set update-notifier false
+RUN npm i -g npm@`npm --version`
 
 # Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
