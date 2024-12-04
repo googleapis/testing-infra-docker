@@ -8,7 +8,7 @@
 /elixir     @googleapis/yoshi-elixir
 /go         @googleapis/yoshi-go
 /java       @googleapis/yoshi-java @googleapis/cloud-java-team-teamsync
-/node       @googleapis/yoshi-nodejs
+/node       @googleapis/jsteam
 /python     @googleapis/yoshi-python
 /ruby       @googleapis/yoshi-ruby
 /php        @googleapis/yoshi-php
