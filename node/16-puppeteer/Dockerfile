@@ -28,6 +28,9 @@ RUN apt-get update && apt-get install -y make build-essential libssl-dev zlib1g-
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python-openssl
 
+# Update npm
+RUN npm install -g npm@9
+
 # Run everything after as non-privileged user.
 USER node
 
