@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:18
 
 # Taken from
 # https://github.com/GoogleChrome/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-in-docker
@@ -26,7 +26,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 # Install pyenv dependencies
 RUN apt-get update && apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 
 # Run everything after as non-privileged user.
 USER node
@@ -42,8 +42,8 @@ RUN echo 'export PATH="/home/node/.pyenv/bin:$PATH"' >> ~/.profile && \
 ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
 
 # Install python
-RUN pyenv install 3.8.16 && \
-    pyenv global 3.8.16 && \
+RUN pyenv install 3.10.13 && \
+    pyenv global 3.10.13 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Setup Cloud SDK
