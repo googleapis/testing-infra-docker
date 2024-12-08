@@ -25,6 +25,17 @@ steps:
       ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "--config", "java/java8.yaml", "-v"]
     waitFor: ["java8-build"]
 
+  # Java 11 build for publish docs
+  - name: gcr.io/cloud-builders/docker
+    args: [ "build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java11", "." ]
+    dir: java/java11
+    id: java11-build
+    waitFor: [ "-" ]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      [ "-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java11", "--config", "java/java11.yaml", "-v" ]
+    waitFor: [ "java11-build" ]
+
   # Java 17 build specifically for java-storage
   - name: gcr.io/cloud-builders/docker
     args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "."]
@@ -38,6 +49,7 @@ steps:
 
 images:
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java11
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17
 
 options:
