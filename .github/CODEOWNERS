@@ -10,5 +10,5 @@
 /java       @googleapis/yoshi-java @googleapis/cloud-java-team-teamsync
 /node       @googleapis/jsteam
 /python     @googleapis/yoshi-python
-/ruby       @googleapis/yoshi-ruby
+/ruby       @googleapis/ruby-team
 /php        @googleapis/yoshi-php
