@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM eclipse-temurin:17
+FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/maven@sha256:d3f04985c6a68415e36c0a6468d0f8316f27d4dbee77bc459257ba444224bd9f
 
 RUN apt-get update && \
     apt-get -y upgrade && \
