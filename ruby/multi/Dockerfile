@@ -27,7 +27,8 @@ ENV RUBY_27_VERSION=2.7.8 \
     TOYS_VERSION=0.15.6 \
     PYTHON_VERSION=3.10.15 \
     NODEJS_VERSION=18.20.5 \
-    DOCUPLOADER_VERSION=0.6.5
+    DOCUPLOADER_VERSION=0.6.5 \
+    GH_VERSION=2.65.0
 
 ENV OLDEST_RUBY_VERSION=$RUBY_30_VERSION \
     NEWEST_RUBY_VERSION=$RUBY_33_VERSION \
@@ -178,6 +179,13 @@ RUN CHROMEDRIVER_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-tes
     && rm -rf /tmp/chromedriver-linux64.zip \
     && mv -f /tmp/chromedriver-linux64/chromedriver "/usr/local/bin/chromedriver" \
     && chmod +x "/usr/local/bin/chromedriver"
+
+# Install gh
+RUN mkdir -p /opt/local \
+    && wget https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.tar.gz \
+    && tar xvzf gh_${GH_VERSION}_linux_amd64.tar.gz -C /opt/local/ \
+    && ln -s /opt/local/gh_${GH_VERSION}_linux_amd64/bin/gh /usr/local/bin/ \
+    && rm gh_${GH_VERSION}_linux_amd64.tar.gz
 
 # Allow non-root users read access to /root (for Trampoline V2)
 RUN chmod -v a+rx /root
