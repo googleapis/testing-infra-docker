@@ -14,7 +14,7 @@
 
 # eclipse-temurin:17 as of Jan 9th, 2025
 # https://hub.docker.com/layers/library/eclipse-temurin/17/images/sha256-227c7dac267fde2625cee1dd978006a09c3f2048544b72597160620675da2668
-FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/maven@sha256:7fccb2a944c8caed3a1f7e56a02ca52cebe5a95e06cb3e4fd35e26b9a6e7dfeb
+FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/eclipse-temurin@sha256:7fccb2a944c8caed3a1f7e56a02ca52cebe5a95e06cb3e4fd35e26b9a6e7dfeb
 
 RUN apt-get update && \
     apt-get -y upgrade && \
