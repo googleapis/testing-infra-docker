@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/eclipse-temurin:17
+# https://hub.docker.com/layers/library/eclipse-temurin/17/images/sha256-cdb63d76e280973f6afbe4658db03757c7fc4bad3168cd583435752112e74b9a
+FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/eclipse-temurin@sha256:7fccb2a944c8caed3a1f7e56a02ca52cebe5a95e06cb3e4fd35e26b9a6e7dfeb
 
 RUN apt-get update && \
     apt-get -y upgrade && \
