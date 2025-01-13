@@ -12,25 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM openjdk:8-jdk
+# openjdk:8-jdk as of January 23th, 2025
+FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
 
+# TODO(suztomo): Update this to source them from Airlock
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
     rm -rf /var/cache/apt
 
-RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
-    unzip /tmp/maven.zip -d /tmp/maven && \
-    mv /tmp/maven/apache-maven-3.8.1 /usr/local/lib/maven && \
-    rm /tmp/maven.zip && \
-    ln -s $JAVA_HOME/lib $JAVA_HOME/conf
+ENV MAVEN_HOME=/usr/share/maven
+# 3.9.9-eclipse-temurin-11-alpine
+COPY --from=us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/maven@sha256:d3f04985c6a68415e36c0a6468d0f8316f27d4dbee77bc459257ba444224bd9f ${MAVEN_HOME} ${MAVEN_HOME}
 
+# TODO(suztomo): Do we use Gradle?
 RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
     mkdir -p /usr/local/lib/gradle && \
     unzip -q /tmp/gradle.zip -d /usr/local/lib/gradle && \
     rm /tmp/gradle.zip
 
-ENV PATH $PATH:/usr/local/lib/maven/bin:/usr/local/lib/gradle/gradle-4.9/bin
+ENV PATH $PATH:${MAVEN_HOME}/bin:/usr/local/lib/gradle/gradle-4.9/bin
 
 # Install gcloud SDK
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
@@ -41,7 +42,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
 RUN mkdir -p /tmp/playservices && \
     wget -q https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar -O /tmp/play-services-basement.aar && \
     unzip -q /tmp/play-services-basement.aar -d /tmp/playservices && \
-    mvn install:install-file \
+    mvn -V install:install-file \
         -Dfile=/tmp/playservices/classes.jar \
         -DgroupId=com.google.android.google-play-services \
         -DartifactId=google-play-services \
@@ -49,7 +50,7 @@ RUN mkdir -p /tmp/playservices && \
         -Dpackaging=jar
 
 # Install the appengine SDK
-RUN mvn dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
+RUN mvn -V dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
 
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
