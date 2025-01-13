@@ -15,6 +15,7 @@
 # openjdk:8-jdk as of January 23th, 2025
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
 
+# TODO(suztomo): Update this to source them from Airlock
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \

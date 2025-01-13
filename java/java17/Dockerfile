@@ -16,6 +16,7 @@
 # https://hub.docker.com/layers/library/eclipse-temurin/17/images/sha256-227c7dac267fde2625cee1dd978006a09c3f2048544b72597160620675da2668
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/eclipse-temurin@sha256:7fccb2a944c8caed3a1f7e56a02ca52cebe5a95e06cb3e4fd35e26b9a6e7dfeb
 
+# TODO(suztomo): Update this to source them from Airlock
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install wget && \
@@ -29,6 +30,7 @@ ENV MAVEN_HOME=/usr/share/maven
 # 3.9.9-eclipse-temurin-11-alpine
 COPY --from=us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/maven@sha256:d3f04985c6a68415e36c0a6468d0f8316f27d4dbee77bc459257ba444224bd9f ${MAVEN_HOME} ${MAVEN_HOME}
 
+# TODO(suztomo): Do we use Gradle?
 RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
     mkdir -p /usr/local/lib/gradle && \
     unzip -q /tmp/gradle.zip -d /usr/local/lib/gradle && \
