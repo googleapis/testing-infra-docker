@@ -22,6 +22,8 @@ steps:
     dir: java/java8
     id: java8-build
     waitFor: ["-"]
+    env:
+    - 'DOCKER_BUILDKIT=1'
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "gcr.io/$PROJECT_ID/java8", "--config", "java/java8.yaml", "-v"]
@@ -79,6 +81,8 @@ steps:
     dir: java/java17
     id: java17-build
     waitFor: ["-"]
+    env:
+    - 'DOCKER_BUILDKIT=1'
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "gcr.io/$PROJECT_ID/java17", "--config", "java/java17.yaml", "-v"]

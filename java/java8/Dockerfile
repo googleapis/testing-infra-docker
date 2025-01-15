@@ -12,11 +12,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Start of Airlock configuration go/airlock/howto_docker
+#debian base with tag: bookworm-v1.0.0-gke.2
+FROM gcr.io/gke-release/debian-base@sha256:a832a1accd71d3c3a8c102aeb0ff7ee38536ab9f0237031920492621415f53f3 as bootstrap
+
+RUN --mount=type=secret,id=credentials \
+    gcloud auth list
+
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y --allow-change-held-packages \
+        gnupg curl ca-certificates apt-utils && \
+    curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    echo 'deb http://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main' | tee -a /etc/apt/sources.list.d/artifact-registry.list
+
+RUN apt-get update && apt-get install apt-transport-artifact-registry
+
+# New clean base so we aren't fetching "gnupg curl apt-utils" if not needed
+FROM gcr.io/gke-release/debian-base@sha256:a832a1accd71d3c3a8c102aeb0ff7ee38536ab9f0237031920492621415f53f3 as base
+
+# ca-certificates is required for https
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y --allow-change-held-packages \
+        ca-certificates
+
+# Copy only the ar+https
+COPY --from=bootstrap "/usr/lib/apt/methods/ar+https" "/usr/lib/apt/methods/ar+https"
+# Copy the apache notice type license for OSPO
+COPY --from=bootstrap "/usr/share/doc/apt-transport-artifact-registry" "/usr/share/doc/apt-transport-artifact-registry"
+
+# Remove all other apt sources, silence errors if file doesn't exist
+RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
+
+# If GOOGLE_APPLICATION_CREDENTIALS is passed in docker build command use it, if not leave it unset to support GCE Metadata in CI builds
+ARG GOOGLE_APPLICATION_CREDENTIALS
+
+# Use a secret mount to access your long lived credentials, without the risk of leaking them in any of the docker layers
+# Make sure the distribution is correct; in this case, it is trying to access Debian Bookworm repository
+RUN --mount=type=secret,id=credentials \
+    echo 'deb ar+https://us-apt.pkg.dev/remote/artifact-foundry-prod/debian-3p-remote-bookworm bookworm main' | \
+    tee -a  /etc/apt/sources.list.d/artifact-registry.list && \
+    apt-get update
+
+
+# End of Airlock configuration
+
 # openjdk:8-jdk as of January 23th, 2025
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
 
 # TODO(suztomo): Update this to source them from Airlock
-RUN apt-get update && \
+RUN --mount=type=secret,id=credentials apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
     rm -rf /var/cache/apt
@@ -56,7 +100,8 @@ RUN mvn -V dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
-RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+RUN --mount=type=secret,id=credentials \
+    apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
@@ -74,7 +119,8 @@ RUN pyenv install 3.9.13 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install docker
-RUN apt-get update && apt-get install -y \
+RUN --mount=type=secret,id=credentials \
+    apt-get update && apt-get install -y \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -90,18 +136,22 @@ RUN apt-get update && apt-get install -y \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Install Terraform
-RUN apt-get update && apt-get install -y gnupg software-properties-common curl && \
+RUN --mount=type=secret,id=credentials \
+    apt-get update && apt-get install -y gnupg software-properties-common curl && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
     apt-get update && apt-get install terraform
 
 # jq and xmlstarlet used to modify json and xml files
-RUN apt-get -y install jq
-RUN apt-get -y install xmlstarlet
+RUN --mount=type=secret,id=credentials \
+    apt-get -y install jq
+RUN --mount=type=secret,id=credentials \
+    apt-get -y install xmlstarlet
 
 # Installing JDK 11 to build projects that depend on graal-sdk 22.1.0 or higher
 # (requiring Java 11+). Still we target Java 8 for the compiled class files.
-RUN apt-get install -y openjdk-11-jdk
+RUN --mount=type=secret,id=credentials \
+    apt-get install -y openjdk-11-jdk
 # JDK 11 is used only when explicitly selected in the build file
 ENV JAVA8_HOME=/usr/local/openjdk-8
 ENV JAVA11_HOME=/usr/lib/jvm/java-11-openjdk-amd64
