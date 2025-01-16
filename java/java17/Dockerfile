@@ -22,7 +22,8 @@ INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/eclipse-temurin@sha256:7fccb2a944c8caed3a1f7e56a02ca52cebe5a95e06cb3e4fd35e26b9a6e7dfeb
 
 # TODO(suztomo): Update this to source them from Airlock
-RUN apt-get update && \
+RUN --mount=type=secret,id=credentials \
+    apt-get update && \
     apt-get -y upgrade && \
     apt-get install wget && \
     apt-get install unzip && \
@@ -44,7 +45,8 @@ RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp
 ENV PATH $PATH:${MAVEN_HOME}/bin:/usr/local/lib/gradle/gradle-4.9/bin
 
 # Install gcloud SDK
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+RUN  --mount=type=secret,id=credentials \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
     apt-get install google-cloud-sdk -y
 
@@ -66,7 +68,8 @@ RUN mvn -V dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
-RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+RUN  --mount=type=secret,id=credential \
+    apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
@@ -84,17 +87,20 @@ RUN pyenv install 3.9.13 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Add Graphviz for Cloud Run samples
-RUN apt-get update -y && \
+RUN  --mount=type=secret,id=credentials \
+    apt-get update -y && \
     apt-get install -y graphviz && \
     rm -rf /var/lib/apt/lists/*
     
 # Add imagemagick for Cloud Run samples
-RUN apt-get update -y && \
+RUN  --mount=type=secret,id=credentials \
+    apt-get update -y && \
     apt-get install -y imagemagick && \
     rm -rf /var/lib/apt/lists/*
 
 # Install docker
-RUN apt-get update && apt-get install -y \
+RUN  --mount=type=secret,id=credentials \
+    apt-get update && apt-get install -y \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -110,13 +116,16 @@ RUN apt-get update && apt-get install -y \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Install Terraform
-RUN apt-get update && apt-get install -y gnupg software-properties-common curl && \
+RUN  --mount=type=secret,id=credentials \
+    apt-get update && apt-get install -y gnupg software-properties-common curl && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
     apt-get update && apt-get install terraform
 
 # jq and xmlstarlet used to modify json and xml files
-RUN apt-get -y install jq
-RUN apt-get -y install xmlstarlet
+RUN  --mount=type=secret,id=credentials \
+    apt-get -y install jq
+RUN  --mount=type=secret,id=credentials \
+    apt-get -y install xmlstarlet
 
 WORKDIR /workspace
