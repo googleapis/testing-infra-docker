@@ -24,6 +24,7 @@ steps:
     waitFor: ["-"]
     env:
     - 'DOCKER_BUILDKIT=1'
+    - 'COMPOSE_DOCKER_CLI_BUILD=1'
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "gcr.io/$PROJECT_ID/java8", "--config", "java/java8.yaml", "-v"]
@@ -83,6 +84,7 @@ steps:
     waitFor: ["-"]
     env:
     - 'DOCKER_BUILDKIT=1'
+    - 'COMPOSE_DOCKER_CLI_BUILD=1'
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "gcr.io/$PROJECT_ID/java17", "--config", "java/java17.yaml", "-v"]
