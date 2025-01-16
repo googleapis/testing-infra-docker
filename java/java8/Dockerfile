@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-INCLUDE+ ./Dockerfile.airlock.base
+INCLUDE+ ../../Dockerfile.airlock.base
 
 # openjdk:8-jdk as of January 23th, 2025
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
