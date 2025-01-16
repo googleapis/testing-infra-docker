@@ -1,4 +1,3 @@
-
 # Start of Airlock configuration go/airlock/howto_docker
 #debian base with tag: bookworm-v1.0.0-gke.2
 FROM gcr.io/gke-release/debian-base@sha256:a832a1accd71d3c3a8c102aeb0ff7ee38536ab9f0237031920492621415f53f3 as bootstrap
