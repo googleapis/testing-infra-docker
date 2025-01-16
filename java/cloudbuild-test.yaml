@@ -23,7 +23,7 @@ steps:
       - '-c'
       - |
         for D in $(find java -type d -depth 1); do
-          cp Dockerfile.ubuntu-bookworm.airlock "${D}"
+          cp Dockerfile.ubuntu-bookworm.airlock $D
         done
     id: copy-base-dockerfile
     waitFor: ["-"]
