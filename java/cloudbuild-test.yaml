@@ -18,10 +18,20 @@ substitutions:
 steps:
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        for D in $(find java -type d -depth 1); do
+          cp Dockerfile.ubuntu-bookworm.airlock "${D}"
+        done
+    id: copy-base-dockerfile
+    waitFor: ["-"]
+  - name: gcr.io/cloud-builders/docker
     args: ["build", "-t", "gcr.io/$PROJECT_ID/java8", "."]
     dir: java/java8
     id: java8-build
-    waitFor: ["-"]
+    waitFor: ["copy-base-dockerfile"]
     env:
     - 'DOCKER_BUILDKIT=1'
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
@@ -81,7 +91,7 @@ steps:
     args: ["build", "-t", "gcr.io/$PROJECT_ID/java17", "."]
     dir: java/java17
     id: java17-build
-    waitFor: ["-"]
+    waitFor: ["copy-base-dockerfile"]
     env:
     - 'DOCKER_BUILDKIT=1'
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
