@@ -16,6 +16,13 @@
 # https://hub.docker.com/layers/library/eclipse-temurin/17/images/sha256-227c7dac267fde2625cee1dd978006a09c3f2048544b72597160620675da2668
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/eclipse-temurin@sha256:7fccb2a944c8caed3a1f7e56a02ca52cebe5a95e06cb3e4fd35e26b9a6e7dfeb
 
+# This will use GOOGLE_APPLICATION_CREDENTIALS if passed in docker build command, if not passed will leave it unset to support GCE Metadata in CI builds
+ARG GOOGLE_APPLICATION_CREDENTIALS
+
+# go/airlock/howto_docker#example-dockerfile-with-debian-bookworm
+RUN --mount=type=secret,id=credentials \
+      gcloud auth list
+
 # TODO(suztomo): Update this to source them from Airlock
 RUN apt-get update && \
     apt-get -y upgrade && \
