@@ -12,49 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Start of Airlock configuration go/airlock/howto_docker
-#debian base with tag: bookworm-v1.0.0-gke.2
-FROM gcr.io/gke-release/debian-base@sha256:a832a1accd71d3c3a8c102aeb0ff7ee38536ab9f0237031920492621415f53f3 as bootstrap
+# syntax = edrevo/dockerfile-plus
 
-RUN --mount=type=secret,id=credentials \
-    gcloud auth list
-
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y --allow-change-held-packages \
-        gnupg curl ca-certificates apt-utils && \
-    curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-    echo 'deb http://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main' | tee -a /etc/apt/sources.list.d/artifact-registry.list
-
-RUN apt-get update && apt-get install apt-transport-artifact-registry
-
-# New clean base so we aren't fetching "gnupg curl apt-utils" if not needed
-FROM gcr.io/gke-release/debian-base@sha256:a832a1accd71d3c3a8c102aeb0ff7ee38536ab9f0237031920492621415f53f3 as base
-
-# ca-certificates is required for https
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y --allow-change-held-packages \
-        ca-certificates
-
-# Copy only the ar+https
-COPY --from=bootstrap "/usr/lib/apt/methods/ar+https" "/usr/lib/apt/methods/ar+https"
-# Copy the apache notice type license for OSPO
-COPY --from=bootstrap "/usr/share/doc/apt-transport-artifact-registry" "/usr/share/doc/apt-transport-artifact-registry"
-
-# Remove all other apt sources, silence errors if file doesn't exist
-RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
-
-# If GOOGLE_APPLICATION_CREDENTIALS is passed in docker build command use it, if not leave it unset to support GCE Metadata in CI builds
-ARG GOOGLE_APPLICATION_CREDENTIALS
-
-# Use a secret mount to access your long lived credentials, without the risk of leaking them in any of the docker layers
-# Make sure the distribution is correct; in this case, it is trying to access Debian Bookworm repository
-RUN --mount=type=secret,id=credentials \
-    echo 'deb ar+https://us-apt.pkg.dev/remote/artifact-foundry-prod/debian-3p-remote-bookworm bookworm main' | \
-    tee -a  /etc/apt/sources.list.d/artifact-registry.list && \
-    apt-get update
-
-
-# End of Airlock configuration
+INCLUDE+ Dockerfile.airlock.base
 
 # openjdk:8-jdk as of January 23th, 2025
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
