@@ -22,9 +22,8 @@ steps:
     args:
       - '-c'
       - |
-        for D in $(find java -type d -depth 1); do
-          cp Dockerfile.ubuntu-bookworm.airlock $D
-        done
+        cp Dockerfile.ubuntu-bookworm.airlock java/java8/
+        cp Dockerfile.ubuntu-bookworm.airlock java/java17/
     id: copy-base-dockerfile
     waitFor: ["-"]
   - name: gcr.io/cloud-builders/docker
