@@ -26,9 +26,9 @@ RUN --mount=type=secret,id=credentials \
     apt-get update && \
     apt-get -y upgrade && \
     apt-get install wget && \
-    apt-get install unzip && \
-    apt -y install git && \
-    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
+    apt-get install -v unzip && \
+    apt -y install -v  git && \
+    apt-get install -v -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
     rm -rf /var/cache/apt
 
 ENV MAVEN_HOME=/usr/share/maven
@@ -48,7 +48,7 @@ ENV PATH $PATH:${MAVEN_HOME}/bin:/usr/local/lib/gradle/gradle-4.9/bin
 RUN  --mount=type=secret,id=credentials \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
-    apt-get install google-cloud-sdk -y
+    apt-get install -v google-cloud-sdk -y
 
 # Install google-play-services version 1
 RUN mkdir -p /tmp/playservices && \
@@ -69,7 +69,7 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
 RUN  --mount=type=secret,id=credential \
-    apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+    apt-get install -v -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
@@ -89,18 +89,18 @@ RUN pyenv install 3.9.13 && \
 # Add Graphviz for Cloud Run samples
 RUN  --mount=type=secret,id=credentials \
     apt-get update -y && \
-    apt-get install -y graphviz && \
+    apt-get install -v -y graphviz && \
     rm -rf /var/lib/apt/lists/*
     
 # Add imagemagick for Cloud Run samples
 RUN  --mount=type=secret,id=credentials \
     apt-get update -y && \
-    apt-get install -y imagemagick && \
+    apt-get install -v -y imagemagick && \
     rm -rf /var/lib/apt/lists/*
 
 # Install docker
 RUN  --mount=type=secret,id=credentials \
-    apt-get update && apt-get install -y \
+    apt-get update && apt-get install -v -y \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -113,19 +113,19 @@ RUN  --mount=type=secret,id=credentials \
         bullseye \
         stable" && \
     apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io
+    apt-get install -v -y docker-ce docker-ce-cli containerd.io
 
 # Install Terraform
 RUN  --mount=type=secret,id=credentials \
     apt-get update && apt-get install -y gnupg software-properties-common curl && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
-    apt-get update && apt-get install terraform
+    apt-get update && apt-get install -v terraform
 
 # jq and xmlstarlet used to modify json and xml files
 RUN  --mount=type=secret,id=credentials \
-    apt-get -y install jq
+    apt-get -y install -v jq
 RUN  --mount=type=secret,id=credentials \
-    apt-get -y install xmlstarlet
+    apt-get -y install -v xmlstarlet
 
 WORKDIR /workspace
