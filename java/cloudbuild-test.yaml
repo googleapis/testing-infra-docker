@@ -16,23 +16,23 @@ timeout: 7200s # 2 hours
 substitutions:
   _GRAALVM_VERSION: '22.3.3'
 steps:
-- name: "gcr.io/cloud-builders/docker"
-  id: buildx-create
-  args:
-    - buildx
-    - create
-    - --name=buildx-builder
-    - --driver=docker-container
-    - --driver-opt
-    - network=cloudbuild
-    - --use
+  - name: "gcr.io/cloud-builders/docker"
+    id: buildx-create
+    args:
+      - buildx
+      - create
+      - --name=buildx-builder
+      - --driver=docker-container
+      - --driver-opt
+      - network=cloudbuild
+      - --use
 
-- name: gcr.io/cloud-builders/docker
-  entrypoint: bash
-  args:
-    - -c
-    - |
-      docker buildx build --add-host=metadata.google.internal:169.254.169.254 .
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        docker buildx build --add-host=metadata.google.internal:169.254.169.254 .
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
     entrypoint: 'bash'
