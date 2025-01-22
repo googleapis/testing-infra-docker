@@ -17,8 +17,8 @@
 # The file is copied by the previous step in Cloud Build yaml file
 # INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
 
-#debian base with tag: bookworm-v1.0.0-gke.2
-FROM gcr.io/gke-release/debian-base@sha256:a832a1accd71d3c3a8c102aeb0ff7ee38536ab9f0237031920492621415f53f3 as bootstrap
+# openjdk:8-jdk as of January 23th, 2025
+FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
@@ -55,12 +55,6 @@ RUN --mount=type=secret,id=credentials \
     apt-get update
 
 # Everything after this is for your image, if you build FROM a base image with airlock already configured
-
-
-
-
-# openjdk:8-jdk as of January 23th, 2025
-FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
 
 RUN cat /etc/apt/sources.list
 

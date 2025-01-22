@@ -14,17 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# The file is copied by the previous step in Cloud Build yaml file
-INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
-
 # eclipse-temurin:17 as of Jan 9th, 2025
 # https://hub.docker.com/layers/library/eclipse-temurin/17/images/sha256-227c7dac267fde2625cee1dd978006a09c3f2048544b72597160620675da2668
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/eclipse-temurin@sha256:7fccb2a944c8caed3a1f7e56a02ca52cebe5a95e06cb3e4fd35e26b9a6e7dfeb
 
+# The file is copied by the previous step in Cloud Build yaml file
+INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
+
+# Everything after this is for your image, if you build FROM a base image with airlock already configured
+
+RUN cat /etc/apt/sources.list
+
+RUN more /etc/apt/sources.list.d/*  | cat
+
 # TODO(suztomo): Update this to source them from Airlock
 RUN --mount=type=secret,id=credentials \
     apt-get update && \
-    apt-get -y upgrade && \
+    apt-get -y -v upgrade && \
     apt-get install wget && \
     apt-get install -v unzip && \
     apt -y install -v  git && \
