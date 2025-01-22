@@ -97,7 +97,7 @@ steps:
 
   # Java 17 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "gcr.io/$PROJECT_ID/java17", "."]
+    args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254", "-t", "gcr.io/$PROJECT_ID/java17", "."]
     dir: java/java17
     id: java17-build
     waitFor: ["copy-base-dockerfile"]
