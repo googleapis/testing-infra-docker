@@ -46,10 +46,6 @@ RUN --mount=type=secret,id=credentials \
 
 # Everything after this is for your image, if you build FROM a base image with airlock already configured
 
-RUN cat /etc/apt/sources.list
-
-RUN more /etc/apt/sources.list.d/*  | cat
-
 RUN --mount=type=secret,id=credentials apt-get update && \
     apt-get -v -y upgrade && \
     apt-get install -v -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
