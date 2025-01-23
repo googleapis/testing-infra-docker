@@ -18,7 +18,7 @@
 # INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
 
 # openjdk:8-jdk as of January 23th, 2025
-FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
+FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217 as bootstrap
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
