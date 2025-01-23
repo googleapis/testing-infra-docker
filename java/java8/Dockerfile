@@ -16,7 +16,7 @@
 # INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
 
 # openjdk:8-jdk as of January 23th, 2025
-FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217 as bootstrap
+FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217 as mybootstrap
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
@@ -32,9 +32,9 @@ RUN apt-get update && \
         ca-certificates
 
 # Copy only the ar+https
-COPY --from=bootstrap "/usr/lib/apt/methods/ar+https" "/usr/lib/apt/methods/ar+https"
+COPY --from=mybootstrap "/usr/lib/apt/methods/ar+https" "/usr/lib/apt/methods/ar+https"
 # Copy the apache notice type license for OSPO
-COPY --from=bootstrap "/usr/share/doc/apt-transport-artifact-registry" "/usr/share/doc/apt-transport-artifact-registry"
+COPY --from=mybootstrap "/usr/share/doc/apt-transport-artifact-registry" "/usr/share/doc/apt-transport-artifact-registry"
 
 # The container image is "bullseye". So use matching configuration from:
 # go/airlock/howto_debian?DEBIAN_REPOSITORY=bullseye&APT_REPOSITORY=bullseye-3p-l1#apt-debian-standard-repositories
