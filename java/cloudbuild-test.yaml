@@ -35,12 +35,12 @@ steps:
         cp Dockerfile.ubuntu-bookworm.airlock java/java8/
         cp Dockerfile.ubuntu-bookworm.airlock java/java17/
     id: copy-base-dockerfile
-    waitFor: ["-"]
+    waitFor: ["buildx-create"]
   - name: gcr.io/cloud-builders/docker
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254", "-t", "gcr.io/$PROJECT_ID/java8", "."]
     dir: java/java8
     id: java8-build
-    waitFor: ["copy-base-dockerfile"]
+    waitFor: ["copy-base-dockerfile", "buildx-create"]
     env:
     - 'DOCKER_BUILDKIT=1'
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
@@ -100,7 +100,8 @@ steps:
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254", "-t", "gcr.io/$PROJECT_ID/java17", "."]
     dir: java/java17
     id: java17-build
-    waitFor: ["copy-base-dockerfile"]
+    # Without waiting Java 8, you would get a conflict error "daemon: Conflict. The container name "/buildx_buildkit_buildx-builder0" is already in use by container"
+    waitFor: ["copy-base-dockerfile", "buildx-create", "java8-build"]
     env:
     - 'DOCKER_BUILDKIT=1'
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
