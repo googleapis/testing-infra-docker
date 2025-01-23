@@ -31,11 +31,6 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
         ca-certificates
 
-# Copy only the ar+https
-COPY --from=mybootstrap "/usr/lib/apt/methods/ar+https" "/usr/lib/apt/methods/ar+https"
-# Copy the apache notice type license for OSPO
-COPY --from=mybootstrap "/usr/share/doc/apt-transport-artifact-registry" "/usr/share/doc/apt-transport-artifact-registry"
-
 # The container image is "bullseye". So use matching configuration from:
 # go/airlock/howto_debian?DEBIAN_REPOSITORY=bullseye&APT_REPOSITORY=bullseye-3p-l1#apt-debian-standard-repositories
 RUN --mount=type=secret,id=credentials \
