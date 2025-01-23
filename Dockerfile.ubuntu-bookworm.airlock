@@ -11,9 +11,6 @@ RUN apt-get update && \
 
 RUN apt-get update && apt-get install apt-transport-artifact-registry
 
-# New clean base so we aren't fetching "gnupg curl apt-utils" if not needed
-FROM gcr.io/gke-release/debian-base@sha256:a832a1accd71d3c3a8c102aeb0ff7ee38536ab9f0237031920492621415f53f3 as base
-
 # ca-certificates is required for https
 RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
