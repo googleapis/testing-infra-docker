@@ -22,7 +22,7 @@ FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3a
 
 # The container image is "bullseye". So use matching configuration from:
 # go/airlock/howto_debian?DEBIAN_REPOSITORY=bullseye&APT_REPOSITORY=bullseye-3p-l1#apt-debian-standard-repositories
-RUN echo 'deb ar+https://us-apt.pkg.dev/projects/artifact-foundry-prod standard-debian-bullseye-3p-l1 main' | sudo tee -a  /etc/apt/sources.list.d/artifact-registry.list
+RUN echo 'deb ar+https://us-apt.pkg.dev/projects/artifact-foundry-prod standard-debian-bullseye-3p-l1 main' | tee -a  /etc/apt/sources.list.d/artifact-registry.list
 
 # Everything after this is for your image, if you build FROM a base image with airlock already configured
 
