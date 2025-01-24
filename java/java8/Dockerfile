@@ -42,7 +42,7 @@ RUN --mount=type=secret,id=credentials \
 RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
 
 RUN --mount=type=secret,id=credentials \
-    apt update && apt install -y -v nano
+    apt update && apt install -y -v nano golang
 
 # Everything after this is for your image, if you build FROM a base image with airlock already configured
 
