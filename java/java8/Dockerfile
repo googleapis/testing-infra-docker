@@ -12,13 +12,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# openjdk:8-jdk as of January 23th, 2025
-FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217
+# The file is copied by the previous step in Cloud Build yaml file
+# INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
 
-# TODO(suztomo): Update this to source them from Airlock
+# openjdk:8-jdk as of January 23th, 2025
+FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217 as mybootstrap
+
 RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
+    apt-get install --no-install-recommends -y --allow-change-held-packages \
+        gnupg curl ca-certificates apt-utils && \
+    curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+    echo 'deb http://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main' | tee -a /etc/apt/sources.list.d/artifact-registry.list
+
+RUN apt-get update && apt-get install apt-transport-artifact-registry
+
+# ca-certificates is required for https
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y --allow-change-held-packages \
+        ca-certificates
+
+# Remove all other apt sources, silence errors if file doesn't exist
+RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
+
+# The container image is "bullseye". So use matching configuration from:
+# go/airlock/howto_debian?DEBIAN_REPOSITORY=bullseye&APT_REPOSITORY=bullseye-3p-l1#apt-debian-standard-repositories
+RUN --mount=type=secret,id=credentials \
+    echo 'deb ar+https://us-apt.pkg.dev/projects/artifact-foundry-prod standard-debian-bullseye-3p-l1 main' | \
+    tee -a  /etc/apt/sources.list.d/artifact-registry.list && \
+    apt-get update
+
+RUN --mount=type=secret,id=credentials \
+    apt update && apt install -y -v nano golang
+
+# Everything after this is for your image, if you build FROM a base image with Airlock already configured
+RUN --mount=type=secret,id=credentials apt-get update && \
+    apt-get -v -y upgrade && \
+    apt-get install -v -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
     rm -rf /var/cache/apt
 
 ENV MAVEN_HOME=/usr/share/maven
@@ -36,7 +65,7 @@ ENV PATH $PATH:${MAVEN_HOME}/bin:/usr/local/lib/gradle/gradle-4.9/bin
 # Install gcloud SDK
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
-    apt-get install google-cloud-sdk -y
+    apt-get install -v google-cloud-sdk -y
 
 # Install google-play-services version 1
 RUN mkdir -p /tmp/playservices && \
@@ -56,7 +85,8 @@ RUN mvn -V dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
-RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+RUN --mount=type=secret,id=credentials \
+    apt-get install -v -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
@@ -74,7 +104,8 @@ RUN pyenv install 3.9.13 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install docker
-RUN apt-get update && apt-get install -y \
+RUN --mount=type=secret,id=credentials \
+    apt-get update && apt-get install -v -y \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -90,18 +121,22 @@ RUN apt-get update && apt-get install -y \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Install Terraform
-RUN apt-get update && apt-get install -y gnupg software-properties-common curl && \
+RUN --mount=type=secret,id=credentials \
+    apt-get update && apt-get install -v -y gnupg software-properties-common curl && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
     apt-get update && apt-get install terraform
 
 # jq and xmlstarlet used to modify json and xml files
-RUN apt-get -y install jq
-RUN apt-get -y install xmlstarlet
+RUN --mount=type=secret,id=credentials \
+    apt-get -y install -v jq
+RUN --mount=type=secret,id=credentials \
+    apt-get -y install -v xmlstarlet
 
 # Installing JDK 11 to build projects that depend on graal-sdk 22.1.0 or higher
 # (requiring Java 11+). Still we target Java 8 for the compiled class files.
-RUN apt-get install -y openjdk-11-jdk
+RUN --mount=type=secret,id=credentials \
+    apt-get install -v -y openjdk-11-jdk
 # JDK 11 is used only when explicitly selected in the build file
 ENV JAVA8_HOME=/usr/local/openjdk-8
 ENV JAVA11_HOME=/usr/lib/jvm/java-11-openjdk-amd64
