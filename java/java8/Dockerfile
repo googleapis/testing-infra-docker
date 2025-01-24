@@ -31,6 +31,9 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
         ca-certificates
 
+# Remove all other apt sources, silence errors if file doesn't exist
+RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
+
 # The container image is "bullseye". So use matching configuration from:
 # go/airlock/howto_debian?DEBIAN_REPOSITORY=bullseye&APT_REPOSITORY=bullseye-3p-l1#apt-debian-standard-repositories
 RUN --mount=type=secret,id=credentials \
@@ -38,14 +41,10 @@ RUN --mount=type=secret,id=credentials \
     tee -a  /etc/apt/sources.list.d/artifact-registry.list && \
     apt-get update
 
-# Remove all other apt sources, silence errors if file doesn't exist
-RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
-
 RUN --mount=type=secret,id=credentials \
     apt update && apt install -y -v nano golang
 
-# Everything after this is for your image, if you build FROM a base image with airlock already configured
-
+# Everything after this is for your image, if you build FROM a base image with Airlock already configured
 RUN --mount=type=secret,id=credentials apt-get update && \
     apt-get -v -y upgrade && \
     apt-get install -v -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
