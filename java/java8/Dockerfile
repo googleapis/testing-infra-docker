@@ -34,6 +34,9 @@ RUN apt-get update && \
 # Remove all other apt sources, silence errors if file doesn't exist
 RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
 
+# If GOOGLE_APPLICATION_CREDENTIALS is passed in docker build command use it, if not leave it unset to support GCE Metadata in CI builds
+ARG GOOGLE_APPLICATION_CREDENTIALS
+
 # The container image is "bullseye". So use matching configuration from:
 # go/airlock/howto_debian?DEBIAN_REPOSITORY=bullseye&APT_REPOSITORY=bullseye-3p-l1#apt-debian-standard-repositories
 RUN --mount=type=secret,id=credentials \
@@ -42,30 +45,37 @@ RUN --mount=type=secret,id=credentials \
     apt-get update
 
 RUN --mount=type=secret,id=credentials \
-    apt update && apt install -y -v nano golang
+    apt update && apt install -y nano golang
+
+RUN --mount=type=secret,id=credentials \
+    apt install -y python3.9 python3-pip
+
+RUN python3 --version
+# Install python setuptools
+RUN python3 -m pip install setuptools
 
 # Everything after this is for your image, if you build FROM a base image with Airlock already configured
-RUN --mount=type=secret,id=credentials apt-get update && \
-    apt-get -v -y upgrade && \
-    apt-get install -v -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
-    rm -rf /var/cache/apt
+RUN --mount=type=secret,id=credentials \
+    apt install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg
+
+# Install Python 3
+RUN --mount=type=secret,id=credentials \
+    apt install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
+
 
 ENV MAVEN_HOME=/usr/share/maven
 # 3.9.9-eclipse-temurin-11-alpine
 COPY --from=us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/maven@sha256:d3f04985c6a68415e36c0a6468d0f8316f27d4dbee77bc459257ba444224bd9f ${MAVEN_HOME} ${MAVEN_HOME}
 
-# TODO(suztomo): Do we use Gradle?
-RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
-    mkdir -p /usr/local/lib/gradle && \
-    unzip -q /tmp/gradle.zip -d /usr/local/lib/gradle && \
-    rm /tmp/gradle.zip
-
-ENV PATH $PATH:${MAVEN_HOME}/bin:/usr/local/lib/gradle/gradle-4.9/bin
+ENV PATH $PATH:${MAVEN_HOME}/bin
 
 # Install gcloud SDK
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+RUN --mount=type=secret,id=credentials \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
-    apt-get install -v google-cloud-sdk -y
+    apt install -y google-cloud-sdk
 
 # Install google-play-services version 1
 RUN mkdir -p /tmp/playservices && \
@@ -84,28 +94,9 @@ RUN mvn -V dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
-# Install pyenv
-RUN --mount=type=secret,id=credentials \
-    apt-get install -v -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
-    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
-RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-
-ENV PATH /root/.pyenv/bin:$PATH
-ENV PATH /root/.pyenv/shims:$PATH
-
-RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
-    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
-    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
-
-# Install python
-RUN pyenv install 3.9.13 && \
-    pyenv global 3.9.13 && \
-    python3 -m pip install --upgrade pip setuptools
-
 # Install docker
 RUN --mount=type=secret,id=credentials \
-    apt-get update && apt-get install -v -y \
+    apt-get update && apt-get install -y \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -122,21 +113,21 @@ RUN --mount=type=secret,id=credentials \
 
 # Install Terraform
 RUN --mount=type=secret,id=credentials \
-    apt-get update && apt-get install -v -y gnupg software-properties-common curl && \
+    apt-get update && apt-get install -y gnupg software-properties-common curl && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
     apt-get update && apt-get install terraform
 
 # jq and xmlstarlet used to modify json and xml files
 RUN --mount=type=secret,id=credentials \
-    apt-get -y install -v jq
+    apt-get -y install jq
 RUN --mount=type=secret,id=credentials \
-    apt-get -y install -v xmlstarlet
+    apt-get -y install xmlstarlet
 
 # Installing JDK 11 to build projects that depend on graal-sdk 22.1.0 or higher
 # (requiring Java 11+). Still we target Java 8 for the compiled class files.
 RUN --mount=type=secret,id=credentials \
-    apt-get install -v -y openjdk-11-jdk
+    apt-get install -y openjdk-11-jdk
 # JDK 11 is used only when explicitly selected in the build file
 ENV JAVA8_HOME=/usr/local/openjdk-8
 ENV JAVA11_HOME=/usr/lib/jvm/java-11-openjdk-amd64
