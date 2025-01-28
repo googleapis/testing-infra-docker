@@ -1,4 +1,5 @@
-# Copyright 2018 Google LLC
+# Copyright 2018 Google LLCRG
+# 
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,15 +38,18 @@ RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
 # If GOOGLE_APPLICATION_CREDENTIALS is passed in docker build command use it, if not leave it unset to support GCE Metadata in CI builds
 ARG GOOGLE_APPLICATION_CREDENTIALS
 
+# You can override the repository URL with:
+# --build-arg="APT_REPO=ar+https://us-apt.pkg.dev/remote/artifact-foundry-prod/debian-3p-remote-bullseye bullseye main" .
+# This is convinient when you want to pass a special Airlock repository
+# that initiates software package imports.
+ARG APT_REPO="ar+https://us-apt.pkg.dev/projects/artifact-foundry-prod standard-debian-bullseye-3p-l1 main"
+
 # The container image is "bullseye". So use matching configuration from:
 # go/airlock/howto_debian?DEBIAN_REPOSITORY=bullseye&APT_REPOSITORY=bullseye-3p-l1#apt-debian-standard-repositories
 RUN --mount=type=secret,id=credentials \
-    echo 'deb ar+https://us-apt.pkg.dev/projects/artifact-foundry-prod standard-debian-bullseye-3p-l1 main' | \
+    echo "deb ${APT_REPO}" | \
     tee -a  /etc/apt/sources.list.d/artifact-registry.list && \
     apt-get update
-
-RUN --mount=type=secret,id=credentials \
-    apt update && apt install -y nano golang
 
 RUN --mount=type=secret,id=credentials \
     apt install -y python3.9 python3-pip
