@@ -185,8 +185,8 @@ RUN python3.11 -m pip
 RUN python3.12 -m pip
 RUN python3.13 -m pip
 
-# Use python 3.9 by default
-RUN python3.9 -m venv /venv
+# Use python 3.10 by default
+RUN python3.10 -m venv /venv
 ENV PATH /venv/bin:$PATH
 
 COPY requirements.txt /requirements.txt
