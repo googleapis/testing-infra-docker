@@ -19,7 +19,7 @@ timeout: 7200s
 steps:
   # Go 1.22 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "gcr.io/$PROJECT_ID/go122", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go122", "."]
     dir: go/go122
     id: go122-build
     waitFor: ["-"]
@@ -27,7 +27,7 @@ steps:
     args:
       [
         "-i",
-        "gcr.io/$PROJECT_ID/go122",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/go122",
         "--config",
         "/workspace/go/go122.yaml",
         "-v",
@@ -36,7 +36,7 @@ steps:
 
   # Go 1.23 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "gcr.io/$PROJECT_ID/go123", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go123", "."]
     dir: go/go123
     id: go123-build
     waitFor: ["-"]
@@ -44,7 +44,7 @@ steps:
     args:
       [
         "-i",
-        "gcr.io/$PROJECT_ID/go123",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/go123",
         "--config",
         "/workspace/go/go123.yaml",
         "-v",
@@ -53,7 +53,7 @@ steps:
 
   # Go 1.23 release build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "gcr.io/$PROJECT_ID/release-images/go123", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go123", "."]
     dir: go/go123-release
     id: go123-release-build
     waitFor: ["-"]
@@ -61,7 +61,7 @@ steps:
     args:
       [
         "-i",
-        "gcr.io/$PROJECT_ID/release-images/go123",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go123",
         "--config",
         "/workspace/go/go123-release.yaml",
         "-v",
