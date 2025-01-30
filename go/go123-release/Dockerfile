@@ -18,7 +18,7 @@ FROM golang:1.23
 RUN set -ex; \
     apt-get update -y; \
     apt-get install -y \
-    unzip wget vim \
+    unzip wget vim jq zip \
     # for docker
     ca-certificates curl gnupg
 
