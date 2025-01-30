@@ -16,24 +16,34 @@ FROM ubuntu:focal
 
 ENTRYPOINT /bin/bash
 
-ENV RUBY_27_VERSION=2.7.8 \
-    RUBY_30_VERSION=3.0.7 \
+# Version notes:
+# * The gems gem is pinned to 1.2.0 because 1.3.0 requires Ruby 3.1. We can
+#   update it to 1.3.0 once we drop Ruby 3.0 support.
+# * The bundler gem is pinned to 2.5.23 because 2.6 requires Ruby 3.1. We can
+#   update it to 2.6 once we drop Ruby 3.0 support.
+ENV RUBY_30_VERSION=3.0.7 \
     RUBY_31_VERSION=3.1.6 \
     RUBY_32_VERSION=3.2.6 \
-    RUBY_33_VERSION=3.3.6 \
-    BUNDLER1_VERSION=1.17.3 \
-    BUNDLER2_VERSION=2.4.22 \
+    RUBY_33_VERSION=3.3.7 \
+    RUBY_34_VERSION=3.4.1 \
+    BUNDLER_VERSION=2.5.23 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
-    PYTHON_VERSION=3.10.15 \
-    NODEJS_VERSION=18.20.5 \
+    GEMS_VERSION=1.2.0 \
+    JWT_VERSION=2.10.1 \
+    PYTHON_VERSION=3.10.16 \
+    NODEJS_VERSION=18.20.6 \
     DOCUPLOADER_VERSION=0.6.5 \
     GH_VERSION=2.65.0
 
 ENV OLDEST_RUBY_VERSION=$RUBY_30_VERSION \
     NEWEST_RUBY_VERSION=$RUBY_33_VERSION \
     DEFAULT_RUBY_VERSION=$RUBY_33_VERSION \
-    RUBY_VERSIONS="$RUBY_27_VERSION $RUBY_30_VERSION $RUBY_31_VERSION $RUBY_32_VERSION $RUBY_33_VERSION"
+    RUBY_VERSIONS="$RUBY_30_VERSION $RUBY_31_VERSION $RUBY_32_VERSION $RUBY_33_VERSION $RUBY_34_VERSION"
+
+# Legacy envs we may be able to get rid of once we verify they're not used.
+ENV BUNDLER1_VERSION=1.17.3 \
+    BUNDLER2_VERSION=$BUNDLER_VERSION
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -122,7 +132,11 @@ RUN for version in ${RUBY_VERSIONS}; do \
       rbenv install "$version" \
         && rbenv global "$version" \
         && gem update --system \
-        && gem install bundler:${BUNDLER2_VERSION} rake:${RAKE_VERSION} toys:${TOYS_VERSION}; \
+        && gem install bundler:${BUNDLER_VERSION} \
+                       rake:${RAKE_VERSION} \
+                       toys:${TOYS_VERSION} \
+                       gems:${GEMS_VERSION} \
+                       jwt:${JWT_VERSION}; \
     done \
     && rbenv global ${DEFAULT_RUBY_VERSION}
 
