@@ -21,6 +21,8 @@ ENTRYPOINT /bin/bash
 #   update it to 1.3.0 once we drop Ruby 3.0 support.
 # * The bundler gem is pinned to 2.5.23 because 2.6 requires Ruby 3.1. We can
 #   update it to 2.6 once we drop Ruby 3.0 support.
+# * The google_auth Python package is pinned to 2.37.0 because of a JWT
+#   signature in 2.38.0.
 ENV RUBY_30_VERSION=3.0.7 \
     RUBY_31_VERSION=3.1.6 \
     RUBY_32_VERSION=3.2.6 \
@@ -34,6 +36,7 @@ ENV RUBY_30_VERSION=3.0.7 \
     PYTHON_VERSION=3.10.16 \
     NODEJS_VERSION=18.20.6 \
     DOCUPLOADER_VERSION=0.6.5 \
+    PYTHON_AUTH_VERSION=2.37.0 \
     GH_VERSION=2.65.0
 
 ENV OLDEST_RUBY_VERSION=$RUBY_30_VERSION \
@@ -154,6 +157,7 @@ RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 # Install python
 RUN pyenv install ${PYTHON_VERSION} \
     && pyenv global ${PYTHON_VERSION} \
+    && python3 -m pip install google_auth==${PYTHON_AUTH_VERSION} \
     && python3 -m pip install gcp-docuploader==${DOCUPLOADER_VERSION}
 
 # Install nodenv
