@@ -18,32 +18,43 @@ steps:
 # Build Ruby multi-use image
 - id: 'build-multi'
   name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi', '.']
+  args:
+    - 'build'
+    - '-t'
+    - 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi'
+    - '-t'
+    - 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi-node'
+    - '-t'
+    - 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth'
+    - '-t'
+    - 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/release'
+    - '-t'
+    - 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi'
+    - '-t'
+    - 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release'
+    - '-t'
+    - 'gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi'
+    - '.'
   dir: 'ruby/multi'
   waitFor: ['-']
 
-# Tag alternate names
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
-                'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi-node']
-  waitFor: ['build-multi']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
-                'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/autosynth']
-  waitFor: ['build-multi']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
-                'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/release']
-  waitFor: ['build-multi']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
-                'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-multi']
-  waitFor: ['build-multi']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
-                'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release']
-  waitFor: ['build-multi']
-- name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
-                'gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi']
-  waitFor: ['build-multi']
+- id: 'build-release'
+  name: 'gcr.io/cloud-builders/docker'
+  args:
+    - 'build'
+    - '-t'
+    - 'gcr.io/$PROJECT_ID/release'
+    - '.'
+  dir: 'ruby/release'
+  waitFor: ['-']
+- id: 'test-release'
+  name: gcr.io/gcp-runtimes/structure_test
+  args:
+    [
+      '-i',
+      'gcr.io/$PROJECT_ID/release',
+      '--config',
+      '/workspace/ruby/release.yaml',
+      '-v',
+    ]
+  waitFor: ['build-release']
