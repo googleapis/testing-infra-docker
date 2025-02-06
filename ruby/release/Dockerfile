@@ -16,30 +16,16 @@ FROM ubuntu:focal
 
 ENTRYPOINT /bin/bash
 
-# Version notes:
-# * The gems gem is pinned to 1.2.0 because 1.3.0 requires Ruby 3.1. We can
-#   update it to 1.3.0 once we drop Ruby 3.0 support.
-# * The bundler gem is pinned to 2.5.23 because 2.6 requires Ruby 3.1. We can
-#   update it to 2.6 once we drop Ruby 3.0 support.
-ENV RUBY_33_VERSION=3.3.7 \
-    BUNDLER_VERSION=2.5.23 \
+ENV RUBY_VERSION=3.3.7 \
+    BUNDLER_VERSION=2.6.3 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
-    GEMS_VERSION=1.2.0 \
+    GEMS_VERSION=1.3.0 \
     JWT_VERSION=2.10.1 \
     PYTHON_VERSION=3.10.16 \
     DOCUPLOADER_VERSION=0.6.5 \
     GH_VERSION=2.65.0 \
     SYFT_VERSION=1.19.0
-
-ENV OLDEST_RUBY_VERSION=$RUBY_33_VERSION \
-    NEWEST_RUBY_VERSION=$RUBY_33_VERSION \
-    DEFAULT_RUBY_VERSION=$RUBY_33_VERSION \
-    RUBY_VERSIONS="$RUBY_33_VERSION"
-
-# Legacy envs we may be able to get rid of once we verify they're not used.
-ENV BUNDLER1_VERSION=1.17.3 \
-    BUNDLER2_VERSION=$BUNDLER_VERSION
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -64,28 +50,21 @@ RUN apt-get update \
       freetds-dev \
       git \
       gpg-agent \
-      imagemagick \
       libasound2 \
       libbz2-dev \
       libffi-dev \
       libgdbm-dev \
       liblzma-dev \
-      libmagickwand-dev \
-      libmysqlclient-dev \
       libncurses5-dev \
       libpq-dev \
       libreadline-dev \
       libreadline6-dev \
-      libsqlite3-dev \
       libssl-dev \
       libvips-dev \
       libyaml-dev \
       make \
       memcached \
-      mysql-server \
       pkg-config \
-      postgresql \
-      postgresql-contrib \
       python-openssl \
       qt5-qmake \
       software-properties-common \
@@ -124,17 +103,14 @@ RUN mkdir -p "$(rbenv root)"/plugins \
 # Install ruby
 ENV RUBY_CONFIGURE_OPTS --disable-install-doc
 RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
-RUN for version in ${RUBY_VERSIONS}; do \
-      rbenv install "$version" \
-        && rbenv global "$version" \
-        && gem update --system \
-        && gem install bundler:${BUNDLER_VERSION} \
-                       rake:${RAKE_VERSION} \
-                       toys:${TOYS_VERSION} \
-                       gems:${GEMS_VERSION} \
-                       jwt:${JWT_VERSION}; \
-    done \
-    && rbenv global ${DEFAULT_RUBY_VERSION}
+RUN rbenv install "${RUBY_VERSION}" \
+    && rbenv global "${RUBY_VERSION}" \
+    && gem update --system \
+    && gem install bundler:${BUNDLER_VERSION} \
+                   rake:${RAKE_VERSION} \
+                   toys:${TOYS_VERSION} \
+                   gems:${GEMS_VERSION} \
+                   jwt:${JWT_VERSION}
 
 # Install pyenv
 ENV PYENV_ROOT=/root/.pyenv
