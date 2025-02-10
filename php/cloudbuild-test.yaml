@@ -58,3 +58,15 @@ steps:
     ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php83', '--config', '/workspace/php/php83.yaml', '-v']
   waitFor: ['build-php83']
 
+# PHP release
+- id: 'build-php-release'
+  name: gcr.io/cloud-builders/docker
+  args:
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/release', '-t', 'gcr.io/cloud-devrel-public-resources/release', '.']
+  dir: 'php/release'
+  waitFor: ['-']
+
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/release', '--config', '/workspace/php/release.yaml', '-v']
+  waitFor: ['build-php-release']

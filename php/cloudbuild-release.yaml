@@ -33,5 +33,19 @@ steps:
     ['-i', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/php81', '--config', '/workspace/php/php81.yaml', '-v']
   waitFor: ['build-php81']
 
+
+# PHP release
+- id: 'build-release'
+  name: gcr.io/cloud-builders/docker
+  args:
+    ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/php-release', '.']
+  dir: 'php/release'
+  waitFor: ['-']
+- name: gcr.io/gcp-runtimes/structure_test
+  args:
+    ['-i', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/php-release', '--config', '/workspace/php/release.yaml', '-v']
+  waitFor: ['build-release']
+
 images:
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/php81
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/php-release
