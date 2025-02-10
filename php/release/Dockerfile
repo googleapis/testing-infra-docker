@@ -2,7 +2,7 @@ FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
 ENV PHP_DIR=/opt/php81
 ENV PHP_SRC_DIR=/usr/local/src/php81-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
-ENV PHP_VERISON=8.1.18
+ENV PHP_VERISON=8.4.3
 
 RUN apt-get update && \
     apt-get -y install \
