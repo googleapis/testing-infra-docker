@@ -17,3 +17,15 @@ commandTests:
   - name: "version"
     command: ["syft", "--version"]
     expectedOutput: ["syft 1.19.0"]
+  - name: "jq"
+    command: ["jq", "--version"]
+    expectedOutput: ["jq-"]
+  - name: "uuidgen"
+    command: ["uuidgen", "--version"]
+    expectedOutput: ["uuidgen"]
+  - name: "git"
+    command: ["git", "--version"]
+    expectedOutput: ["git version"]
+  - name: "zip"
+    command: ["zip", "--version"]
+    expectedOutput: ["This is Zip"]

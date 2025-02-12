@@ -18,7 +18,12 @@ ENV SYFT_VERSION=1.19.0
 
 # update SSL certs
 RUN apt-get update -y && \
-    apt-get install -y ca-certificates
+    apt-get install -y \
+        ca-certificates \
+        uuid-runtime \
+        git \
+        jq \
+        zip
 
 RUN mkdir /workspace
 
