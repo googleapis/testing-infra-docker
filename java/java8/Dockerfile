@@ -62,18 +62,27 @@ RUN python3 -m pip install setuptools
 RUN --mount=type=secret,id=credentials \
     apt install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg
 
-# Install Python 3
-RUN --mount=type=secret,id=credentials \
-    apt install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
-    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
-
-
 ENV MAVEN_HOME=/usr/share/maven
 # 3.9.9-eclipse-temurin-11-alpine
 COPY --from=us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/maven@sha256:d3f04985c6a68415e36c0a6468d0f8316f27d4dbee77bc459257ba444224bd9f ${MAVEN_HOME} ${MAVEN_HOME}
 
 ENV PATH $PATH:${MAVEN_HOME}/bin
+
+# jq and xmlstarlet used to modify json and xml files
+RUN --mount=type=secret,id=credentials \
+    apt-get -y install jq
+RUN --mount=type=secret,id=credentials \
+    apt-get -y install xmlstarlet
+
+# Installing JDK 11 to build projects that depend on graal-sdk 22.1.0 or higher
+# (requiring Java 11+). Still we target Java 8 for the compiled class files.
+RUN --mount=type=secret,id=credentials \
+    apt-get install -y openjdk-11-jdk
+# JDK 11 is used only when explicitly selected in the build file
+ENV JAVA8_HOME=/usr/local/openjdk-8
+ENV JAVA11_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+
+# TODO(b/390675031) The following packages are still downloading outside Airlock
 
 # Install gcloud SDK
 RUN --mount=type=secret,id=credentials \
@@ -122,18 +131,5 @@ RUN --mount=type=secret,id=credentials \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
     apt-get update && apt-get install terraform
 
-# jq and xmlstarlet used to modify json and xml files
-RUN --mount=type=secret,id=credentials \
-    apt-get -y install jq
-RUN --mount=type=secret,id=credentials \
-    apt-get -y install xmlstarlet
-
-# Installing JDK 11 to build projects that depend on graal-sdk 22.1.0 or higher
-# (requiring Java 11+). Still we target Java 8 for the compiled class files.
-RUN --mount=type=secret,id=credentials \
-    apt-get install -y openjdk-11-jdk
-# JDK 11 is used only when explicitly selected in the build file
-ENV JAVA8_HOME=/usr/local/openjdk-8
-ENV JAVA11_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
 WORKDIR /workspace

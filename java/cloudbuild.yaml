@@ -16,8 +16,8 @@ timeout: 7200s # 2 hours
 substitutions:
   _GRAALVM_VERSION: '22.3.3'
 steps:
-  # Java 8 build
   - name: "gcr.io/cloud-builders/docker"
+    # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     id: buildx-create
     args:
       - buildx
@@ -27,7 +27,9 @@ steps:
       - --driver-opt
       - network=cloudbuild
       - --use
+  # Java 8 build
   - name: gcr.io/cloud-builders/docker
+    # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254", "-t", "gcr.io/$PROJECT_ID/java8", "."]
     dir: java/java8
     id: java8-build

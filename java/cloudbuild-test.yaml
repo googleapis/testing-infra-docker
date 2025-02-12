@@ -17,6 +17,7 @@ substitutions:
   _GRAALVM_VERSION: '22.3.3'
 steps:
   - name: "gcr.io/cloud-builders/docker"
+    # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     id: buildx-create
     args:
       - buildx
@@ -28,19 +29,11 @@ steps:
       - --use
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        cp Dockerfile.ubuntu-bookworm.airlock java/java8/
-        cp Dockerfile.ubuntu-bookworm.airlock java/java17/
-    id: copy-base-dockerfile
-    waitFor: ["buildx-create"]
-  - name: gcr.io/cloud-builders/docker
+    # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254", "-t", "gcr.io/$PROJECT_ID/java8", "."]
     dir: java/java8
     id: java8-build
-    waitFor: ["copy-base-dockerfile", "buildx-create"]
+    waitFor: ["buildx-create"]
     env:
     - 'DOCKER_BUILDKIT=1'
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
@@ -101,7 +94,7 @@ steps:
     dir: java/java17
     id: java17-build
     # Without waiting Java 8, you would get a conflict error "daemon: Conflict. The container name "/buildx_buildkit_buildx-builder0" is already in use by container"
-    waitFor: ["copy-base-dockerfile", "buildx-create", "java8-build"]
+    waitFor: ["buildx-create", "java8-build"]
     env:
     - 'DOCKER_BUILDKIT=1'
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
