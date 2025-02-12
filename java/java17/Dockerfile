@@ -1,5 +1,3 @@
-# syntax = edrevo/dockerfile-plus
-
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,23 +16,12 @@
 # https://hub.docker.com/layers/library/eclipse-temurin/17/images/sha256-227c7dac267fde2625cee1dd978006a09c3f2048544b72597160620675da2668
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/eclipse-temurin@sha256:7fccb2a944c8caed3a1f7e56a02ca52cebe5a95e06cb3e4fd35e26b9a6e7dfeb
 
-# The file is copied by the previous step in Cloud Build yaml file
-INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
-
-# Everything after this is for your image, if you build FROM a base image with airlock already configured
-
-RUN cat /etc/apt/sources.list
-
-RUN more /etc/apt/sources.list.d/*  | cat
-
-# TODO(suztomo): Update this to source them from Airlock
-RUN --mount=type=secret,id=credentials \
-    apt-get update && \
-    apt-get -y -v upgrade && \
+RUN apt-get update && \
+    apt-get -y upgrade && \
     apt-get install wget && \
-    apt-get install -v unzip && \
-    apt -y install -v  git && \
-    apt-get install -v -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
+    apt-get install unzip && \
+    apt -y install git && \
+    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
     rm -rf /var/cache/apt
 
 ENV MAVEN_HOME=/usr/share/maven
@@ -42,7 +29,6 @@ ENV MAVEN_HOME=/usr/share/maven
 # 3.9.9-eclipse-temurin-11-alpine
 COPY --from=us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/maven@sha256:d3f04985c6a68415e36c0a6468d0f8316f27d4dbee77bc459257ba444224bd9f ${MAVEN_HOME} ${MAVEN_HOME}
 
-# TODO(suztomo): Do we use Gradle?
 RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp/gradle.zip && \
     mkdir -p /usr/local/lib/gradle && \
     unzip -q /tmp/gradle.zip -d /usr/local/lib/gradle && \
@@ -51,10 +37,9 @@ RUN wget -q https://services.gradle.org/distributions/gradle-4.9-bin.zip -O /tmp
 ENV PATH $PATH:${MAVEN_HOME}/bin:/usr/local/lib/gradle/gradle-4.9/bin
 
 # Install gcloud SDK
-RUN  --mount=type=secret,id=credentials \
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
-    apt-get install -v google-cloud-sdk -y
+    apt-get install google-cloud-sdk -y
 
 # Install google-play-services version 1
 RUN mkdir -p /tmp/playservices && \
@@ -74,8 +59,7 @@ RUN mvn -V dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 # Install pyenv
-RUN  --mount=type=secret,id=credential \
-    apt-get install -v -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
     xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
@@ -93,20 +77,17 @@ RUN pyenv install 3.9.13 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Add Graphviz for Cloud Run samples
-RUN  --mount=type=secret,id=credentials \
-    apt-get update -y && \
-    apt-get install -v -y graphviz && \
+RUN apt-get update -y && \
+    apt-get install -y graphviz && \
     rm -rf /var/lib/apt/lists/*
     
 # Add imagemagick for Cloud Run samples
-RUN  --mount=type=secret,id=credentials \
-    apt-get update -y && \
-    apt-get install -v -y imagemagick && \
+RUN apt-get update -y && \
+    apt-get install -y imagemagick && \
     rm -rf /var/lib/apt/lists/*
 
 # Install docker
-RUN  --mount=type=secret,id=credentials \
-    apt-get update && apt-get install -v -y \
+RUN apt-get update && apt-get install -y \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -119,19 +100,16 @@ RUN  --mount=type=secret,id=credentials \
         bullseye \
         stable" && \
     apt-get update && \
-    apt-get install -v -y docker-ce docker-ce-cli containerd.io
+    apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Install Terraform
-RUN  --mount=type=secret,id=credentials \
-    apt-get update && apt-get install -y gnupg software-properties-common curl && \
+RUN apt-get update && apt-get install -y gnupg software-properties-common curl && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
     apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
-    apt-get update && apt-get install -v terraform
+    apt-get update && apt-get install terraform
 
 # jq and xmlstarlet used to modify json and xml files
-RUN  --mount=type=secret,id=credentials \
-    apt-get -y install -v jq
-RUN  --mount=type=secret,id=credentials \
-    apt-get -y install -v xmlstarlet
+RUN apt-get -y install jq
+RUN apt-get -y install xmlstarlet
 
 WORKDIR /workspace
