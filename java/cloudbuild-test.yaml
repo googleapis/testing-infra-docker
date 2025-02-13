@@ -32,7 +32,7 @@ steps:
     # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
       "-t", "gcr.io/$PROJECT_ID/java8",
-      "-t", "gcr.io/cloud-devrel-public-resources/java8"
+      "-t", "gcr.io/cloud-devrel-public-resources/java8",
       "."]
     dir: java/java8
     id: java8-build
