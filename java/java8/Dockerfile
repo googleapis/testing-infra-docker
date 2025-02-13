@@ -1,5 +1,4 @@
-# Copyright 2018 Google LLCRG
-# 
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# The file is copied by the previous step in Cloud Build yaml file
-# INCLUDE+ Dockerfile.ubuntu-bookworm.airlock
 
 # openjdk:8-jdk as of January 23th, 2025
 FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3af2ac94130765b73fc8f1b42ffc04f77996ed8210c297fcfa28ca880ff0a217 as mybootstrap
