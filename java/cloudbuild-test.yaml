@@ -37,10 +37,18 @@ steps:
     env:
     - 'DOCKER_BUILDKIT=1'
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
+  - name: gcr.io/cloud-builders/docker
+    id: java8-buildx-ls
+    args: ["buildx", "ls"]
+    waitFor: ["java8-build"]
+  - name: gcr.io/cloud-builders/docker
+    id: java8-buildx-inspect
+    args: ["buildx", "inspect", "buildx-builder"]
+    waitFor: ["java8-buildx-ls", "java8-build"]
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "gcr.io/$PROJECT_ID/java8", "--config", "java/java8.yaml", "-v"]
-    waitFor: ["java8-build"]
+    waitFor: ["java8-buildx-inspect", "java8-build"]
   - name: gcr.io/cloud-builders/docker
     args:
       [
@@ -49,7 +57,7 @@ steps:
         "gcr.io/cloud-devrel-public-resources/java8",
       ]
     dir: java/java8
-    waitFor: ["java8-build"]
+    waitFor: ["java8-buildx-inspect", "java8-build"]
 
   # Java 11 build
   - name: gcr.io/cloud-builders/docker
