@@ -14,12 +14,26 @@
 
 timeout: 7200s # 2 hours
 steps:
+  - name: "gcr.io/cloud-builders/docker"
+    # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
+    id: buildx-create
+    args:
+      - buildx
+      - create
+      - --name=buildx-builder
+      - --driver=docker-container
+      - --driver-opt
+      - network=cloudbuild
+      - --use
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "."]
+    # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
+    id: buildx-create
+    args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
+      "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "."]
     dir: java/java8
     id: java8-build
-    waitFor: ["-"]
+    waitFor: ["buildx-create"]
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "--config", "java/java8.yaml", "-v"]
@@ -30,7 +44,8 @@ steps:
     args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "."]
     dir: java/java17
     id: java17-build
-    waitFor: ["-"]
+    # Without waiting Java 8, you would get a conflict error "daemon: Conflict. The container name "/buildx_buildkit_buildx-builder0" is already in use by container"
+    waitFor: ["java8-build"]
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "--config", "java/java17.yaml", "-v"]
