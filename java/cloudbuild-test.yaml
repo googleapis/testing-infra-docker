@@ -31,8 +31,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
-      "-t", "gcr.io/$PROJECT_ID/java8-airlock",
-      "-t", "gcr.io/cloud-devrel-public-resources/java8-airlock",
+      "-t", "java8-airlock-local",
       "."]
     dir: java/java8-airlock
     id: java8-airlock-build
@@ -42,7 +41,7 @@ steps:
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
   - name: gcr.io/gcp-runtimes/structure_test
     args:
-      ["-i", "gcr.io/$PROJECT_ID/java8-airlock", "--config", "java/java8.yaml", "-v"]
+      ["-i", "java8-airlock-local", "--config", "java/java8.yaml", "-v"]
     waitFor: ["java8-airlock-build"]
   # Java 8 build
   - name: gcr.io/cloud-builders/docker

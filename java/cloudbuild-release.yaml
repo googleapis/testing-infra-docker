@@ -25,7 +25,7 @@ steps:
       - --driver-opt
       - network=cloudbuild
       - --use
-  # Java 8 build
+  # Java 8 Airlock build
   - name: gcr.io/cloud-builders/docker
     # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     id: buildx-create
