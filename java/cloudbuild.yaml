@@ -30,7 +30,12 @@ steps:
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
     # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
-    args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254", "-t", "gcr.io/$PROJECT_ID/java8", "."]
+    # The infrastructure-public-image tag is for image scanning (b/314943422).
+    args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
+      "-t", "gcr.io/$PROJECT_ID/java8",
+      "-t", "gcr.io/cloud-devrel-public-resources/java8",
+      "-t", "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$SHORT_SHA",
+      "."]
     dir: java/java8
     id: java8-build
     waitFor: ["-"]
@@ -38,23 +43,6 @@ steps:
     args:
       ["-i", "gcr.io/$PROJECT_ID/java8", "--config", "java/java8.yaml", "-v"]
     waitFor: ["java8-build"]
-  - name: gcr.io/cloud-builders/docker
-    args:
-      [
-        "tag",
-        "gcr.io/$PROJECT_ID/java8",
-        "gcr.io/cloud-devrel-public-resources/java8",
-      ]
-  - name: gcr.io/cloud-builders/docker
-    # The tag for image scanning (b/314943422)
-    args:
-      [
-        "tag",
-        "gcr.io/$PROJECT_ID/java8",
-        "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$SHORT_SHA",
-      ]
-    waitFor: ["java8-build"]
-
 
   # Java 11 build
   - name: gcr.io/cloud-builders/docker
