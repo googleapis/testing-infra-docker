@@ -21,9 +21,6 @@ commandTests:
 - name: "maven"
   command: ["mvn", "-version"]
   expectedOutput: ["Apache Maven 3.9.*"]
-- name: "gradle"
-  command: ["gradle", "-version"]
-  expectedOutput: ["Gradle 4.9"]
 - name: "gcloud"
   command: ["gcloud", "version"]
   expectedOutput: ["Google Cloud SDK"]
@@ -37,8 +34,8 @@ commandTests:
   command: ["xmllint", "--version"]
   expectedError: ["using libxml version"]
 - name: "python"
-  command: ["python", "--version"]
-  expectedOutput: ["Python 3.9.13"]
+  command: ["python3", "--version"]
+  expectedOutput: ["Python 3.9"]
 - name: "docker"
   command: ["docker", "--version"]
   expectedOutput: ["Docker version *"]

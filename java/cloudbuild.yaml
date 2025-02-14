@@ -16,26 +16,9 @@ timeout: 7200s # 2 hours
 substitutions:
   _GRAALVM_VERSION: '22.3.3'
 steps:
-  - name: "gcr.io/cloud-builders/docker"
-    # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
-    id: buildx-create
-    args:
-      - buildx
-      - create
-      - --name=buildx-builder
-      - --driver=docker-container
-      - --driver-opt
-      - network=cloudbuild
-      - --use
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
-    # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
-    # The infrastructure-public-image tag is for image scanning (b/314943422).
-    args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
-      "-t", "gcr.io/$PROJECT_ID/java8",
-      "-t", "gcr.io/cloud-devrel-public-resources/java8",
-      "-t", "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$SHORT_SHA",
-      "."]
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/java8", "."]
     dir: java/java8
     id: java8-build
     waitFor: ["-"]
@@ -43,6 +26,23 @@ steps:
     args:
       ["-i", "gcr.io/$PROJECT_ID/java8", "--config", "java/java8.yaml", "-v"]
     waitFor: ["java8-build"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+        "tag",
+        "gcr.io/$PROJECT_ID/java8",
+        "gcr.io/cloud-devrel-public-resources/java8",
+      ]
+  - name: gcr.io/cloud-builders/docker
+    # The tag for image scanning (b/314943422)
+    args:
+      [
+        "tag",
+        "gcr.io/$PROJECT_ID/java8",
+        "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$SHORT_SHA",
+      ]
+    waitFor: ["java8-build"]
+
 
   # Java 11 build
   - name: gcr.io/cloud-builders/docker
@@ -100,7 +100,7 @@ steps:
 
     # Java 17 build
   - name: gcr.io/cloud-builders/docker
-    args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254", "-t", "gcr.io/$PROJECT_ID/java17", "."]
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/java17", "."]
     dir: java/java17
     id: java17-build
     waitFor: ["-"]

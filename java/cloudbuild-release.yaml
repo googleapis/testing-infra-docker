@@ -25,15 +25,27 @@ steps:
       - --driver-opt
       - network=cloudbuild
       - --use
-  # Java 8 build
+  # Java 8 Airlock build
   - name: gcr.io/cloud-builders/docker
     # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     id: buildx-create
+    # https://docs.docker.com/build/builders/drivers/#loading-to-local-image-store
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
-      "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "."]
+      "--load",
+      "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock", "."]
+    dir: java/java8-airlock
+    id: java8-airlock-build
+    waitFor: ["buildx-create"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock", "--config", "java/java8.yaml", "-v"]
+    waitFor: ["java8-airlock-build"]
+  # Java 8 build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "."]
     dir: java/java8
     id: java8-build
-    waitFor: ["buildx-create"]
+    waitFor: ["-"]
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "--config", "java/java8.yaml", "-v"]
@@ -53,6 +65,7 @@ steps:
 
 images:
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17
 
 options:
