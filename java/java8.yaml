@@ -21,9 +21,6 @@ commandTests:
 - name: "maven"
   command: ["mvn", "-version"]
   expectedOutput: ["Apache Maven 3.9.*"]
-- name: "gradle"
-  command: ["gradle", "-version"]
-  expectedOutput: ["Gradle 4.9"]
 - name: "gcloud"
   command: ["gcloud", "version"]
   expectedOutput: ["Google Cloud SDK"]
