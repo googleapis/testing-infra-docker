@@ -29,3 +29,6 @@ commandTests:
   - name: "zip"
     command: ["zip", "--version"]
     expectedOutput: ["This is Zip"]
+  - name: "curl"
+    command: ["curl", "--version"]
+    expectedOutput: ["curl"]
