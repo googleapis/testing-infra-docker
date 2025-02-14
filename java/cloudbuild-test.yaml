@@ -19,13 +19,14 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     id: buildx-create
+    # https://docs.docker.com/build/builders/drivers/#load-by-default
     args:
       - buildx
       - create
       - --name=buildx-builder
       - --driver=docker-container
       - --driver-opt
-      - network=cloudbuild
+      - network=cloudbuild,default-load=true
       - --use
   # Java 8 Airlock build
   - name: gcr.io/cloud-builders/docker
@@ -39,6 +40,10 @@ steps:
     env:
     - 'DOCKER_BUILDKIT=1'
     - 'COMPOSE_DOCKER_CLI_BUILD=1'
+  - name: gcr.io/cloud-builders/docker
+    args: ["image", "ls"]
+    id: java8-airlock-build-check
+    waitFor: ["java8-airlock-build"]
   - name: gcr.io/gcp-runtimes/structure_test
     args:
       ["-i", "java8-airlock-local", "--config", "java/java8.yaml", "-v"]

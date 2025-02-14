@@ -23,14 +23,13 @@ steps:
       - --name=buildx-builder
       - --driver=docker-container
       - --driver-opt
-      - network=cloudbuild
+      - network=cloudbuild,default-load=true
       - --use
   # Java 8 Airlock build
   - name: gcr.io/cloud-builders/docker
     # go/airlock/howto_docker#example-gcb-dockerfile-in-docker-build-support
     id: buildx-create
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
-      "--push",
       "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock", "."]
     dir: java/java8-airlock
     id: java8-airlock-build
