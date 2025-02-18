@@ -20,7 +20,9 @@ RUN set -ex; \
     apt-get install -y \
     unzip wget vim jq zip \
     # for docker
-    ca-certificates curl gnupg
+    ca-certificates curl gnupg \
+    # for SBOM generation
+    uuid-runtime
 
 RUN install -m 0755 -d /etc/apt/keyrings && \
     curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
