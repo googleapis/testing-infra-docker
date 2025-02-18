@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.22
+FROM golang:1.24
 
 # Install dependencies
 RUN set -ex; \
     apt-get update -y; \
     apt-get install -y \
-    unzip wget vim \
+    unzip wget vim jq zip \
     # for docker
     ca-certificates curl gnupg
 
@@ -49,5 +49,23 @@ RUN (export GOTOOLCHAIN='auto' && \
     go install github.com/jstemmer/go-junit-report@latest && \
     go install golang.org/x/lint/golint@latest && \
     go install golang.org/x/tools/cmd/goimports@latest)
+
+# Install pyenv
+RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+    libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
+RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+
+ENV PATH /root/.pyenv/bin:$PATH
+ENV PATH /root/.pyenv/shims:$PATH
+
+RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc && \
+    echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
+
+# Install python
+RUN pyenv install 3.9.13 && \
+    pyenv global 3.9.13 && \
+    python3 -m pip install --upgrade pip setuptools
 
 WORKDIR $GOPATH
