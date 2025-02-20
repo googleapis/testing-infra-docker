@@ -20,12 +20,9 @@ commandTests:
   - name: "syft version"
     command: ["syft", "--version"]
     expectedOutput: ["syft 1.19.0"]
-  - name: "python version"
-    command: ["python3", "--version"]
-    expectedOutput: ["Python 3.10.16"]
   - name: "gcloud version"
     command: ["gcloud", "version"]
     expectedOutput: ["Google Cloud SDK"]
   - name: "gh version"
     command: ["gh", "--version"]
-    expectedOutput: ["gh version 2.65.0"]
+    expectedOutput: ["gh version 2.67.0"]
