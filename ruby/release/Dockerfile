@@ -17,14 +17,12 @@ FROM ubuntu:focal
 ENTRYPOINT /bin/bash
 
 ENV RUBY_VERSION=3.3.7 \
-    BUNDLER_VERSION=2.6.3 \
+    BUNDLER_VERSION=2.6.5 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
     GEMS_VERSION=1.3.0 \
     JWT_VERSION=2.10.1 \
-    PYTHON_VERSION=3.10.16 \
-    DOCUPLOADER_VERSION=0.6.5 \
-    GH_VERSION=2.65.0 \
+    GH_VERSION=2.67.0 \
     SYFT_VERSION=1.19.0
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -56,7 +54,6 @@ RUN apt-get update \
       libgdbm-dev \
       liblzma-dev \
       libncurses5-dev \
-      libpq-dev \
       libreadline-dev \
       libreadline6-dev \
       libssl-dev \
@@ -65,10 +62,8 @@ RUN apt-get update \
       make \
       memcached \
       pkg-config \
-      python-openssl \
       qt5-qmake \
       software-properties-common \
-      sqlite3 \
       wget \
       xz-utils \
       zlib1g-dev \
@@ -111,22 +106,6 @@ RUN rbenv install "${RUBY_VERSION}" \
                    toys:${TOYS_VERSION} \
                    gems:${GEMS_VERSION} \
                    jwt:${JWT_VERSION}
-
-# Install pyenv
-ENV PYENV_ROOT=/root/.pyenv
-RUN git clone --depth=1 https://github.com/pyenv/pyenv.git $PYENV_ROOT \
-    && cd $PYENV_ROOT \
-    && src/configure \
-    && make -C src
-ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
-RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc
-RUN echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> .bashrc
-RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-
-# Install python
-RUN pyenv install ${PYTHON_VERSION} \
-    && pyenv global ${PYTHON_VERSION} \
-    && python3 -m pip install gcp-docuploader==${DOCUPLOADER_VERSION}
 
 # Install gh
 RUN mkdir -p /opt/local \

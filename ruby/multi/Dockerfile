@@ -23,18 +23,17 @@ ENTRYPOINT /bin/bash
 #   update it to 2.6 once we drop Ruby 3.0 support.
 ENV RUBY_30_VERSION=3.0.7 \
     RUBY_31_VERSION=3.1.6 \
-    RUBY_32_VERSION=3.2.6 \
+    RUBY_32_VERSION=3.2.7 \
     RUBY_33_VERSION=3.3.7 \
-    RUBY_34_VERSION=3.4.1 \
+    RUBY_34_VERSION=3.4.2 \
     BUNDLER_VERSION=2.5.23 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
     GEMS_VERSION=1.2.0 \
     JWT_VERSION=2.10.1 \
     PYTHON_VERSION=3.10.16 \
-    NODEJS_VERSION=18.20.6 \
-    DOCUPLOADER_VERSION=0.6.5 \
-    GH_VERSION=2.65.0
+    NODEJS_VERSION=18.20.7 \
+    GH_VERSION=2.67.0
 
 ENV OLDEST_RUBY_VERSION=$RUBY_30_VERSION \
     NEWEST_RUBY_VERSION=$RUBY_33_VERSION \
@@ -153,8 +152,7 @@ RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 
 # Install python
 RUN pyenv install ${PYTHON_VERSION} \
-    && pyenv global ${PYTHON_VERSION} \
-    && python3 -m pip install gcp-docuploader==${DOCUPLOADER_VERSION}
+    && pyenv global ${PYTHON_VERSION}
 
 # Install nodenv
 ENV NODENV_ROOT=/root/.nodenv
