@@ -41,6 +41,7 @@ RUN apt-get update \
     gpg-agent \
     graphviz \
     hunspell-en-us \
+    jq \
     libbz2-dev \
     libdb5.3-dev \
     libenchant-2-2 \
