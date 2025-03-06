@@ -33,6 +33,7 @@ ENV RUBY_30_VERSION=3.0.7 \
     JWT_VERSION=2.10.1 \
     PYTHON_VERSION=3.10.16 \
     NODEJS_VERSION=18.20.7 \
+    CLOUD_SQL_PROXY_VERSION=2.15.1 \
     GH_VERSION=2.67.0
 
 ENV OLDEST_RUBY_VERSION=$RUBY_30_VERSION \
@@ -204,6 +205,13 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
     apt-get update -y && \
     apt-get install google-cloud-cli -y
+
+# Install cloud sql proxy
+RUN curl -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v${CLOUD_SQL_PROXY_VERSION}/cloud-sql-proxy.linux.amd64 \
+    && chmod +x /usr/local/bin/cloud-sql-proxy \
+    && ln -s /usr/local/bin/cloud-sql-proxy /bin/cloud-sql-proxy \
+    && mkdir /cloudsql \
+    && chmod 0777 /cloudsql
 
 # Allow non-root users read access to /root (for Trampoline V2)
 RUN chmod -v a+rx /root
