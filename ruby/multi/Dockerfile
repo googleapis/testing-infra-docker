@@ -209,7 +209,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 # Install cloud sql proxy
 RUN curl -o /usr/local/bin/cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v${CLOUD_SQL_PROXY_VERSION}/cloud-sql-proxy.linux.amd64 \
     && chmod +x /usr/local/bin/cloud-sql-proxy \
-    && ln -s /usr/local/bin/cloud-sql-proxy /bin/cloud-sql-proxy \
+    && ln -s /usr/local/bin/cloud-sql-proxy /bin/cloud_sql_proxy \
     && mkdir /cloudsql \
     && chmod 0777 /cloudsql
 
