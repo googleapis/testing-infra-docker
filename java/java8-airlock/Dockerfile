@@ -90,6 +90,9 @@ RUN --mount=type=secret,id=credentials \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
     apt install -y google-cloud-sdk
 
+# Adding the package path to local
+ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
+
 # Install google-play-services version 1
 RUN mkdir -p /tmp/playservices && \
     wget -q https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar -O /tmp/play-services-basement.aar && \
@@ -100,36 +103,5 @@ RUN mkdir -p /tmp/playservices && \
         -DartifactId=google-play-services \
         -Dversion=1 \
         -Dpackaging=jar
-
-# Install the appengine SDK
-RUN mvn -V dependency:get -Dartifact=com.google.appengine:appengine-api-1.0-sdk:1.9.65
-
-# Adding the package path to local
-ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
-
-# Install docker
-RUN --mount=type=secret,id=credentials \
-    apt-get update && apt-get install -y \
-        apt-transport-https \
-        ca-certificates \
-        curl \
-        gnupg-agent \
-        lsb-release \
-        software-properties-common && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
-    add-apt-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/debian \
-        $(lsb_release -cs) \
-        stable" && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io
-
-# Install Terraform
-RUN --mount=type=secret,id=credentials \
-    apt-get update && apt-get install -y gnupg software-properties-common curl && \
-    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
-    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
-    apt-get update && apt-get install terraform
-
 
 WORKDIR /workspace
