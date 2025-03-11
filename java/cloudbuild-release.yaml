@@ -38,7 +38,7 @@ steps:
     waitFor: ["buildx-create"]
   - name: gcr.io/gcp-runtimes/structure_test
     args:
-      ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock", "--config", "java/java8.yaml", "-v"]
+      ["-i", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock", "--config", "java/java8-airlock.yaml", "-v"]
     waitFor: ["java8-airlock-build"]
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
