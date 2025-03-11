@@ -93,15 +93,4 @@ RUN --mount=type=secret,id=credentials \
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
-# Install google-play-services version 1
-RUN mkdir -p /tmp/playservices && \
-    wget -q https://dl.google.com/dl/android/maven2/com/google/android/gms/play-services-basement/8.3.0/play-services-basement-8.3.0.aar -O /tmp/play-services-basement.aar && \
-    unzip -q /tmp/play-services-basement.aar -d /tmp/playservices && \
-    mvn -V install:install-file \
-        -Dfile=/tmp/playservices/classes.jar \
-        -DgroupId=com.google.android.google-play-services \
-        -DartifactId=google-play-services \
-        -Dversion=1 \
-        -Dpackaging=jar
-
 WORKDIR /workspace
