@@ -17,15 +17,16 @@
 # Parameters
 # _IMAGE_NAME: Name of the image. E.g. python-multi
 # _IMAGE_SOURCE_PATH: Path to Dockerfile. E.g. python/googleapis/python-multi
+# _PROJECT_ID: Name of GCB project. E.g. cloud-sdk-release-custom-pool
 
 timeout: 7200s  # 2 hours
 steps:
 - name: gcr.io/cloud-builders/docker
   args: [
     'build',  '--cache-from',
-    'us-central1-docker.pkg.dev/cloud-sdk-release-custom-pool/release-images-dev/${_IMAGE_NAME}',
+    'us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}',
     '-t',
-    'us-central1-docker.pkg.dev/cloud-sdk-release-custom-pool/release-images-dev/${_IMAGE_NAME}',
+    'us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}',
     '.']
   dir: '${_IMAGE_SOURCE_PATH}'
   id: '${_IMAGE_NAME}'
@@ -36,4 +37,4 @@ options:
   requestedVerifyOption: VERIFIED  # For provenance attestation generation
 
 images:
-  - us-central1-docker.pkg.dev/cloud-sdk-release-custom-pool/release-images-dev/${_IMAGE_NAME}
+  - us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}
