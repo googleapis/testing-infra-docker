@@ -35,7 +35,7 @@ dependencies:
   - gitSource:
       repository:
         url: "https://cloud-sdk.googlesource.com/infrastructure/mirrors/testing-infra-docker"
-      revision: "${_LOUHI_REF_SHA}"
+      revision: "${_LOUHI_REF_SHA}" # Auto-populated with the trigger sha or repository branch HEAD (in that order)
       destPath: "infrastructure/mirrors/testing-infra-docker/${_IMAGE_NAME}"
 
 options:
