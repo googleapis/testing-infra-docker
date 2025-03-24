@@ -31,6 +31,12 @@ steps:
   dir: '${_IMAGE_SOURCE_PATH}'
   id: '${_IMAGE_NAME}'
   waitFor: ['-']
+dependencies:
+  - gitSource:
+      repository:
+        url: "https://cloud-sdk.googlesource.com/infrastructure/mirrors/testing-infra-docker"
+      revision: "${_LOUHI_REF_SHA}"
+      destPath: "infrastructure/mirrors/testing-infra-docker/${_IMAGE_NAME}"
 
 options:
   machineType: 'E2_HIGHCPU_8'
