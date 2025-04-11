@@ -23,9 +23,7 @@ timeout: 7200s  # 2 hours
 steps:
 - name: gcr.io/cloud-builders/docker
   args: [
-    'build',  '--cache-from',
-    'us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}',
-    '-t',
+    'build', '-t',
     'us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}',
     '.']
   dir: '${_IMAGE_SOURCE_PATH}'
