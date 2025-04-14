@@ -4,12 +4,12 @@
 # For syntax help see:
 # https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
 
-*           @googleapis/yoshi
-/elixir     @googleapis/yoshi-elixir
-/go         @googleapis/yoshi-go
-/java       @googleapis/yoshi-java @googleapis/cloud-java-team-teamsync
-/node       @googleapis/jsteam
-/python     @googleapis/yoshi-python
-/ruby       @googleapis/ruby-team
-/php        @googleapis/yoshi-php
+*           @googleapis/cloud-client-library-release-automation-team
+/elixir     @googleapis/yoshi-elixir @googleapis/cloud-client-library-release-automation-team
+/go         @googleapis/yoshi-go @googleapis/cloud-client-library-release-automation-team
+/java       @googleapis/yoshi-java @googleapis/cloud-java-team-teamsync @googleapis/cloud-client-library-release-automation-team
+/node       @googleapis/jsteam @googleapis/cloud-client-library-release-automation-team
+/python     @googleapis/yoshi-python @googleapis/cloud-client-library-release-automation-team
+/ruby       @googleapis/ruby-team @googleapis/cloud-client-library-release-automation-team
+/php        @googleapis/yoshi-php @googleapis/cloud-client-library-release-automation-team
 /syft       @googleapis/cloud-client-library-release-automation-team
