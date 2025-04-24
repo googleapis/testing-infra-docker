@@ -24,8 +24,7 @@ ENTRYPOINT /bin/bash
 # * The rubygems-update gem is pinned to 3.5.4 because this version introduced
 #   a fix to ensure the 'gem update --system' command respects ruby version
 #   constraints. b/410431197
-ENV RUBY_30_VERSION=3.0.7 \
-    RUBY_31_VERSION=3.1.6 \
+ENV RUBY_31_VERSION=3.1.6 \
     RUBY_32_VERSION=3.2.7 \
     RUBY_33_VERSION=3.3.7 \
     RUBY_34_VERSION=3.4.2 \
@@ -33,17 +32,17 @@ ENV RUBY_30_VERSION=3.0.7 \
     BUNDLER_VERSION=2.5.23 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
-    GEMS_VERSION=1.2.0 \
+    GEMS_VERSION=1.3.0 \
     JWT_VERSION=2.10.1 \
-    PYTHON_VERSION=3.10.16 \
-    NODEJS_VERSION=18.20.7 \
+    PYTHON_VERSION=3.11.12 \
+    NODEJS_VERSION=22.15.0 \
     CLOUD_SQL_PROXY_VERSION=2.15.1 \
     GH_VERSION=2.67.0
 
-ENV OLDEST_RUBY_VERSION=$RUBY_30_VERSION \
+ENV OLDEST_RUBY_VERSION=$RUBY_31_VERSION \
     NEWEST_RUBY_VERSION=$RUBY_33_VERSION \
-    DEFAULT_RUBY_VERSION=$RUBY_33_VERSION \
-    RUBY_VERSIONS="$RUBY_30_VERSION $RUBY_31_VERSION $RUBY_32_VERSION $RUBY_33_VERSION $RUBY_34_VERSION"
+    DEFAULT_RUBY_VERSION=$RUBY_34_VERSION \
+    RUBY_VERSIONS="$RUBY_31_VERSION $RUBY_32_VERSION $RUBY_33_VERSION $RUBY_34_VERSION"
 
 # Legacy envs we may be able to get rid of once we verify they're not used.
 ENV BUNDLER1_VERSION=1.17.3 \
@@ -135,7 +134,6 @@ RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
 RUN for version in ${RUBY_VERSIONS}; do \
       rbenv install "$version" \
         && rbenv global "$version" \
-        && gem install rubygems-update -v ${GEMSUPDATE_VERSION} \
         && gem update --system \
         && gem install bundler:${BUNDLER_VERSION} \
                        rake:${RAKE_VERSION} \
