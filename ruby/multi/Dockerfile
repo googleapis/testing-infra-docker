@@ -21,11 +21,15 @@ ENTRYPOINT /bin/bash
 #   update it to 1.3.0 once we drop Ruby 3.0 support.
 # * The bundler gem is pinned to 2.5.23 because 2.6 requires Ruby 3.1. We can
 #   update it to 2.6 once we drop Ruby 3.0 support.
+# * The rubygems-update gem is pinned to 3.5.4 because this version introduced
+#   a fix to ensure the 'gem update --system' command respects ruby version
+#   constraints. b/410431197
 ENV RUBY_30_VERSION=3.0.7 \
     RUBY_31_VERSION=3.1.6 \
     RUBY_32_VERSION=3.2.7 \
     RUBY_33_VERSION=3.3.7 \
     RUBY_34_VERSION=3.4.2 \
+    GEMSUPDATE_VERSION=3.5.4 \
     BUNDLER_VERSION=2.5.23 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
@@ -131,6 +135,7 @@ RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
 RUN for version in ${RUBY_VERSIONS}; do \
       rbenv install "$version" \
         && rbenv global "$version" \
+        && gem install rubygems-update -v ${GEMSUPDATE_VERSION} \
         && gem update --system \
         && gem install bundler:${BUNDLER_VERSION} \
                        rake:${RAKE_VERSION} \
