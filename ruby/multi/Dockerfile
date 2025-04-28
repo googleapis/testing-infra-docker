@@ -28,6 +28,7 @@ ENV RUBY_31_VERSION=3.1.7 \
     RUBY_32_VERSION=3.2.8 \
     RUBY_33_VERSION=3.3.8 \
     RUBY_34_VERSION=3.4.3 \
+    GEMSUPDATE_VERSION=3.5.4 \
     BUNDLER_VERSION=2.6.8 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
@@ -132,6 +133,7 @@ ENV RUBY_CONFIGURE_OPTS --disable-install-doc
 RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
 RUN for version in ${RUBY_VERSIONS}; do \
       rbenv install "$version" \
+        && gem install rubygems-update -v ${GEMSUPDATE_VERSION} \
         && rbenv global "$version" \
         && gem update --system \
         && gem install bundler:${BUNDLER_VERSION} \
