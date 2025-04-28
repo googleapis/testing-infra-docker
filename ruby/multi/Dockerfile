@@ -133,8 +133,8 @@ ENV RUBY_CONFIGURE_OPTS --disable-install-doc
 RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
 RUN for version in ${RUBY_VERSIONS}; do \
       rbenv install "$version" \
-        && gem install rubygems-update -v ${GEMSUPDATE_VERSION} \
         && rbenv global "$version" \
+        && gem install rubygems-update -v ${GEMSUPDATE_VERSION} \
         && gem update --system \
         && gem install bundler:${BUNDLER_VERSION} \
                        rake:${RAKE_VERSION} \
