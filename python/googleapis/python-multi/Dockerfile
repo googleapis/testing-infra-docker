@@ -65,6 +65,7 @@ RUN apt-get update \
     uuid-dev \
     vim \
     wget \
+    zip \
     zlib1g-dev \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
