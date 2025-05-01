@@ -123,6 +123,7 @@ RUN for PYTHON_VERSION in 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.13.0; do
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 23.1.2
 RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
+    && wget --no-check-certificate -O /tmp/get-pip-3-8.py 'https://bootstrap.pypa.io/pip/3.8/get-pip.py' \
     && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.11 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
 
@@ -138,7 +139,7 @@ RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.i
 
 # Ensure Pip for all python3 versions
 RUN python3.7 /tmp/get-pip-3-7.py
-RUN python3.8 /tmp/get-pip.py
+RUN python3.8 /tmp/get-pip-3-8.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.10 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
