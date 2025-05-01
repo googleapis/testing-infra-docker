@@ -62,6 +62,7 @@ RUN apt-get update \
     tcl-dev \
     tk \
     tk-dev \
+    unzip \
     uuid-dev \
     vim \
     wget \
