@@ -60,7 +60,7 @@ RUN python3 -m pip install setuptools
 
 # Everything after this is for your image, if you build FROM a base image with Airlock already configured
 RUN --mount=type=secret,id=credentials \
-    apt install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg
+    apt install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg zip
 
 ENV MAVEN_HOME=/usr/share/maven
 # 3.9.9-eclipse-temurin-11-alpine

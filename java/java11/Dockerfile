@@ -16,7 +16,7 @@ FROM openjdk:11-jdk
 
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
+    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg zip && \
     rm -rf /var/cache/apt
 
 RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.8.1/binaries/apache-maven-3.8.1-bin.zip -O /tmp/maven.zip && \
