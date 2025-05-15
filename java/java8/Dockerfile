@@ -18,7 +18,7 @@ FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3a
 # TODO(suztomo): Update this to source them from Airlock
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg zip && \
+    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg zip unzip && \
     rm -rf /var/cache/apt
 
 ENV MAVEN_HOME=/usr/share/maven
