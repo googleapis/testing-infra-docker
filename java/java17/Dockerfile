@@ -22,7 +22,7 @@ RUN apt-get update && \
     apt-get install wget && \
     apt-get install unzip && \
     apt -y install git && \
-    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
+    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg zip unzip && \
     rm -rf /var/cache/apt
 
 ENV MAVEN_HOME=/usr/share/maven

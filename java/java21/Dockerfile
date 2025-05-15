@@ -19,7 +19,7 @@ RUN apt-get update && \
     apt-get install wget && \
     apt-get install unzip && \
     apt -y install git && \
-    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg && \
+    apt-get install -y --no-install-recommends libxml2-utils apt-transport-https ca-certificates gnupg zip unzip && \
     rm -rf /var/cache/apt
 
 RUN wget -q https://archive.apache.org/dist/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.zip -O /tmp/maven.zip && \
