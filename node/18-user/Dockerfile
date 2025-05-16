@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:18-buster
+FROM node:18-bookworm
 
 # Add Graphviz
 RUN set -ex; \
@@ -29,13 +29,25 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists/*
 
 # Install docker
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
-    add-apt-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/debian \
-        $(lsb_release -cs) \
-        stable" && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io
+#RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+#    add-apt-repository \
+#        "deb [arch=amd64] https://download.docker.com/linux/debian \
+#        $(lsb_release -cs) \
+#        stable" && \
+#    apt-get update && \
+#    apt-get install -y docker-ce docker-ce-cli containerd.io
+
+# Install docker
+RUN install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update -y && \
+    apt-get install -y  docker-ce docker-ce-cli containerd.io
+
 
 # Setup protoc
 RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.10.1/protoc-3.10.1-linux-x86_64.zip > /tmp/protoc-3.10.1-linux-x86_64.zip && \
@@ -46,7 +58,7 @@ RUN curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.10.
 # Install pyenv dependencies
 RUN apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
-    xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+    xz-utils tk-dev libffi-dev liblzma-dev python3-openssl
 
 USER node
 
