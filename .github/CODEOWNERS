@@ -13,3 +13,4 @@
 /ruby       @googleapis/ruby-team @googleapis/cloud-client-library-release-automation-team
 /php        @googleapis/yoshi-php @googleapis/cloud-client-library-release-automation-team
 /syft       @googleapis/cloud-client-library-release-automation-team
+/common     @googleapis/cloud-client-library-release-automation-team
