@@ -12,17 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:focal
+FROM ubuntu:noble
 
 ENTRYPOINT /bin/bash
 
-ENV RUBY_VERSION=3.3.7 \
-    BUNDLER_VERSION=2.6.5 \
+ENV RUBY_VERSION=3.4.4 \
+    RUBYGEMS_VERSION=3.6.9 \
+    BUNDLER_VERSION=2.6.9 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
     GEMS_VERSION=1.3.0 \
     JWT_VERSION=2.10.1 \
-    GH_VERSION=2.67.0 \
+    YARD_VERSION=0.9.37 \
+    REDCARPET_VERSION=3.6.1 \
+    GH_VERSION=2.72.0 \
     SYFT_VERSION=1.19.0
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -44,11 +47,8 @@ RUN apt-get update \
       build-essential \
       ca-certificates \
       curl \
-      freetds-bin \
-      freetds-dev \
       git \
       gpg-agent \
-      libasound2 \
       libbz2-dev \
       libffi-dev \
       libgdbm-dev \
@@ -57,21 +57,14 @@ RUN apt-get update \
       libreadline-dev \
       libreadline6-dev \
       libssl-dev \
-      libvips-dev \
       libyaml-dev \
       make \
-      memcached \
       pkg-config \
       qt5-qmake \
       software-properties-common \
       wget \
       xz-utils \
       zlib1g-dev \
-      jq \
-      libatk-bridge2.0-0 \
-      libdrm-dev \
-      libgbm-dev \
-      libxkbcommon-dev \
     && apt-get -y autoremove \
     && apt-get -y autoclean
 
@@ -85,10 +78,7 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubunt
 
 # Install rbenv
 ENV RBENV_ROOT=/root/.rbenv
-RUN git clone --depth=1 https://github.com/rbenv/rbenv.git $RBENV_ROOT \
-    && cd $RBENV_ROOT \
-    && src/configure \
-    && make -C src
+RUN git clone --depth=1 https://github.com/rbenv/rbenv.git $RBENV_ROOT
 ENV PATH $RBENV_ROOT/shims:$RBENV_ROOT/bin:$PATH
 RUN echo 'eval "$(rbenv init -)"' >> /etc/profile
 RUN echo 'eval "$(rbenv init -)"' >> .bashrc
@@ -100,12 +90,15 @@ ENV RUBY_CONFIGURE_OPTS --disable-install-doc
 RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
 RUN rbenv install "${RUBY_VERSION}" \
     && rbenv global "${RUBY_VERSION}" \
-    && gem update --system \
+    && gem update --system ${RUBYGEMS_VERSION} \
     && gem install bundler:${BUNDLER_VERSION} \
                    rake:${RAKE_VERSION} \
                    toys:${TOYS_VERSION} \
                    gems:${GEMS_VERSION} \
-                   jwt:${JWT_VERSION}
+                   jwt:${JWT_VERSION} \
+                   yard:${YARD_VERSION} \
+                   redcarpet:${REDCARPET_VERSION} \
+    && rbenv rehash
 
 # Install gh
 RUN mkdir -p /opt/local \
@@ -124,5 +117,13 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
     apt-get update -y && \
     apt-get install google-cloud-cli -y
 
+# Library release tooling uses the RUBY_COMMON_TOOLS environment variable to
+# specify where the ruby-common-tools repo is located.
+ENV RUBY_COMMON_TOOLS /root/ruby-common-tools
+RUN git clone --depth=1 https://github.com/googleapis/ruby-common-tools.git ${RUBY_COMMON_TOOLS}
+COPY .toys.rb /root/.toys.rb
+
 # Allow non-root users read access to /root (for Trampoline V2)
 RUN chmod -v a+rx /root
+
+WORKDIR /root
