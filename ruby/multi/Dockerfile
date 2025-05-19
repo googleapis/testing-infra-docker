@@ -12,32 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:focal
+FROM ubuntu:noble
 
 ENTRYPOINT /bin/bash
 
-# Version notes:
-# * The gems gem is pinned to 1.2.0 because 1.3.0 requires Ruby 3.1. We can
-#   update it to 1.3.0 once we drop Ruby 3.0 support.
-# * The bundler gem is pinned to 2.5.23 because 2.6 requires Ruby 3.1. We can
-#   update it to 2.6 once we drop Ruby 3.0 support.
-# * The rubygems-update gem is pinned to 3.5.4 because this version introduced
-#   a fix to ensure the 'gem update --system' command respects ruby version
-#   constraints. b/410431197
 ENV RUBY_31_VERSION=3.1.7 \
     RUBY_32_VERSION=3.2.8 \
     RUBY_33_VERSION=3.3.8 \
-    RUBY_34_VERSION=3.4.3 \
-    GEMSUPDATE_VERSION=3.5.4 \
-    BUNDLER_VERSION=2.6.8 \
+    RUBY_34_VERSION=3.4.4 \
+    RUBYGEMS_VERSION=3.6.9 \
+    BUNDLER_VERSION=2.6.9 \
     RAKE_VERSION=13.2.1 \
     TOYS_VERSION=0.15.6 \
     GEMS_VERSION=1.3.0 \
     JWT_VERSION=2.10.1 \
     PYTHON_VERSION=3.11.12 \
-    NODEJS_VERSION=22.15.0 \
+    NODEJS_VERSION=22.15.1 \
     CLOUD_SQL_PROXY_VERSION=2.15.1 \
-    GH_VERSION=2.71.2
+    GH_VERSION=2.72.0
 
 ENV OLDEST_RUBY_VERSION=$RUBY_31_VERSION \
     DEFAULT_RUBY_VERSION=$RUBY_33_VERSION \
@@ -72,7 +64,6 @@ RUN apt-get update \
       git \
       gpg-agent \
       imagemagick \
-      libasound2 \
       libbz2-dev \
       libffi-dev \
       libgdbm-dev \
@@ -93,7 +84,6 @@ RUN apt-get update \
       pkg-config \
       postgresql \
       postgresql-contrib \
-      python-openssl \
       qt5-qmake \
       software-properties-common \
       sqlite3 \
@@ -118,10 +108,7 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubunt
 
 # Install rbenv
 ENV RBENV_ROOT=/root/.rbenv
-RUN git clone --depth=1 https://github.com/rbenv/rbenv.git $RBENV_ROOT \
-    && cd $RBENV_ROOT \
-    && src/configure \
-    && make -C src
+RUN git clone --depth=1 https://github.com/rbenv/rbenv.git $RBENV_ROOT
 ENV PATH $RBENV_ROOT/shims:$RBENV_ROOT/bin:$PATH
 RUN echo 'eval "$(rbenv init -)"' >> /etc/profile
 RUN echo 'eval "$(rbenv init -)"' >> .bashrc
@@ -134,15 +121,15 @@ RUN echo 'gem: --no-rdoc --no-ri' >> /.gemrc
 RUN for version in ${RUBY_VERSIONS}; do \
       rbenv install "$version" \
         && rbenv global "$version" \
-        && gem install rubygems-update -v ${GEMSUPDATE_VERSION} \
-        && gem update --system \
+        && gem update --system ${RUBYGEMS_VERSION} \
         && gem install bundler:${BUNDLER_VERSION} \
                        rake:${RAKE_VERSION} \
                        toys:${TOYS_VERSION} \
                        gems:${GEMS_VERSION} \
                        jwt:${JWT_VERSION}; \
     done \
-    && rbenv global ${DEFAULT_RUBY_VERSION}
+    && rbenv global ${DEFAULT_RUBY_VERSION} \
+    && rbenv rehash
 
 # Install pyenv
 ENV PYENV_ROOT=/root/.pyenv
