@@ -26,7 +26,7 @@ steps:
 - name: gcr.io/gcp-runtimes/container-structure-test
   args: [
     'test', '--image', "us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}",
-    "--config", "${_STRUCTURE_TEST_CONFIG}"]
+    "--config", "${_CONTAINER_STRUCTURE_TEST_CONFIG}"]
   waitFor: ["${_IMAGE_NAME}"]
 options:
   machineType: 'E2_HIGHCPU_8'
