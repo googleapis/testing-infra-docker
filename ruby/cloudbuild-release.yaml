@@ -15,12 +15,14 @@
 timeout: 7200s  # 2 hours
 steps:
 
-# Build Ruby multi-use image
+# Build Ruby multi-use image (used for integration tests)
 - id: 'build-multi'
   name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/ruby-multi', '.']
   dir: 'ruby/multi'
   waitFor: ['-']
+
+# Build Ruby release image
 - id: 'build-release'
   name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/ruby-release', '.']

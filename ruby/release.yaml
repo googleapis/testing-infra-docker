@@ -16,7 +16,13 @@ schemaVersion: 1.0.0
 commandTests:
   - name: "ruby version"
     command: ["ruby", "-v"]
-    expectedOutput: ["ruby 3.3.7"]
+    expectedOutput: ["ruby 3.4.4"]
+  - name: "toys version"
+    command: ["toys", "--version"]
+    expectedOutput: ["0.15.6"]
+  - name: "toys release check"
+    command: ["toys", "system", "tools", "show", "release", "perform"]
+    expectedOutput: ["runnable: true"]
   - name: "syft version"
     command: ["syft", "--version"]
     expectedOutput: ["syft 1.19.0"]
@@ -25,4 +31,4 @@ commandTests:
     expectedOutput: ["Google Cloud SDK"]
   - name: "gh version"
     command: ["gh", "--version"]
-    expectedOutput: ["gh version 2.67.0"]
+    expectedOutput: ["gh version 2.72.0"]
