@@ -28,14 +28,6 @@ RUN set -ex; \
     ; \
   rm -rf /var/lib/apt/lists/*
 
-# Install docker
-#RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
-#    add-apt-repository \
-#        "deb [arch=amd64] https://download.docker.com/linux/debian \
-#        $(lsb_release -cs) \
-#        stable" && \
-#    apt-get update && \
-#    apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Install docker
 RUN install -m 0755 -d /etc/apt/keyrings && \
@@ -78,8 +70,8 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
 ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
 
 # Install python
-RUN pyenv install 3.10.13 && \
-    pyenv global 3.10.13 && \
+RUN pyenv install 3.12.10 && \
+    pyenv global 3.12.10 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install gcp-uploader and gcp-releasetool and their dependencies.
@@ -88,7 +80,7 @@ RUN python3 -m pip install --require-hashes -r requirements.txt
 
 # Setup Cloud SDK
 WORKDIR /home/node
-ENV CLOUD_SDK_VERSION=446.0.0 \
+ENV CLOUD_SDK_VERSION=520.0.0 \
     CLOUDSDK_PYTHON=/home/node/.pyenv/shims/python3 \
     PATH=/home/node/google-cloud-sdk/bin:$PATH
 RUN set -ex; \
