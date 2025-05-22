@@ -1,6 +1,35 @@
-FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
-ENV PHP_DIR=/opt/php81
-ENV PHP_SRC_DIR=/usr/local/src/php81-build
+# Create a git-base image with the base libgit2-dev dependency
+# and git
+FROM marketplace.gcr.io/google/debian12:latest AS git-base
+RUN apt-get update && \
+    apt-get -y install \
+            build-essential \
+            git \
+            libgit2-dev
+
+# build the splitsh go binary (install golang)
+FROM git-base AS splitsh
+RUN mkdir /workspace
+WORKDIR /workspace
+
+# install golang
+ENV GO_VERSION=1.19.13
+ADD "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" /workspace/
+RUN tar -zxf "go${GO_VERSION}.linux-amd64.tar.gz"
+ENV PATH="${PATH}:/workspace/go/bin/" \
+    GOROOT=/workspace/go
+
+RUN apt-get install -y pkg-config
+
+# compile splitsh go binary
+RUN git clone --depth 1 --branch v2.0.0 https://github.com/splitsh/lite.git /workspace/lite && \
+        cd /workspace/lite && \
+        go build -o /workspace/splitsh-lite github.com/splitsh/lite
+
+# build the php-release image
+FROM git-base
+ENV PHP_DIR=/opt/php84
+ENV PHP_SRC_DIR=/usr/local/src/php84-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
 ENV PHP_VERISON=8.4.3
 
@@ -8,6 +37,7 @@ RUN apt-get update && \
     apt-get -y install \
             autoconf \
             build-essential \
+            curl \
             git-core \
             jq \
             libbz2-dev \
@@ -31,7 +61,6 @@ RUN apt-get update && \
             libzip-dev \
             unixodbc-dev \
             php-imagick \
-            python-ipaddress \
             wget \
             zip \
             zlib1g-dev \
@@ -42,7 +71,7 @@ RUN apt-get update && \
             uuid-runtime
 
 # Remove old version of PHP
-RUN apt purge -y php7.4-common
+RUN apt purge -y php-common
 
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
@@ -74,6 +103,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --enable-mbregex \
         --enable-exif \
         --enable-bcmath \
+        --enable-dom \
         --with-mhash \
         --with-pdo-mysql \
         --with-sodium=shared \
@@ -105,9 +135,6 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         php -r "if (hash_file('SHA384', 'composer-setup.php') === rtrim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
         php composer-setup.php --filename=composer --install-dir=/usr/local/bin
 
-# Install phpunit globally
-RUN composer global require phpunit/phpunit:^8.0
-
 # Install Google Cloud SDK
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
         -o ${HOME}/google-cloud-sdk.tar.gz \
@@ -116,11 +143,6 @@ RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
         --usage-reporting false \
         --path-update false \
         --command-completion false
-
-# Install Cloud SQL proxy
-RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy \
-    && chmod +x cloud_sql_proxy \
-    && mv cloud_sql_proxy /usr/local/bin
 
 # Make composer and gcloud bins available via the PATH variable
 ENV PATH="$PATH:/root/.config/composer/vendor/bin:/root/google-cloud-sdk/bin"
@@ -131,8 +153,10 @@ RUN gcloud config set app/promote_by_default false && \
     gcloud -q components install app-engine-python && \
     gcloud -q components update
 
-# Build php-cs-fixer
-RUN composer global require friendsofphp/php-cs-fixer
+# Install phpunit and php-cs-fixer globally
+RUN composer global require \
+    phpunit/phpunit:^8.0 \
+    friendsofphp/php-cs-fixer
 
 # Install Python3
 RUN wget https://www.python.org/ftp/python/3.9.14/Python-3.9.14.tgz \
@@ -145,3 +169,6 @@ RUN wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
   && python3.9 /tmp/get-pip.py \
   && rm /tmp/get-pip.py \
   && python3.9 -m pip
+
+# add the splitsh-lite command
+COPY --from=splitsh /workspace/splitsh-lite /bin/splitsh-lite

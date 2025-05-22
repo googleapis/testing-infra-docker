@@ -40,3 +40,7 @@ commandTests:
 - name: "zip"
   command: ["zip", "--version"]
   expectedOutput: ["This is Zip"]
+- name: "splitsh-lite"
+  command: ["splitsh-lite", "--version"]
+  # splitsh reports version to stderr
+  expectedError: ["splitsh-lite version"]
