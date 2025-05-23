@@ -27,7 +27,6 @@ steps:
   waitFor: ['-']
 
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node14
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18-puppeteer
 
