@@ -15,11 +15,6 @@
 timeout: 7200s  # 2 hours
 steps:
 
-# Node 14
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node14', '.']
-  dir: 'node/14-user'
-  waitFor: ['-']
 # Node 18
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18', '.']
@@ -32,7 +27,6 @@ steps:
   waitFor: ['-']
 
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node14
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18-puppeteer
 
