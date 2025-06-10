@@ -29,11 +29,11 @@ commandTests:
   expectedOutput: ["git version 2.*"]
 - name: "bazel"
   command: ["bazel", "--version"]
-  expectedOutput: ["bazel 7.6.1"]
+  expectedOutput: ["bazel 6.3.0"]
 - name: "bazelisk"
   command: ["bazelisk", "--version"]
   # bazelisk forwards commands to bazel, so this reports the bazel version
-  expectedOutput: ["bazel 7.6.1"]
+  expectedOutput: ["bazel 6.3.0"]
 - name: "zip"
   command: ["zip", "--version"]
   expectedOutput: ["This is Zip"]
