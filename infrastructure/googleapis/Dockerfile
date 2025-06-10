@@ -35,7 +35,7 @@ WORKDIR /
 
 ENV PATH="/tools:${PATH}" \
     BAZELISK_BIN=/tools/bazelisk \
-    BAZEL_BIN=/tools/bazelisk
+    BAZEL_BIN=/tools/bazel
 
 # Note: Bazel will use this system-wide configuration file and will merge it
 # with other bazelrc file it finds: https://bazel.build/run/bazelrc

@@ -18,7 +18,7 @@ steps:
 
 - id: 'build'
   name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/googleapis', '.']
+  args: ['build', '-t', 'googleapis', '.']
   dir: 'infrastructure/googleapis'
   waitFor: ['-']
 
@@ -26,7 +26,7 @@ steps:
   args:
     [
       "-i",
-      "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/googleapis",
+      "googleapis",
       "--config",
       "/workspace/infrastructure/googleapis.yaml",
       "-v",
