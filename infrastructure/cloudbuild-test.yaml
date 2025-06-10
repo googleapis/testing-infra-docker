@@ -16,7 +16,6 @@ timeout: 7200s # 2 hours
 
 steps:
 
-# Build Ruby multi-use image
 - id: 'build'
   name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/googleapis', '.']
@@ -33,3 +32,5 @@ steps:
       "-v",
     ]
   waitFor: ["build"]
+options:
+  logging: CLOUD_LOGGING_ONLY
