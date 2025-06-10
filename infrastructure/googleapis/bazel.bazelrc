@@ -1,0 +1,2 @@
+# Ask Bazel to use C++14 by default.
+build --repo_env=BAZEL_CXXOPTS="-std=c++14"
