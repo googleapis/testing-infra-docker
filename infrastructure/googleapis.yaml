@@ -28,7 +28,7 @@ commandTests:
   command: ["git", "version"]
   expectedOutput: ["git version 2.*"]
 - name: "bazel"
-  command: ["bazel --version"]
+  command: ["bazel", "--version"]
   expectedOutput: ["bazel 7.6.1"]
 - name: "bazelisk"
   command: ["bazelisk", "--version"]
@@ -36,4 +36,4 @@ commandTests:
   expectedOutput: ["bazel 7.6.1"]
 - name: "zip"
   command: ["zip", "--version"]
-  expectedError: ["This is Zip"]
+  expectedOutput: ["This is Zip"]
