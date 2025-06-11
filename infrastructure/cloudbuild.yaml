@@ -54,3 +54,6 @@ artifacts:
     location: gs://gapic-images/prebuild
     paths:
       - /workspace/output/*.tar.gz
+
+images:
+  - gcr.io/$PROJECT_ID/googleapis
