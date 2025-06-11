@@ -40,8 +40,7 @@ steps:
     ]
   waitFor: ["build"]
 
-- id: prebuild
-  name: us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/googleapis
+- name: us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/googleapis
   entrypoint: "/workspace/infrastructure/googleapis/prebuild.sh"
   waitFor: ["build"]
   env:
@@ -49,3 +48,9 @@ steps:
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
+artifacts:
+  objects:
+    location: gs://gapic-images/prebuild
+    paths:
+      - /workspace/output/*.tar.gz
