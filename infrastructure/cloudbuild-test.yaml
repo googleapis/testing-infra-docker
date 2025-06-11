@@ -41,7 +41,7 @@ steps:
   waitFor: ["build"]
 
 - id: prebuild
-  name: us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/googleapis
+  name: googleapis
   entrypoint: "/workspace/infrastructure/googleapis/prebuild.sh"
   waitFor: ["build"]
   env:
