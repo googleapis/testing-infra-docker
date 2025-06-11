@@ -22,7 +22,7 @@ steps:
     [
       "build",
       "-t",
-      "us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}",
+      "gcr.io/$PROJECT_ID/googleapis",
       ".",
     ]
   dir: "infrastructure/googleapis"
@@ -33,14 +33,14 @@ steps:
   args:
     [
       "-i",
-      "us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}",
+      "gcr.io/$PROJECT_ID/googleapis",
       "--config",
       "/workspace/infrastructure/googleapis.yaml",
       "-v",
     ]
   waitFor: ["build"]
 
-- name: us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}
+- name: "gcr.io/$PROJECT_ID/googleapis"
   entrypoint: "/workspace/infrastructure/googleapis/prebuild.sh"
   waitFor: ["build"]
   env:
