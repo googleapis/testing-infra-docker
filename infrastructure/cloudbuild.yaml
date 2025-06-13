@@ -22,7 +22,7 @@ steps:
     [
       "build",
       "-t",
-      "googleapis",
+      "gcr.io/$PROJECT_ID/googleapis",
       ".",
     ]
   dir: "infrastructure/googleapis"
@@ -33,15 +33,14 @@ steps:
   args:
     [
       "-i",
-      "googleapis",
+      "gcr.io/$PROJECT_ID/googleapis",
       "--config",
       "/workspace/infrastructure/googleapis.yaml",
       "-v",
     ]
   waitFor: ["build"]
 
-- id: prebuild
-  name: googleapis
+- name: "gcr.io/$PROJECT_ID/googleapis"
   entrypoint: "/workspace/infrastructure/googleapis/prebuild.sh"
   waitFor: ["build"]
   env:
@@ -49,3 +48,12 @@ steps:
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
+artifacts:
+  objects:
+    location: gs://gapic-images/prebuild
+    paths:
+      - /workspace/output/*.tar.gz
+
+images:
+  - gcr.io/$PROJECT_ID/googleapis
