@@ -40,12 +40,18 @@ steps:
     ]
   waitFor: ["build"]
 
+- id: googleapis-test
+  name: googleapis
+  entrypoint: "/workspace/infrastructure/googleapis/bazel-build-test.sh"
+  waitFor: ["build"]
+
 - id: prebuild
   name: googleapis
   entrypoint: "/workspace/infrastructure/googleapis/prebuild.sh"
-  waitFor: ["build"]
+  waitFor: ["googleapis-test"]
   env:
     - HOME=/workspace
 
 options:
   logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_32'
