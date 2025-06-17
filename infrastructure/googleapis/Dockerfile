@@ -13,6 +13,7 @@ RUN apt-get update && \
     python-dev-is-python3 \
     openjdk-17-jdk \
     python3-dev \
+    python3-pip \
     pkg-config \
     openssl \
     libxml2-dev \
