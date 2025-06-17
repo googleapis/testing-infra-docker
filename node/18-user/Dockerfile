@@ -25,6 +25,9 @@ RUN set -ex; \
     gnupg-agent \
     lsb-release \
     software-properties-common \
+    git \
+    jq \
+    zip \
     ; \
   rm -rf /var/lib/apt/lists/*
 
