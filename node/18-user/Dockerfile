@@ -70,7 +70,7 @@ RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \
     echo 'eval "$(pyenv init -)"' >> ~/.profile && \
     echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.profile
 
-ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:${PATH}"
+ENV PATH="/home/node/.pyenv/bin:/home/node/.pyenv/shims:/home/node/.npm-global/bin:${PATH}"
 
 # Install python
 RUN pyenv install 3.12.10 && \

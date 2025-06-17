@@ -16,10 +16,10 @@ schemaVersion: 1.0.0
 commandTests:
 - name: "node"
   command: ["node", "--version"]
-  expectedOutput: ["npm@10.7.0"]
+  expectedOutput: ["v18.*"]
 - name: "npm"
   command: ["npm", "--version"]
-  expectedOutput: ["npm@10.7.0"]
+  expectedOutput: ["10.*"]
 - name: "gcloud"
   command: ["gcloud", "version"]
   expectedOutput: ["Google Cloud SDK"]
