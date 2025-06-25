@@ -97,7 +97,7 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.13.0; do \
+RUN for PYTHON_VERSION in 3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.5; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -146,7 +146,30 @@ RUN python3.12 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
 
 RUN rm /tmp/get-pip-3-7.py
+RUN rm /tmp/get-pip-3-8.py
 RUN rm /tmp/get-pip.py
+
+# Remove setuptools installations for Python 3.7, 3.8
+# since there is no fix for CVE-2025-47273/CVE-2025-47273.
+# See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
+RUN for PYTHON_VERSION in 3.7 3.8; do \
+    /usr/local/bin/python${PYTHON_VERSION} -m pip \
+    uninstall -y \
+    setuptools \
+  ; done
+
+# Upgrade setuptools installations for Python 3.9, 3.10 and 3.11
+# for CVE-2025-47273/CVE-2025-47273.
+# See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
+COPY requirements.txt /requirements.txt
+
+RUN for PYTHON_VERSION in 3.9 3.10 3.11; do \
+    /usr/local/bin/python${PYTHON_VERSION} -m pip \
+    install \
+    --no-cache-dir \
+    --require-hashes \
+    -r /requirements.txt \
+  ; done
 
 # Test Pip
 RUN python3 -m pip
@@ -157,15 +180,5 @@ RUN python3.10 -m pip
 RUN python3.11 -m pip
 RUN python3.12 -m pip
 RUN python3.13 -m pip
-
-
-# Install Python packages
-COPY requirements.txt /requirements.txt
-
-RUN /usr/local/bin/python3 -m pip \
-  install \
-  --no-cache-dir \
-  --require-hashes \
-  -r /requirements.txt
 
 CMD ["python3.11"]
