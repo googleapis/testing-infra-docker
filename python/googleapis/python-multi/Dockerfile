@@ -85,8 +85,6 @@ ENV GNUPGHOME /tmp/gpg
 # See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
 RUN set -ex \
   && gpg --keyserver keyserver.ubuntu.com --recv-keys \
-      # 2.7.18 (Benjamin Peterson)
-      C01E1CAD5EA2C4F0B8E3571504C367C218ADD4FF \
       # 3.6.15, 3.7.12 (Ned Deily)
       0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
       # 3.8.12 and 3.9.7 (Łukasz Langa)
@@ -125,7 +123,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install the desired versions of Python.
-RUN for PYTHON_VERSION in 2.7.18 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.13.0; do \
+RUN for PYTHON_VERSION in 3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.5; do \
   set -ex \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
     && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
@@ -137,9 +135,6 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.1
     && cd /usr/src/python-${PYTHON_VERSION} \
     && ./configure \
         --enable-shared \
-      # This works only on Python 2.7 and throws a warning on every other
-      # version, but seems otherwise harmless.
-        --enable-unicode=ucs4 \
         --with-system-ffi \
         --without-ensurepip \
     && make -j$(nproc) \
@@ -153,7 +148,7 @@ RUN for PYTHON_VERSION in 2.7.18 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.1
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 21.3.1
+ENV PYTHON_PIP_VERSION 23.1.2
 RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
     && wget --no-check-certificate -O /tmp/get-pip-3-8.py 'https://bootstrap.pypa.io/pip/3.8/get-pip.py' \
     && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
@@ -177,6 +172,7 @@ RUN python3.12 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
 
 RUN rm /tmp/get-pip-3-7.py
+RUN rm /tmp/get-pip-3-8.py
 RUN rm /tmp/get-pip.py
 
 # Test Pip
@@ -189,17 +185,36 @@ RUN python3.11 -m pip
 RUN python3.12 -m pip
 RUN python3.13 -m pip
 
-# Use python 3.10 by default
+# Remove setuptools installations for Python 3.7, 3.8
+# since there is no fix for CVE-2025-47273/CVE-2025-47273.
+# See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
+RUN for PYTHON_VERSION in 3.7 3.8; do \
+    /usr/local/bin/python${PYTHON_VERSION} -m pip \
+    uninstall -y \
+    setuptools \
+  ; done
+
+# Install nox and upgrade setuptools installations for Python 3.9, 3.10 and 3.11
+# for CVE-2025-47273/CVE-2025-47273.
+# See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
+COPY requirements.txt /requirements.txt
+
+RUN for PYTHON_VERSION in 3.9 3.10 3.11; do \
+    /usr/local/bin/python${PYTHON_VERSION} -m pip \
+    install \
+    --no-cache-dir \
+    --require-hashes \
+    -r /requirements.txt \
+  ; done
+
 RUN python3.10 -m venv /venv
+RUN /venv/bin/python -m pip install --no-cache-dir -r /requirements.txt
 ENV PATH /venv/bin:$PATH
 
-COPY requirements.txt /requirements.txt
-RUN pip install --require-hashes --no-cache-dir -r /requirements.txt
-
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 499.0.0
-# Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.9
+ENV CLOUD_SDK_VERSION 528.0.0
+# Use python 3.12 for cloud sdk.
+ENV CLOUDSDK_PYTHON python3.12
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
