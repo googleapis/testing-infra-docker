@@ -15,13 +15,6 @@
 timeout: 7200s  # 2 hours
 steps:
 
-# cloud-devrel-kokoro-resources/google-cloud-python/autosynth
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/google-cloud-python/autosynth', '.']
-  dir: 'python/cloud-devrel-kokoro-resources/google-cloud-python/autosynth'
-  waitFor: ['-']
-  id: 'autosynth'
-
 # cloud-devrel-kokoro-resources/python-base
 - name: gcr.io/cloud-builders/docker
   args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
