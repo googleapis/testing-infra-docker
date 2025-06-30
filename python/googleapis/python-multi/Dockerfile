@@ -131,8 +131,9 @@ RUN for PYTHON_VERSION in 3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.5; d
     && rm -r python-${PYTHON_VERSION}.tar.xz.asc \
     && mkdir -p /usr/src/python-${PYTHON_VERSION} \
     && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
-    # Remove all bundled setuptools wheels
-    # since there is no fix for CVE-2025-47273/CVE-2025-47273.
+    # TODO: Remove this code once all Python verions include bundled setuptools 79.0.1 or newer.
+    # In the interim, remove all bundled setuptools wheels
+    # since there is no release for CVE-2025-47273/CVE-2025-47273 in Python 3.8, 3.9, 3.10, 3.11, 3.12.
     # See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
     && rm -rf /usr/src/python-${PYTHON_VERSION}/Lib/ensurepip/_bundled/setuptools*.whl \
     && rm python-${PYTHON_VERSION}.tar.xz \
@@ -149,7 +150,8 @@ RUN for PYTHON_VERSION in 3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.5; d
   && rm -rf ~/.cache/ \
   && rm -r "$GNUPGHOME"
 
-# Remove bundled setuptools 67.6.1 wheel
+# TODO: Remove this code once the next patch version of Python 3.12 runtime is released
+# In the interim, remove bundled setuptools 67.6.1 wheel
 # since it does not include a fix for CVE-2025-47273/CVE-2025-47273.
 # As per https://github.com/python/cpython/issues/135374#issuecomment-2963361124,
 # this test file is not needed at runtime.
@@ -227,7 +229,9 @@ RUN python3.12 -m venv /venv
 RUN /venv/bin/python -m pip install --no-cache-dir -r /requirements.txt
 ENV PATH /venv/bin:$PATH
 
-# Remove bundled setuptools 75.3.2 wheel
+# TODO: Remove this code once there is a newer version of virtualenv which does not include setuptools 75.3.2
+# https://github.com/pypa/virtualenv/tree/main/src/virtualenv/seed/wheels/embed
+# In the interim, remove the bundled setuptools 75.3.2 wheel
 # since it does not include a fix for CVE-2025-47273/CVE-2025-47273.
 RUN rm -rf /venv/lib/python3.12/site-packages/virtualenv/seed/wheels/embed/setuptools-75.3.2-py3-none-any.whl
 
