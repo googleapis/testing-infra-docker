@@ -20,7 +20,7 @@ RUN set -ex; \
     apt-get install -y \
     unzip wget vim jq zip \
     # for docker
-    ca-certificates curl gnupg \
+    apt-transport-https ca-certificates curl gnupg \
     # for SBOM generation
     uuid-runtime
 
@@ -41,9 +41,9 @@ RUN unzip protoc-3.13.0-linux-x86_64.zip
 RUN mv bin/protoc /bin/protoc && which protoc
 
 # Install gcloud SDK
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
-    apt-get install google-cloud-sdk -y
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
+    apt-get update -y && apt-get install google-cloud-cli -y
 
 # Install tools used in build
 RUN (export GOTOOLCHAIN='auto' && \
