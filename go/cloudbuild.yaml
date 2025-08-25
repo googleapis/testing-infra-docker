@@ -17,24 +17,7 @@
 
 timeout: 7200s # 2 hours
 steps:
-  # Go 1.22 build
-  - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "gcr.io/$PROJECT_ID/go123", "."]
-    dir: go/go123
-    id: go123-build
-    waitFor: ["-"]
-  - name: gcr.io/gcp-runtimes/structure_test
-    args:
-      [
-        "-i",
-        "gcr.io/$PROJECT_ID/go123",
-        "--config",
-        "/workspace/go/go123.yaml",
-        "-v",
-      ]
-    waitFor: ["go123-build"]
-
-    # Go 1.24 build
+  # Go 1.24 build
   - name: gcr.io/cloud-builders/docker
     args: ["build", "-t", "gcr.io/$PROJECT_ID/go124", "."]
     dir: go/go124
@@ -51,9 +34,26 @@ steps:
       ]
     waitFor: ["go124-build"]
 
+    # Go 1.25 build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/go125", "."]
+    dir: go/go125
+    id: go125-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      [
+        "-i",
+        "gcr.io/$PROJECT_ID/go125",
+        "--config",
+        "/workspace/go/go125.yaml",
+        "-v",
+      ]
+    waitFor: ["go125-build"]
+
 images:
-  - gcr.io/$PROJECT_ID/go123
   - gcr.io/$PROJECT_ID/go124
+  - gcr.io/$PROJECT_ID/go125
 
 options:
   logging: CLOUD_LOGGING_ONLY
