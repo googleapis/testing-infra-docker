@@ -25,10 +25,16 @@ steps:
   args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18-puppeteer', '.']
   dir: 'node/18-puppeteer'
   waitFor: ['-']
+# Node 22 user
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node22', '.']
+  dir: 'node/22-user'
+  waitFor: ['-']
 
 images:
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18-puppeteer
+  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node22
 
 options:
   logging: CLOUD_LOGGING_ONLY
