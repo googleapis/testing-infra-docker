@@ -78,6 +78,7 @@ RUN pyenv install 3.12.10 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install gcp-uploader and gcp-releasetool and their dependencies.
+COPY requirements.txt requirements.txt
 RUN python3 -m pip install --require-hashes -r requirements.txt
 
 # Setup Cloud SDK
