@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:18-bookworm
+FROM node:22-bookworm
 
 # Add Graphviz
 RUN set -ex; \
@@ -78,6 +78,7 @@ RUN pyenv install 3.12.10 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install gcp-uploader and gcp-releasetool and their dependencies.
+COPY requirements.txt requirements.txt
 RUN python3 -m pip install --require-hashes -r requirements.txt
 
 # Setup Cloud SDK
