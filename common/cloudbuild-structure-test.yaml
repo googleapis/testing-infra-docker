@@ -12,26 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# GCB config for generating docker images.
+# GCB config for generating docker images and running structure_test.
 #
 # Parameters
 # _IMAGE_NAME: Name of the image. E.g. python-multi
 # _IMAGE_SOURCE_PATH: Path to Dockerfile. E.g. python/googleapis/python-multi
 # _PROJECT_ID: Name of GCB project. E.g. cloud-sdk-release-custom-pool
+# _REPO_NAME: Name of the Artifact Registry Repo. E.g. release-images-dev
 
 timeout: 7200s  # 2 hours
 steps:
 - name: gcr.io/cloud-builders/docker
   args: [
     'build', '-t',
-    'us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}',
+    'us-central1-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}',
     '.']
   dir: '${_IMAGE_SOURCE_PATH}'
   id: '${_IMAGE_NAME}'
   waitFor: ['-']
 - name: gcr.io/gcp-runtimes/structure_test
   args: [
-    "-i", "us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}",
+    "-i", "us-central1-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}",
     "--config", "${_STRUCTURE_TEST_CONFIG}", "-v"]
   waitFor: ["${_IMAGE_NAME}"]
 
@@ -40,4 +41,4 @@ options:
   requestedVerifyOption: VERIFIED  # For provenance attestation generation
 
 images:
-- us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}
+- us-central1-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}
