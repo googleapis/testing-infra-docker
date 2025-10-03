@@ -6,7 +6,7 @@
 
 *           @googleapis/cloud-client-library-release-automation-team
 /elixir     @googleapis/yoshi-elixir @googleapis/cloud-client-library-release-automation-team
-/go         @googleapis/yoshi-go @googleapis/cloud-client-library-release-automation-team
+/go         @googleapis/cloud-sdk-go-eng @googleapis/cloud-client-library-release-automation-team
 /java       @googleapis/yoshi-java @googleapis/cloud-java-team-teamsync @googleapis/cloud-client-library-release-automation-team
 /node       @googleapis/jsteam @googleapis/cloud-client-library-release-automation-team
 /python     @googleapis/yoshi-python @googleapis/cloud-client-library-release-automation-team
