@@ -15,7 +15,7 @@
 # Dockerfile derived from googleapis/python-multi (the image used by the client
 # libraries tests). We modify this to ensure that all standard library
 # features are available.
-FROM ubuntu:24.04
+FROM marketplace.gcr.io/google/ubuntu2404
 
 ENV DEBIAN_FRONTEND noninteractive
 

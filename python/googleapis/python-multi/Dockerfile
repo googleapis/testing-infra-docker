@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:24.04
+FROM marketplace.gcr.io/google/ubuntu2404
 
 ENV DEBIAN_FRONTEND noninteractive
 
