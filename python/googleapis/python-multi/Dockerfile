@@ -77,8 +77,6 @@ RUN apt-get update \
 RUN mkdir /tmp/gpg \
 && echo "disable-ipv6" >> /tmp/gpg/dirmngr.conf
 
-ENV GNUPGHOME /tmp/gpg
-
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
