@@ -141,25 +141,25 @@ RUN set -eux; \
         [3.14]="https://github.com/login/oauth" \
     ); \
     \
-    for PYTHON_VERSION in $PYTHON_VERSIONS; do \
+    for VERSION in $PYTHON_VERSIONS; do \
         # 1. Define VERSION_GROUP (e.g., 3.14 from 3.14.0)
-        VERSION_GROUP="$(echo "${PYTHON_VERSION}" | cut -d . -f 1,2)"; \
+        VERSION_GROUP="$(echo "${VERSION}" | cut -d . -f 1,2)"; \
         \
         # 2. Look up IDENTITY and ISSUER using the defined VERSION_GROUP
         IDENTITY="${PYTHON_IDENTITIES[$VERSION_GROUP]}"; \
         ISSUER="${PYTHON_ISSUERS[$VERSION_GROUP]}"; \
         \
-      wget --quiet -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-$PYTHON_VERSION.tar.xz" \
-      && wget --quiet -O python-${PYTHON_VERSION}.tar.xz.sigstore "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-$PYTHON_VERSION.tar.xz.sigstore" \
+      wget --quiet -O python-${VERSION}.tar.xz "https://www.python.org/ftp/python/${VERSION}/Python-$VERSION.tar.xz" \
+      && wget --quiet -O python-${VERSION}.tar.xz.sigstore "https://www.python.org/ftp/python/${VERSION}/Python-$VERSION.tar.xz.sigstore" \
       # Verify the Python tarball signature with cosign.
-      && cosign verify-blob python-${PYTHON_VERSION}.tar.xz \
+      && cosign verify-blob python-${VERSION}.tar.xz \
         --certificate-oidc-issuer "${ISSUER}" \
         --certificate-identity "${IDENTITY}" \
-        --bundle python-${PYTHON_VERSION}.tar.xz.sigstore \
-      && mkdir -p /usr/src/python-${PYTHON_VERSION} \
-      && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
-      && rm python-${PYTHON_VERSION}.tar.xz \
-      && cd /usr/src/python-${PYTHON_VERSION} \
+        --bundle python-${VERSION}.tar.xz.sigstore \
+      && mkdir -p /usr/src/python-${VERSION} \
+      && tar -xJC /usr/src/python-${VERSION} --strip-components=1 -f python-${VERSION}.tar.xz \
+      && rm python-${VERSION}.tar.xz \
+      && cd /usr/src/python-${VERSION} \
       && ./configure \
           --enable-shared \
           --with-system-ffi \
