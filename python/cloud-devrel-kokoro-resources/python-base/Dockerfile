@@ -62,23 +62,6 @@ RUN mkdir /tmp/gpg \
 && echo "disable-ipv6" >> /tmp/gpg/dirmngr.conf
 
 ENV GNUPGHOME /tmp/gpg
-# Fetch keys for verifying python installations
-# Do this early so the build fails quickly if the keyserver is unavailable
-# Consider one of the alternatives here if this continues to be flaky:
-# https://github.com/docker-library/faq#openpgp--gnupg-keys-and-verification
-# See https://www.python.org/downloads/ 'OpenPGP Public Keys' for new keys.
-# The hashes below are the fingerprints for the keys of the key signers
-# and are not specific to any version of Python
-RUN set -ex \
-  && gpg --keyserver keyserver.ubuntu.com --recv-keys \
-      # 3.6.x, 3.7.x (Ned Deily)
-      0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D \
-      # 3.8.x and 3.9.x (Łukasz Langa)
-      E3FF2839C048B25C084DEBE9B26995E310250568 \
-      # 3.10.x and 3.11.x (Pablo Galindo Salgado)
-      A035C8C19219BA821ECEA86B64E628F8D684696D \
-      # 3.12.x and 3.13.x (Thomas Wouters)
-      7169605F62C751356D054A26A821E680E5FA6305
 
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -96,27 +79,70 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
-# Install the desired versions of Python.
-RUN for PYTHON_VERSION in 3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.8 3.14.0; do \
-  set -ex \
-    && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-    && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
-    && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
-    && rm -r python-${PYTHON_VERSION}.tar.xz.asc \
-    && mkdir -p /usr/src/python-${PYTHON_VERSION} \
-    && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
-    && rm python-${PYTHON_VERSION}.tar.xz \
-    && cd /usr/src/python-${PYTHON_VERSION} \
-    && ./configure \
-        --enable-shared \
-        --with-system-ffi \
-    && make -j$(nproc) \
-    && make install \
-    && ldconfig \
+# From https://www.python.org/downloads/metadata/sigstore/
+# Starting with Python 3.14, Sigstore is the only method of signing and verification of release artifacts. 
+RUN LATEST_VERSION="2.6.1" && \
+    wget "https://github.com/sigstore/cosign/releases/download/v${LATEST_VERSION}/cosign_${LATEST_VERSION}_amd64.deb" && \
+    dpkg -i cosign_${LATEST_VERSION}_amd64.deb && \
+    rm cosign_${LATEST_VERSION}_amd64.deb
+
+ARG PYTHON_VERSIONS="3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.8 3.14.0"
+
+SHELL ["/bin/bash", "-c"]
+
+RUN set -eux; \
+    # Define the required associative arrays completely.
+    declare -A PYTHON_IDENTITIES; \
+    PYTHON_IDENTITIES=(\
+        [3.7]="nad@python.org" \
+        [3.8]="lukasz@langa.pl" \
+        [3.9]="lukasz@langa.pl" \
+        [3.10]="pablogsal@python.org" \
+        [3.11]="pablogsal@python.org" \
+        [3.12]="thomas@python.org" \
+        [3.13]="thomas@python.org" \
+        [3.14]="hugo@python.org" \
+    ); \
+    declare -A PYTHON_ISSUERS; \
+    PYTHON_ISSUERS=(\
+        [3.7]="https://github.com/login/oauth" \
+        [3.8]="https://github.com/login/oauth" \
+        [3.9]="https://github.com/login/oauth" \
+        [3.10]="https://accounts.google.com" \
+        [3.11]="https://accounts.google.com" \
+        [3.12]="https://accounts.google.com" \
+        [3.13]="https://accounts.google.com" \
+        [3.14]="https://github.com/login/oauth" \
+    ); \
+    \
+    for PYTHON_VERSION in $PYTHON_VERSIONS; do \
+        # 1. Define VERSION_GROUP (e.g., 3.14 from 3.14.0)
+        VERSION_GROUP="$(echo "${PYTHON_VERSION}" | cut -d . -f 1,2)"; \
+        \
+        # 2. Look up IDENTITY and ISSUER using the defined VERSION_GROUP
+        IDENTITY="${PYTHON_IDENTITIES[$VERSION_GROUP]}"; \
+        ISSUER="${PYTHON_ISSUERS[$VERSION_GROUP]}"; \
+        \
+      wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-$PYTHON_VERSION.tar.xz" \
+      && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.sigstore "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-$PYTHON_VERSION.tar.xz.sigstore" \
+      # Verify the Python tarball signature with cosign.
+      && cosign verify-blob python-${PYTHON_VERSION}.tar.xz \
+        --certificate-oidc-issuer "${ISSUER}" \
+        --certificate-identity "${IDENTITY}" \
+        --bundle python-${PYTHON_VERSION}.tar.xz.sigstore \
+      && mkdir -p /usr/src/python-${PYTHON_VERSION} \
+      && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
+      && rm python-${PYTHON_VERSION}.tar.xz \
+      && cd /usr/src/python-${PYTHON_VERSION} \
+      && ./configure \
+          --enable-shared \
+          --with-system-ffi \
+      && make -j$(nproc) \
+      && make install \
+      && ldconfig \
   ; done \
   && rm -rf /usr/src/python* \
-  && rm -rf ~/.cache/ \
-  && rm -r "$GNUPGHOME"
+  && rm -rf ~/.cache/
 
 # Install pip on Python 3.11
 # If the environment variable is called "PIP_VERSION", pip explodes with
@@ -144,6 +170,7 @@ RUN python3.9 /tmp/get-pip.py
 RUN python3.10 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
+RUN python3.14 /tmp/get-pip.py
 
 RUN rm /tmp/get-pip-3-7.py
 RUN rm /tmp/get-pip-3-8.py
@@ -180,5 +207,6 @@ RUN python3.10 -m pip
 RUN python3.11 -m pip
 RUN python3.12 -m pip
 RUN python3.13 -m pip
+RUN python3.14 -m pip
 
 CMD ["python3.11"]
