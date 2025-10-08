@@ -121,8 +121,8 @@ RUN set -eux; \
         IDENTITY="${PYTHON_IDENTITIES[$VERSION_GROUP]}"; \
         ISSUER="${PYTHON_ISSUERS[$VERSION_GROUP]}"; \
         \
-      wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-$PYTHON_VERSION.tar.xz" \
-      && wget --quiet --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.sigstore "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-$PYTHON_VERSION.tar.xz.sigstore" \
+      wget --quiet -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-$PYTHON_VERSION.tar.xz" \
+      && wget --quiet -O python-${PYTHON_VERSION}.tar.xz.sigstore "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-$PYTHON_VERSION.tar.xz.sigstore" \
       # Verify the Python tarball signature with cosign.
       && cosign verify-blob python-${PYTHON_VERSION}.tar.xz \
         --certificate-oidc-issuer "${ISSUER}" \
