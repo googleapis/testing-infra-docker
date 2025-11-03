@@ -17,15 +17,15 @@
 # features are available.
 FROM marketplace.gcr.io/google/ubuntu2404
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Ensure local Python is preferred over distribution Python.
-ENV PATH /usr/local/bin:$PATH
+ENV PATH=/usr/local/bin:$PATH
 
 # http://bugs.python.org/issue19846
 # At the moment, setting "LANG=C" on a Linux system fundamentally breaks
 # Python 3.
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 
 # Install dependencies.
 RUN apt-get update \
@@ -84,7 +84,7 @@ RUN LATEST_VERSION="2.6.1" && \
     dpkg -i cosign_${LATEST_VERSION}_amd64.deb && \
     rm cosign_${LATEST_VERSION}_amd64.deb
 
-ARG PYTHON_VERSIONS="3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.8 3.14.0"
+ARG PYTHON_VERSIONS="3.9.24 3.10.19 3.11.14 3.12.12 3.13.9 3.14.0"
 
 SHELL ["/bin/bash", "-c"]
 
@@ -92,8 +92,6 @@ RUN set -eux; \
     # Define the required associative arrays completely.
     declare -A PYTHON_IDENTITIES; \
     PYTHON_IDENTITIES=(\
-        [3.7]="nad@python.org" \
-        [3.8]="lukasz@langa.pl" \
         [3.9]="lukasz@langa.pl" \
         [3.10]="pablogsal@python.org" \
         [3.11]="pablogsal@python.org" \
@@ -103,8 +101,6 @@ RUN set -eux; \
     ); \
     declare -A PYTHON_ISSUERS; \
     PYTHON_ISSUERS=(\
-        [3.7]="https://github.com/login/oauth" \
-        [3.8]="https://github.com/login/oauth" \
         [3.9]="https://github.com/login/oauth" \
         [3.10]="https://accounts.google.com" \
         [3.11]="https://accounts.google.com" \
@@ -145,43 +141,26 @@ RUN set -eux; \
 # Install pip on Python 3.11
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 23.1.2
-RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
-    && wget --no-check-certificate -O /tmp/get-pip-3-8.py 'https://bootstrap.pypa.io/pip/3.8/get-pip.py' \
-    && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+ENV PYTHON_PIP_VERSION=23.1.2
+RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.11 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
-
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the
   # same as the version bundled with Python
   # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
   # https://github.com/docker-library/python/pull/143#issuecomment-241032683
     && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
-
   # then we use "pip list" to ensure we don't have more than one pip version installed
   # https://github.com/docker-library/python/pull/100
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
 # Ensure Pip for all python3 versions
-RUN python3.7 /tmp/get-pip-3-7.py
-RUN python3.8 /tmp/get-pip-3-8.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.10 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
 RUN python3.14 /tmp/get-pip.py
 
-RUN rm /tmp/get-pip-3-7.py
-RUN rm /tmp/get-pip-3-8.py
 RUN rm /tmp/get-pip.py
-
-# Remove setuptools installations for Python 3.7, 3.8
-# since there is no fix for CVE-2025-47273/CVE-2025-47273.
-# See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
-RUN for PYTHON_VERSION in 3.7 3.8; do \
-    /usr/local/bin/python${PYTHON_VERSION} -m pip \
-    uninstall -y \
-    setuptools \
-  ; done
 
 # Upgrade setuptools installations for Python 3.9, 3.10 and 3.11
 # for CVE-2025-47273/CVE-2025-47273.
@@ -198,8 +177,6 @@ RUN for PYTHON_VERSION in 3.9 3.10 3.11; do \
 
 # Test Pip
 RUN python3 -m pip
-RUN python3.7 -m pip
-RUN python3.8 -m pip
 RUN python3.9 -m pip
 RUN python3.10 -m pip
 RUN python3.11 -m pip
