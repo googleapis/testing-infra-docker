@@ -37,6 +37,7 @@ RUN apt-get update \
     curl \
     dirmngr \
     enchant-2 \
+    gdal-bin \
     git \
     gpg-agent \
     graphviz \
@@ -47,7 +48,9 @@ RUN apt-get update \
     libenchant-2-2 \
     libexpat1-dev \
     libffi-dev \
+    libgdal-dev \
     liblzma-dev \
+    libpq-dev \
     libreadline-dev \
     libsnappy-dev \
     libssl-dev \
