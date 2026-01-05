@@ -49,6 +49,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 RUN (export GOTOOLCHAIN='auto' && \
     go install honnef.co/go/tools/cmd/staticcheck@latest && \
     go install github.com/jstemmer/go-junit-report@latest && \
+    go install gotest.tools/gotestsum@latest && \
     go install golang.org/x/lint/golint@latest && \
     go install golang.org/x/tools/cmd/goimports@latest)
 
