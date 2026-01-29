@@ -17,7 +17,6 @@ steps:
 
 # Fetch cached plt files
 - name: gcr.io/cloud-builders/gcloud
-  entrypoint: gcloud
   args: ['storage', 'cp', '--recursive', 'gs://$PROJECT_ID/elixir-artifacts/elixir*', '/workspace/elixir/plt_builder/plts/']
   id: load-plts
   waitFor: ['-']
@@ -178,7 +177,6 @@ steps:
 
 # Push cached plt files
 - name: gcr.io/cloud-builders/gcloud
-  entrypoint: gcloud
   args: ['storage', 'cp', '--recursive', '/workspace/elixir/plt_builder/plts/elixir*', 'gs://$PROJECT_ID/elixir-artifacts/']
   waitFor: [
     # 'elixir16-extract-plts',
