@@ -67,6 +67,7 @@ RUN apt-get update \
     tk-dev \
     unzip \
     uuid-dev \
+    uuid-runtime \
     vim \
     wget \
     zip \
