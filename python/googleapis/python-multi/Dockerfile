@@ -177,6 +177,12 @@ RUN set -eux; \
 # this test file is not needed at runtime.
 RUN rm -rf /usr/local/lib/python3.12/test/wheeldata/setuptools-67.6.1-py3-none-any.whl
 
+# TODO: Remove this code once support for Python3.9/Python3.10 is dropped
+# There is no patch for CVE-2023-5752. We need to manually remove the vulnerable pip-23.0.1 binary
+# See upstream bug https://github.com/python/cpython/issues/131860
+RUN rm -rf /usr/local/lib/python3.9/ensurepip/_bundled/pip-23.0.1-py3-none-any.whl
+RUN rm -rf /usr/local/lib/python3.10/ensurepip/_bundled/pip-23.0.1-py3-none-any.whl
+
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
