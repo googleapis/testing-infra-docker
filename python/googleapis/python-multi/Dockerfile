@@ -180,7 +180,7 @@ RUN rm -rf /usr/local/lib/python3.12/test/wheeldata/setuptools-67.6.1-py3-none-a
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION=23.1.2
+ENV PYTHON_PIP_VERSION=26.0
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
     && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
     # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
