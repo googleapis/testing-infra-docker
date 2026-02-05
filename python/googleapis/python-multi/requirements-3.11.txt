@@ -53,7 +53,7 @@ virtualenv==20.36.1 \
     # via nox
 
 # The following packages are considered to be unsafe in a requirements file:
-setuptools==79.0.1 \
-    --hash=sha256:128ce7b8f33c3079fd1b067ecbb4051a66e8526e7b65f6cec075dfc650ddfa88 \
-    --hash=sha256:e147c0549f27767ba362f9da434eab9c5dc0045d5304feb602a0af001089fc51
+setuptools==80.10.2 \
+    --hash=sha256:8b0e9d10c784bf7d262c4e5ec5d4ec94127ce206e8738f29a437945fbc219b70 \
+    --hash=sha256:95b30ddfb717250edb492926c92b5221f7ef3fbcc2b07579bcd4a27da21d0173
     # via -r requirements.in
