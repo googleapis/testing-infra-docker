@@ -1,3 +1,4 @@
 # nox is used downstream to run client library tests/create docs
 nox
 setuptools
+wheel
