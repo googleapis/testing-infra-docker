@@ -116,7 +116,7 @@ RUN LATEST_VERSION="2.6.1" && \
     dpkg -i cosign_${LATEST_VERSION}_amd64.deb && \
     rm cosign_${LATEST_VERSION}_amd64.deb
 
-ARG PYTHON_VERSIONS="3.9.24 3.10.19 3.11.14 3.12.12 3.13.9 3.14.0"
+ARG PYTHON_VERSIONS="3.9.24 3.10.19 3.11.14 3.12.12 3.13.11 3.14.0"
 
 SHELL ["/bin/bash", "-c"]
 
@@ -173,9 +173,11 @@ RUN set -eux; \
 # TODO: Remove this code once the next patch version of Python 3.12 runtime is released
 # In the interim, remove bundled setuptools 67.6.1 wheel
 # since it does not include a fix for CVE-2025-47273/CVE-2025-47273.
+# Also /usr/local/lib/python3.12/test/wheeldata/wheel-0.40.0-py3-none-any.whl for CVE-2026-24049
 # As per https://github.com/python/cpython/issues/135374#issuecomment-2963361124,
 # this test file is not needed at runtime.
 RUN rm -rf /usr/local/lib/python3.12/test/wheeldata/setuptools-67.6.1-py3-none-any.whl
+RUN rm -rf /usr/local/lib/python3.12/test/wheeldata/wheel-0.40.0-py3-none-any.whl
 
 # TODO: Remove this code once support for Python3.9/Python3.10 is dropped
 # There is no patch for CVE-2023-5752. We need to manually remove the vulnerable pip-23.0.1 binary
@@ -218,24 +220,30 @@ RUN python3.14 -m pip
 # Install nox and upgrade setuptools installations for Python 3.9, 3.10 and 3.11
 # for CVE-2025-47273/CVE-2025-47273.
 # See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
-COPY requirements.txt /requirements.txt
+COPY requirements-3.9.txt /requirements-3.9.txt
+COPY requirements-3.10.txt /requirements-3.10.txt
+COPY requirements-3.11.txt /requirements-3.11.txt
+COPY requirements-3.12.txt /requirements-3.12.txt
 
 RUN for PYTHON_VERSION in 3.9 3.10 3.11; do \
     /usr/local/bin/python${PYTHON_VERSION} -m pip \
     install \
     --no-cache-dir \
     --require-hashes \
-    -r /requirements.txt \
+    -r /requirements-${PYTHON_VERSION}.txt \
     # Remove bundled setuptools 75.3.2 wheel
     # since it does not include a fix for CVE-2025-47273/CVE-2025-47273.
     && rm -rf /usr/local/lib/python${PYTHON_VERSION}/site-packages/virtualenv/seed/wheels/embed/setuptools-75.3.2-py3-none-any.whl \
+    # Remove bundled 0.45.1 wheel
+    # since it does not include a fix for CVE-2026-24049
+    && rm -rf /usr/local/lib/python${PYTHON_VERSION}/site-packages/virtualenv/seed/wheels/embed/wheel-0.45.1-py3-none-any.whl \
   ; done
 
 # Python 3.12 is preferred because it does not include
 # a bundled version of setuptools in `Lib/ensurepip/_bundled`
 # which could be impacted by CVE-2025-47273/CVE-2025-47273.
 RUN python3.12 -m venv /venv
-RUN /venv/bin/python -m pip install --no-cache-dir -r /requirements.txt
+RUN /venv/bin/python -m pip install --no-cache-dir -r /requirements-3.12.txt
 ENV PATH=/venv/bin:$PATH
 
 # TODO: Remove this code once there is a newer version of virtualenv which does not include setuptools 75.3.2
@@ -243,6 +251,11 @@ ENV PATH=/venv/bin:$PATH
 # In the interim, remove the bundled setuptools 75.3.2 wheel
 # since it does not include a fix for CVE-2025-47273/CVE-2025-47273.
 RUN rm -rf /venv/lib/python3.12/site-packages/virtualenv/seed/wheels/embed/setuptools-75.3.2-py3-none-any.whl
+# TODO: Remove this code once there is a newer version of virtualenv which does not include wheel 45.1
+# https://github.com/pypa/virtualenv/tree/main/src/virtualenv/seed/wheels/embed
+# In the interim, remove the bundled wheel 45.1
+# since it does not include a fix for CVE-2026-24049
+RUN rm -rf /venv/lib/python3.12/site-packages/virtualenv/seed/wheels/embed/wheel-0.45.1-py3-none-any.whl
 
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION=555.0.0
