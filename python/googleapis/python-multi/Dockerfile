@@ -218,7 +218,9 @@ RUN python3.14 -m pip
 # Install nox and upgrade setuptools installations for Python 3.9, 3.10 and 3.11
 # for CVE-2025-47273/CVE-2025-47273.
 # See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
-COPY requirements.txt /requirements.txt
+COPY requirements-3.9.txt /requirements-3.9.txt
+COPY requirements-3.10.txt /requirements-3.10.txt
+COPY requirements-3.11.txt /requirements-3.11.txt
 
 RUN for PYTHON_VERSION in 3.9 3.10 3.11; do \
     /usr/local/bin/python${PYTHON_VERSION} -m pip \
