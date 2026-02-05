@@ -225,7 +225,7 @@ RUN for PYTHON_VERSION in 3.9 3.10 3.11; do \
     install \
     --no-cache-dir \
     --require-hashes \
-    -r /requirements.txt \
+    -r /requirements-${PYTHON_VERSION}.txt \
     # Remove bundled setuptools 75.3.2 wheel
     # since it does not include a fix for CVE-2025-47273/CVE-2025-47273.
     && rm -rf /usr/local/lib/python${PYTHON_VERSION}/site-packages/virtualenv/seed/wheels/embed/setuptools-75.3.2-py3-none-any.whl \
