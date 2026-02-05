@@ -236,7 +236,7 @@ RUN for PYTHON_VERSION in 3.9 3.10 3.11; do \
     && rm -rf /usr/local/lib/python${PYTHON_VERSION}/site-packages/virtualenv/seed/wheels/embed/setuptools-75.3.2-py3-none-any.whl \
     # Remove bundled 0.45.1 wheel
     # since it does not include a fix for CVE-2026-24049
-    && rm -rf /usr/local/lib/python${PYTHON_VERSION}/site-packages/virtualenv/seed/wheels/embed/wheel-0.45.1-py3-none-any.whl 
+    && rm -rf /usr/local/lib/python${PYTHON_VERSION}/site-packages/virtualenv/seed/wheels/embed/wheel-0.45.1-py3-none-any.whl \
   ; done
 
 # Python 3.12 is preferred because it does not include
