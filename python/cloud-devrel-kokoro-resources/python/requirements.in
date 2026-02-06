@@ -1,2 +1,2 @@
 nox
-virtualenv==20.26.6
+virtualenv==20.36.1
