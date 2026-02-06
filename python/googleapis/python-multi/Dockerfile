@@ -116,7 +116,7 @@ RUN LATEST_VERSION="2.6.1" && \
     dpkg -i cosign_${LATEST_VERSION}_amd64.deb && \
     rm cosign_${LATEST_VERSION}_amd64.deb
 
-ARG PYTHON_VERSIONS="3.9.24 3.10.19 3.11.14 3.12.12 3.13.11 3.14.0"
+ARG PYTHON_VERSIONS="3.10.19 3.11.14 3.12.12 3.13.11 3.14.0"
 
 SHELL ["/bin/bash", "-c"]
 
@@ -124,7 +124,6 @@ RUN set -eux; \
     # Define the required associative arrays completely.
     declare -A PYTHON_IDENTITIES; \
     PYTHON_IDENTITIES=(\
-        [3.9]="lukasz@langa.pl" \
         [3.10]="pablogsal@python.org" \
         [3.11]="pablogsal@python.org" \
         [3.12]="thomas@python.org" \
@@ -133,7 +132,6 @@ RUN set -eux; \
     ); \
     declare -A PYTHON_ISSUERS; \
     PYTHON_ISSUERS=(\
-        [3.9]="https://github.com/login/oauth" \
         [3.10]="https://accounts.google.com" \
         [3.11]="https://accounts.google.com" \
         [3.12]="https://accounts.google.com" \
@@ -179,10 +177,9 @@ RUN set -eux; \
 RUN rm -rf /usr/local/lib/python3.12/test/wheeldata/setuptools-67.6.1-py3-none-any.whl
 RUN rm -rf /usr/local/lib/python3.12/test/wheeldata/wheel-0.40.0-py3-none-any.whl
 
-# TODO: Remove this code once support for Python3.9/Python3.10 is dropped
+# TODO: Remove this code once support for Python3.10 is dropped
 # There is no patch for CVE-2023-5752. We need to manually remove the vulnerable pip-23.0.1 binary
 # See upstream bug https://github.com/python/cpython/issues/131860
-RUN rm -rf /usr/local/lib/python3.9/ensurepip/_bundled/pip-23.0.1-py3-none-any.whl
 RUN rm -rf /usr/local/lib/python3.10/ensurepip/_bundled/pip-23.0.1-py3-none-any.whl
 
 # Install pip on Python 3.10 only.
@@ -200,7 +197,6 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
 # Ensure Pip for all python3 versions
-RUN python3.9 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
@@ -210,22 +206,20 @@ RUN rm /tmp/get-pip.py
 
 # Test Pip
 RUN python3 -m pip
-RUN python3.9 -m pip
 RUN python3.10 -m pip
 RUN python3.11 -m pip
 RUN python3.12 -m pip
 RUN python3.13 -m pip
 RUN python3.14 -m pip
 
-# Install nox and upgrade setuptools installations for Python 3.9, 3.10 and 3.11
+# Install nox and upgrade setuptools installations for Python 3.10 and 3.11
 # for CVE-2025-47273/CVE-2025-47273.
 # See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
-COPY requirements-3.9.txt /requirements-3.9.txt
 COPY requirements-3.10.txt /requirements-3.10.txt
 COPY requirements-3.11.txt /requirements-3.11.txt
 COPY requirements-3.12.txt /requirements-3.12.txt
 
-RUN for PYTHON_VERSION in 3.9 3.10 3.11; do \
+RUN for PYTHON_VERSION in 3.10 3.11; do \
     /usr/local/bin/python${PYTHON_VERSION} -m pip \
     install \
     --no-cache-dir \
