@@ -269,7 +269,7 @@ RUN rm -rf /venv/lib/python3.12/site-packages/virtualenv/seed/wheels/embed/wheel
 RUN rm -rf /venv/lib/python3.12/site-packages/virtualenv/seed/wheels/embed/pip-25.0.1-py3-none-any.whl
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION=555.0.0
+ENV CLOUD_SDK_VERSION=556.0.0
 # Use python 3.12 for cloud sdk.
 ENV CLOUDSDK_PYTHON=python3.12
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
