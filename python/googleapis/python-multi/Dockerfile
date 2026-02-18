@@ -164,6 +164,13 @@ RUN set -eux; \
       && make -j$(nproc) \
       && make install \
       && ldconfig \
+      # TODO: Remove this code once the next patch version of Python 3.10/3.11 is released
+      # This code is a targeted mitigation for CVE-2026-23949 only for Python 3.10 and 3.11
+      && if [ "$VERSION_GROUP" = "3.10" ] || [ "$VERSION_GROUP" = "3.11" ]; then \
+          find /usr/local/lib/python${VERSION_GROUP} -name "jaraco.context-*.whl" -delete \
+          && find /usr/local/lib/python${VERSION_GROUP} -name "setuptools-*.whl" -delete \
+          && /usr/local/bin/python${VERSION_GROUP} -m pip install --upgrade pip jaraco.context setuptools; \
+      fi \
   ; done \
   && rm -rf /usr/src/python* \
   && rm -rf ~/.cache/
