@@ -38,7 +38,7 @@ RUN python3 --version
 RUN which python3
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 556.0.0
+ENV CLOUD_SDK_VERSION 557.0.0
 
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.9
