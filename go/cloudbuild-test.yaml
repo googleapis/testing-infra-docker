@@ -85,3 +85,20 @@ steps:
         "-v",
       ]
     waitFor: ["go125-release-build"]
+
+  # Go 1.26 release build
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go126", "."]
+    dir: go/go126-release
+    id: go126-release-build
+    waitFor: ["-"]
+  - name: gcr.io/gcp-runtimes/structure_test
+    args:
+      [
+        "-i",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go126",
+        "--config",
+        "/workspace/go/go126-release.yaml",
+        "-v",
+      ]
+    waitFor: ["go126-release-build"]
