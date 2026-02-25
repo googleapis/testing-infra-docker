@@ -16,8 +16,8 @@ timeout: 7200s  # 2 hours
 steps:
 
 # Fetch cached plt files
-- name: gcr.io/cloud-builders/gsutil
-  args: ['cp', '-r', 'gs://release-image-cache2/elixir-artifacts/elixir*', '/workspace/elixir/plt_builder/plts/']
+- name: gcr.io/cloud-builders/gcloud
+  args: ['storage', 'cp', '--recursive', 'gs://release-image-cache2/elixir-artifacts/elixir*', '/workspace/elixir/plt_builder/plts/']
   id: load-plts
   allowFailure: true
   waitFor: ['-']
@@ -37,8 +37,8 @@ steps:
   waitFor: ['elixir114-test']
 
 # Push cached plt files
-- name: gcr.io/cloud-builders/gsutil
-  args: ['cp', '-r', '/workspace/elixir/plt_builder/plts/elixir*', 'gs://release-image-cache2/elixir-artifacts/']
+- name: gcr.io/cloud-builders/gcloud
+  args: ['storage', 'cp', '--recursive', '/workspace/elixir/plt_builder/plts/elixir*', 'gs://release-image-cache2/elixir-artifacts/']
   waitFor: [
     'elixir114-extract-plts',
   ]
