@@ -158,12 +158,6 @@ RUN mkdir -p "$(nodenv root)"/plugins \
 RUN nodenv install ${NODEJS_VERSION} \
     && nodenv global ${NODEJS_VERSION}
 
-# Install phantomjs for ruby-docs-samples
-RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 \
-    && tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/ \
-    && ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/ \
-    && rm phantomjs-2.1.1-linux-x86_64.tar.bz2
-
 # Install latest Chrome for testing
 RUN CHROME_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r '.channels.Stable.downloads.chrome[] | select(.platform == "linux64") | .url') \
     && curl -sSLf --retry 3 --output /tmp/chrome-linux64.zip "$CHROME_URL" \
