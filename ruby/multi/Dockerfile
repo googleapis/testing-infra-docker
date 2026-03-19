@@ -16,25 +16,25 @@ FROM ubuntu:noble
 
 ENTRYPOINT /bin/bash
 
-ENV RUBY_31_VERSION=3.1.7 \
-    RUBY_32_VERSION=3.2.8 \
-    RUBY_33_VERSION=3.3.8 \
-    RUBY_34_VERSION=3.4.4 \
-    RUBYGEMS_VERSION=3.6.9 \
-    BUNDLER_VERSION=2.6.9 \
-    RAKE_VERSION=13.2.1 \
-    TOYS_VERSION=0.15.6 \
+ENV RUBY_32_VERSION=3.2.10 \
+    RUBY_33_VERSION=3.3.10 \
+    RUBY_34_VERSION=3.4.8 \
+    RUBY_40_VERSION=4.0.1 \
+    RUBYGEMS_VERSION=4.0.7 \
+    BUNDLER_VERSION=4.0.7 \
+    RAKE_VERSION=13.3.1 \
+    TOYS_VERSION=0.20.0 \
     GEMS_VERSION=1.3.0 \
     JWT_VERSION=2.10.1 \
-    PYTHON_VERSION=3.11.12 \
-    NODEJS_VERSION=22.15.1 \
-    CLOUD_SQL_PROXY_VERSION=2.15.1 \
-    GH_VERSION=2.72.0
+    PYTHON_VERSION=3.13.11 \
+    NODEJS_VERSION=24.13.1 \
+    CLOUD_SQL_PROXY_VERSION=2.21.1 \
+    GH_VERSION=2.87.3
 
-ENV OLDEST_RUBY_VERSION=$RUBY_31_VERSION \
-    DEFAULT_RUBY_VERSION=$RUBY_33_VERSION \
-    NEWEST_RUBY_VERSION=$RUBY_34_VERSION \
-    RUBY_VERSIONS="$RUBY_31_VERSION $RUBY_32_VERSION $RUBY_33_VERSION $RUBY_34_VERSION"
+ENV OLDEST_RUBY_VERSION=$RUBY_32_VERSION \
+    DEFAULT_RUBY_VERSION=$RUBY_40_VERSION \
+    NEWEST_RUBY_VERSION=$RUBY_40_VERSION \
+    RUBY_VERSIONS="$RUBY_32_VERSION $RUBY_33_VERSION $RUBY_34_VERSION $RUBY_40_VERSION"
 
 # Legacy envs we may be able to get rid of once we verify they're not used.
 ENV BUNDLER1_VERSION=1.17.3 \
@@ -148,12 +148,8 @@ RUN pyenv install ${PYTHON_VERSION} \
 
 # Install nodenv
 ENV NODENV_ROOT=/root/.nodenv
-RUN git clone --depth=1 https://github.com/nodenv/nodenv.git $NODENV_ROOT \
-    && cd $NODENV_ROOT \
-    && src/configure \
-    && make -C src
+RUN git clone --depth=1 https://github.com/nodenv/nodenv.git $NODENV_ROOT
 ENV PATH $NODENV_ROOT/shims:$NODENV_ROOT/bin:$PATH
-RUN echo 'export PATH="$HOME/.nodenv/bin:$PATH"' >> ~/.bashrc
 RUN echo 'eval "$(nodenv init -)"' >> ~/.bashrc
 RUN mkdir -p "$(nodenv root)"/plugins \
     && git clone --depth=1 https://github.com/nodenv/node-build.git "$(nodenv root)"/plugins/node-build
@@ -161,12 +157,6 @@ RUN mkdir -p "$(nodenv root)"/plugins \
 # Install nodejs
 RUN nodenv install ${NODEJS_VERSION} \
     && nodenv global ${NODEJS_VERSION}
-
-# Install phantomjs for ruby-docs-samples
-RUN wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 \
-    && tar xvjf phantomjs-2.1.1-linux-x86_64.tar.bz2 -C /usr/local/share/ \
-    && ln -s /usr/local/share/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/ \
-    && rm phantomjs-2.1.1-linux-x86_64.tar.bz2
 
 # Install latest Chrome for testing
 RUN CHROME_URL=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json | jq -r '.channels.Stable.downloads.chrome[] | select(.platform == "linux64") | .url') \
