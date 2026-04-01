@@ -22,7 +22,7 @@ steps:
   waitFor: ['-']
   id: 'python-base'
 - name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-base', 'gcr.io/cloud-devrel-public-resources/python-base']
+  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-base', 'gcr.io/cloud-devrel-public-resources/python-base', 'gcr.io/cloud-devrel-public-resources/python-base:infrastructure-public-image-$COMMIT_SHA']
   waitFor: ['python-base']
 
 # googleapis/python-multi
@@ -32,7 +32,7 @@ steps:
   id: 'python-multi'
   waitFor: ['-']
 - name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', 'gcr.io/cloud-devrel-public-resources/python-multi']
+  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', 'gcr.io/cloud-devrel-public-resources/python-multi', 'gcr.io/cloud-devrel-public-resources/python-multi:infrastructure-public-image-$COMMIT_SHA']
   waitFor: ['python-multi']
 
 # cloud-devrel-kokoro-resources/python
@@ -42,7 +42,7 @@ steps:
   waitFor: ['python-base']
   id: 'python'
 - name: gcr.io/cloud-builders/docker
-  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python', 'gcr.io/cloud-devrel-public-resources/python']
+  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/python', 'gcr.io/cloud-devrel-public-resources/python', 'gcr.io/cloud-devrel-public-resources/python:infrastructure-public-image-$COMMIT_SHA']
   waitFor: ['python']
 
 options:
