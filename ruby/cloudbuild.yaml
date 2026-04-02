@@ -45,7 +45,10 @@ steps:
   waitFor: ['build-multi']
 - name: gcr.io/cloud-builders/docker
   args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
-                'gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi',
+                'gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi']
+  waitFor: ['build-multi']
+- name: gcr.io/cloud-builders/docker
+  args: ['tag', 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/multi',
                 'gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi:infrastructure-public-image-$COMMIT_SHA']
   waitFor: ['build-multi']
 
