@@ -27,8 +27,15 @@ RUN apt-get update && \
 
 RUN mkdir -p /tools
 
-# Add bazelisk and bazel CLIs
-ADD https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 /tools/bazelisk
+# Install Go and build Bazelisk from source to fix vulnerabilities in Go stdlib.
+RUN curl -sL https://golang.org/dl/go1.24.8.linux-amd64.tar.gz | tar -C /usr/local -xz
+ENV PATH="/usr/local/go/bin:${PATH}"
+RUN git clone https://github.com/bazelbuild/bazelisk.git /tmp/bazelisk && \
+    cd /tmp/bazelisk && \
+    git checkout v${BAZELISK_VERSION} && \
+    go build -o /tools/bazelisk && \
+    rm -rf /tmp/bazelisk /usr/local/go
+
 ADD https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-linux-x86_64 /tools/bazel
 # Make the tools executable. These operations are performed in separate
 # layers to make it easier to determine where vulnerabilities come from.
