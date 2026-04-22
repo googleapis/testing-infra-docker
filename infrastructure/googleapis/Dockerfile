@@ -1,6 +1,6 @@
 FROM marketplace.gcr.io/google/debian12:latest
 
-ARG BAZELISK_VERSION=1.26.0
+ARG BAZELISK_VERSION=1.28.1
 ARG BAZEL_VERSION=7.7.1
 
 RUN apt-get update && \
