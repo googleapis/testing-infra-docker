@@ -30,7 +30,10 @@ RUN mkdir -p /tools
 # Add bazelisk and bazel CLIs
 ADD https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 /tools/bazelisk
 ADD https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-linux-x86_64 /tools/bazel
-RUN chmod +x /tools/bazelisk /tools/bazel
+# Make the tools executable. These operations are performed in separate
+# layers to make it easier to determine where vulnerabilities come from.
+RUN chmod +x /tools/bazelisk
+RUN chmod +x /tools/bazel
 
 WORKDIR /
 
