@@ -27,10 +27,10 @@ RUN apt-get update && \
 
 RUN mkdir -p /tools
 
-# Install Go and build Bazelisk from source to fix vulnerabilities in Go stdlib.
-RUN curl -sL https://golang.org/dl/go1.24.8.linux-amd64.tar.gz | tar -C /usr/local -xz
-ENV PATH="/usr/local/go/bin:${PATH}"
-RUN git clone https://github.com/bazelbuild/bazelisk.git /tmp/bazelisk && \
+# Install Go, build Bazelisk from source, and clean up in a single layer to avoid leaving Go in intermediate layers.
+RUN curl -sL https://golang.org/dl/go1.26.2.linux-amd64.tar.gz | tar -C /usr/local -xz && \
+    export PATH="/usr/local/go/bin:${PATH}" && \
+    git clone https://github.com/bazelbuild/bazelisk.git /tmp/bazelisk && \
     cd /tmp/bazelisk && \
     git checkout v${BAZELISK_VERSION} && \
     go build -o /tools/bazelisk && \
