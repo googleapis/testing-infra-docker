@@ -28,7 +28,7 @@ RUN apt-get update && \
 RUN mkdir -p /tools
 
 # Install Go, build Bazelisk from source, and clean up in a single layer to avoid leaving Go in intermediate layers.
-RUN curl -sL https://golang.org/dl/go1.26.2.linux-amd64.tar.gz | tar -C /usr/local -xz && \
+RUN curl -sL https://golang.org/dl/go1.26.4.linux-amd64.tar.gz | tar -C /usr/local -xz && \
     export PATH="/usr/local/go/bin:${PATH}" && \
     git clone https://github.com/bazelbuild/bazelisk.git /tmp/bazelisk && \
     cd /tmp/bazelisk && \
