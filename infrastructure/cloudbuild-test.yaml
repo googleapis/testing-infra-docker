@@ -21,6 +21,7 @@ steps:
   args: 
     [
       "build",
+      "--no-cache",
       "-t",
       "googleapis",
       ".",
