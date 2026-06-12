@@ -1,4 +1,4 @@
-FROM marketplace.gcr.io/google/debian12:latest
+FROM marketplace.gcr.io/google/debian12@sha256:c5a0635172704443a7cfa44b49439e012953bc8c02c23ee6232b25ee67bebc2f
 
 ARG BAZELISK_VERSION=1.28.1
 ARG BAZEL_VERSION=7.7.1
