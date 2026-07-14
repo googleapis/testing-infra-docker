@@ -27,8 +27,21 @@ RUN apt-get update && \
 
 RUN mkdir -p /tools
 
-# Download and install Bazelisk, a wrapper around Bazel.
-ADD https://github.com/bazelbuild/bazelisk/releases/download/v${BAZELISK_VERSION}/bazelisk-linux-amd64 /tools/bazelisk
+# Bootstrap modern version of Go. The bookwork tag is associated with debian,
+# our base image, and the 1.26 tag is the Go minor version to capture rolling
+# patch updates for. 
+COPY --from=golang:1.26-bookworm /usr/local/go /usr/local/go
+
+# Build Bazelisk from source with modern version of Go to avoid using out of
+# date Go in the binary.
+# Removes the Go binary we installed previously so as to not leak it into
+# dependent jobs that may want to install their own version of Go.
+RUN export PATH="/usr/local/go/bin:${PATH}" && \
+    git clone https://github.com/bazelbuild/bazelisk.git /tmp/bazelisk && \
+    cd /tmp/bazelisk && \
+    git checkout v${BAZELISK_VERSION} && \
+    go build -o /tools/bazelisk && \
+    rm -rf /tmp/bazelisk /usr/local/go
 
 ADD https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-linux-x86_64 /tools/bazel
 # Make the tools executable. These operations are performed in separate
