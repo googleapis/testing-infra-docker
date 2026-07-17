@@ -39,6 +39,7 @@ RUN apt-get update \
     enchant-2 \
     gdal-bin \
     git \
+    gnupg \
     gpg-agent \
     graphviz \
     hunspell-en-us \
@@ -82,12 +83,8 @@ RUN mkdir /tmp/gpg \
 && echo "disable-ipv6" >> /tmp/gpg/dirmngr.conf
 
 # Install docker
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
@@ -98,8 +95,8 @@ RUN apt-get update \
   && rm -f /var/cache/apt/archives/*.deb
 
 # Install Microsoft ODBC 17 Driver and unixodbc for testing SQL Server samples
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-archive-keyring.gpg \
+  && echo "deb [arch=amd64,armhf,arm64 signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] https://packages.microsoft.com/ubuntu/20.04/prod focal main" > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
   && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
     msodbcsql17 \

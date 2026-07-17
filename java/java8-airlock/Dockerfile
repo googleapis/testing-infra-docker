@@ -22,8 +22,8 @@ FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3a
 RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
         gnupg curl apt-utils && \
-    curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
-    echo 'deb http://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main' | tee -a /etc/apt/sources.list.d/artifact-registry.list
+    curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud-google-bootstrap.gpg && \
+    echo 'deb [signed-by=/usr/share/keyrings/cloud-google-bootstrap.gpg] http://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main' | tee -a /etc/apt/sources.list.d/artifact-registry.list
 
 RUN apt-get update && apt-get install apt-transport-artifact-registry
 
@@ -44,7 +44,7 @@ ARG APT_REPO="ar+https://us-apt.pkg.dev/projects/artifact-foundry-prod standard-
 # The container image is "bullseye". So use matching configuration from:
 # go/airlock/howto_debian?DEBIAN_REPOSITORY=bullseye&APT_REPOSITORY=bullseye-3p-l1#apt-debian-standard-repositories
 RUN --mount=type=secret,id=credentials \
-    echo "deb ${APT_REPO}" | \
+    echo "deb [signed-by=/usr/share/keyrings/cloud-google-bootstrap.gpg] ${APT_REPO}" | \
     tee -a  /etc/apt/sources.list.d/artifact-registry.list && \
     apt-get update && \
     apt-get install -y ca-certificates
@@ -85,7 +85,7 @@ ENV JAVA11_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 # Install gcloud SDK
 RUN --mount=type=secret,id=credentials \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && apt-get update -y && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && apt-get update -y && \
     apt install -y google-cloud-sdk
 
 # Adding the package path to local

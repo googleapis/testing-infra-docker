@@ -38,6 +38,7 @@ RUN apt-get update \
     curl \
     dirmngr \
     git \
+    gnupg \
     gpg-agent \
     libbz2-dev \
     libffi-dev \
@@ -62,12 +63,8 @@ RUN mkdir /tmp/gpg \
 && echo "disable-ipv6" >> /tmp/gpg/dirmngr.conf
 
 # Install docker
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
