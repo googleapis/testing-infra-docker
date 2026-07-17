@@ -72,8 +72,8 @@ RUN echo 'export PYENV_ROOT="$HOME/.pyenv"' >> .bashrc && \
     echo 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
 
 # Install python
-RUN pyenv install 3.6.12 && \
-    pyenv global 3.6.12 && \
+RUN pyenv install 3.9.13 && \
+    pyenv global 3.9.13 && \
     python3 -m pip install --upgrade pip setuptools
 
 # Install docker
@@ -84,18 +84,23 @@ RUN apt-get update && apt-get install -y \
         gnupg-agent \
         lsb-release \
         software-properties-common && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
-    add-apt-repository \
-        "deb [arch=amd64] https://download.docker.com/linux/debian \
-        bullseye \
-        stable" && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    chmod a+r /etc/apt/keyrings/docker.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # Install Terraform
 RUN apt-get update && apt-get install -y gnupg software-properties-common curl && \
-    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
-    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /etc/apt/keyrings/hashicorp.gpg && \
+    chmod a+r /etc/apt/keyrings/hashicorp.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") main" | \
+    tee /etc/apt/sources.list.d/hashicorp.list > /dev/null && \
     apt-get update && apt-get install terraform
 
 WORKDIR /workspace
