@@ -140,6 +140,7 @@ RUN set -eux; \
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION=26.0
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+    && wget --no-check-certificate -O /tmp/get-pip-3.9.py 'https://bootstrap.pypa.io/pip/3.9/get-pip.py' \
     && python3.11 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the
   # same as the version bundled with Python
@@ -151,13 +152,13 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
 # Ensure Pip for all python3 versions
-RUN python3.9 /tmp/get-pip.py
+RUN python3.9 /tmp/get-pip-3.9.py
 RUN python3.10 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
 RUN python3.14 /tmp/get-pip.py
 
-RUN rm /tmp/get-pip.py
+RUN rm /tmp/get-pip.py /tmp/get-pip-3.9.py
 
 # Upgrade setuptools installations for Python 3.9, 3.10 and 3.11
 # for CVE-2025-47273/CVE-2025-47273.
