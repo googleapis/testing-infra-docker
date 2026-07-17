@@ -21,16 +21,13 @@ FROM us-docker.pkg.dev/artifact-foundry-prod/docker-3p-trusted/openjdk@sha256:3a
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
-        gnupg curl ca-certificates apt-utils && \
+        gnupg curl apt-utils && \
     curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     echo 'deb http://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main' | tee -a /etc/apt/sources.list.d/artifact-registry.list
 
 RUN apt-get update && apt-get install apt-transport-artifact-registry
 
-# ca-certificates is required for https
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y --allow-change-held-packages \
-        ca-certificates
+
 
 # Remove all other apt sources, silence errors if file doesn't exist
 RUN rm -f /etc/apt/sources.list.d/* /etc/apt/sources.list
@@ -49,7 +46,8 @@ ARG APT_REPO="ar+https://us-apt.pkg.dev/projects/artifact-foundry-prod standard-
 RUN --mount=type=secret,id=credentials \
     echo "deb ${APT_REPO}" | \
     tee -a  /etc/apt/sources.list.d/artifact-registry.list && \
-    apt-get update
+    apt-get update && \
+    apt-get install -y ca-certificates
 
 RUN --mount=type=secret,id=credentials \
     apt install -y python3.9 python3-pip
