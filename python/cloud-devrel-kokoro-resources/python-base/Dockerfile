@@ -154,7 +154,9 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
     && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
 # Ensure Pip for all python3 versions
-RUN python3.9 /tmp/get-pip.py
+RUN wget --no-check-certificate -O /tmp/get-pip-3.9.py 'https://bootstrap.pypa.io/pip/3.9/get-pip.py' \
+    && python3.9 /tmp/get-pip-3.9.py \
+    && rm /tmp/get-pip-3.9.py
 RUN python3.10 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
