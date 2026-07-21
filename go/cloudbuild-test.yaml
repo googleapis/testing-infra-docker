@@ -19,7 +19,7 @@ timeout: 7200s
 steps:
   # Go 1.24 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go124", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go124", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go124:infrastructure-public-image-$COMMIT_SHA", "."]
     dir: go/go124
     id: go124-build
     waitFor: ["-"]
@@ -36,7 +36,7 @@ steps:
 
   # Go 1.25 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go125", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go125", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go125:infrastructure-public-image-$COMMIT_SHA", "."]
     dir: go/go125
     id: go125-build
     waitFor: ["-"]
@@ -54,7 +54,7 @@ steps:
   
   # Go 1.26 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go126", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go126", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/go126:infrastructure-public-image-$COMMIT_SHA", "."]
     dir: go/go126
     id: go126-build
     waitFor: ["-"]
@@ -71,7 +71,7 @@ steps:
 
   # Go 1.25 release build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go125", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go125", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go125:infrastructure-public-image-$COMMIT_SHA", "."]
     dir: go/go125-release
     id: go125-release-build
     waitFor: ["-"]
@@ -88,7 +88,7 @@ steps:
 
   # Go 1.26 release build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go126", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go126", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/go126:infrastructure-public-image-$COMMIT_SHA", "."]
     dir: go/go126-release
     id: go126-release-build
     waitFor: ["-"]

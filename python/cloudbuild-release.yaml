@@ -16,7 +16,7 @@ timeout: 7200s  # 2 hours
 steps:
 # googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
-  args: ['build',  '--cache-from', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi', '.']
+  args: ['build',  '--cache-from', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/python-multi:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'python/googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']

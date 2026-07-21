@@ -17,21 +17,21 @@ steps:
 
 # cloud-devrel-kokoro-resources/python-base
 - name: gcr.io/cloud-builders/docker
-  args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '.']
+  args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-base:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'python/cloud-devrel-kokoro-resources/python-base'
   waitFor: ['-']
   id: 'python-base'
 
 # googleapis/python-multi
 - name: gcr.io/cloud-builders/docker
-  args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '.']
+  args: ['build',  '--cache-from', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python-multi:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'python/googleapis/python-multi'
   id: 'python-multi'
   waitFor: ['-']
 
 # cloud-devrel-kokoro-resources/python
 - name: gcr.io/cloud-builders/docker
-  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python', '.']
+  args: ['build',  '--no-cache', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python', '-t', 'gcr.io/cloud-devrel-kokoro-resources/python:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'python/cloud-devrel-kokoro-resources/python'
   waitFor: ['python-base']
   id: 'python'

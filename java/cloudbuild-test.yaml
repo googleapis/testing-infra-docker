@@ -79,6 +79,14 @@ steps:
               "gcr.io/cloud-devrel-public-resources/java11014",
       ]
     waitFor: ["java11014-build"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+              "tag",
+              "gcr.io/$PROJECT_ID/java11014",
+              "gcr.io/cloud-devrel-public-resources/java11014:infrastructure-public-image-$COMMIT_SHA",
+      ]
+    waitFor: ["java11014-build"]
 
   # Java 17 build
   - name: gcr.io/cloud-builders/docker
@@ -97,5 +105,13 @@ steps:
               "tag",
               "gcr.io/$PROJECT_ID/java17",
               "gcr.io/cloud-devrel-public-resources/java17",
+      ]
+    waitFor: ["java17-build"]
+  - name: gcr.io/cloud-builders/docker
+    args:
+      [
+              "tag",
+              "gcr.io/$PROJECT_ID/java17",
+              "gcr.io/cloud-devrel-public-resources/java17:infrastructure-public-image-$COMMIT_SHA",
       ]
     waitFor: ["java17-build"]
