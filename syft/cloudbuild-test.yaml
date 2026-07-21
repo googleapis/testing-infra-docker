@@ -18,7 +18,7 @@ steps:
 # Build Ruby multi-use image
 - id: 'build'
   name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/syft', '.']
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/syft', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/syft:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'syft'
   waitFor: ['-']
 - name: gcr.io/gcp-runtimes/structure_test

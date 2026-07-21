@@ -31,7 +31,8 @@ steps:
   # https://docs.docker.com/build/builders/drivers/#loading-to-local-image-store
   args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
     "--load",
-    "-t", "us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}", "."]
+    "-t", "us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}",
+    "-t", "us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}:infrastructure-public-image-$COMMIT_SHA", "."]
   dir: '${_IMAGE_SOURCE_PATH}'
   id: '${_IMAGE_NAME}'
   waitFor: ["buildx-create"]

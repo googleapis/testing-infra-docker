@@ -24,6 +24,8 @@ steps:
       "--no-cache",
       "-t",
       "gcr.io/$PROJECT_ID/googleapis",
+      "-t",
+      "gcr.io/$PROJECT_ID/googleapis:infrastructure-public-image-$COMMIT_SHA",
       ".",
     ]
   dir: "infrastructure/googleapis"

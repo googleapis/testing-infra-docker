@@ -17,17 +17,17 @@ steps:
 
 # Node 18
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:18-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-user', '.']
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:18-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-user-infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'node/18-user'
   waitFor: ['-']
 # Node 18
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:18-puppeteer', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-puppeteer', '.']
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:18-puppeteer', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-puppeteer', '-t', 'gcr.io/cloud-devrel-public-resources/node:18-puppeteer-infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'node/18-puppeteer'
   waitFor: ['-']
 # Node 22
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:22-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:22-user', '.']
+  args: ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/node:22-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:22-user', '-t', 'gcr.io/cloud-devrel-public-resources/node:22-user-infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'node/22-user'
   waitFor: ['-']
 
