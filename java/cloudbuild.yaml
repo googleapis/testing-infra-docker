@@ -39,7 +39,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java8",
-        "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$SHORT_SHA",
+        "gcr.io/cloud-devrel-public-resources/java8:infrastructure-public-image-$COMMIT_SHA",
       ]
     waitFor: ["java8-build"]
 
@@ -67,7 +67,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java11014",
-        "gcr.io/cloud-devrel-public-resources/java11014:infrastructure-public-image-$SHORT_SHA",
+        "gcr.io/cloud-devrel-public-resources/java11014:infrastructure-public-image-$COMMIT_SHA",
       ]
     waitFor: ["java11014-build"]
 
@@ -94,7 +94,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java17",
-        "gcr.io/cloud-devrel-public-resources/java17:infrastructure-public-image-$SHORT_SHA",
+        "gcr.io/cloud-devrel-public-resources/java17:infrastructure-public-image-$COMMIT_SHA",
       ]
     waitFor: ["java17-build"]
     # Java 21 build
@@ -120,7 +120,7 @@ steps:
       [
         "tag",
         "gcr.io/$PROJECT_ID/java21",
-        "gcr.io/cloud-devrel-public-resources/java21:infrastructure-public-image-$SHORT_SHA",
+        "gcr.io/cloud-devrel-public-resources/java21:infrastructure-public-image-$COMMIT_SHA",
       ]
     waitFor: ["java21-build"]
 images:

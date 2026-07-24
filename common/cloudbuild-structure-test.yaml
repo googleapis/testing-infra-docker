@@ -25,6 +25,8 @@ steps:
   args: [
     'build', '-t',
     'us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}',
+    '-t',
+    'us-central1-docker.pkg.dev/${_PROJECT_ID}/release-images-dev/${_IMAGE_NAME}:infrastructure-public-image-$COMMIT_SHA',
     '.']
   dir: '${_IMAGE_SOURCE_PATH}'
   id: '${_IMAGE_NAME}'

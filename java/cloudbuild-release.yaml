@@ -32,7 +32,8 @@ steps:
     # https://docs.docker.com/build/builders/drivers/#loading-to-local-image-store
     args: ["buildx", "build", "--add-host=metadata.google.internal:169.254.169.254",
       "--load",
-      "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock", "."]
+      "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock",
+      "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8-airlock:infrastructure-public-image-$COMMIT_SHA", "."]
     dir: java/java8-airlock
     id: java8-airlock-build
     waitFor: ["buildx-create"]
@@ -42,7 +43,7 @@ steps:
     waitFor: ["java8-airlock-build"]
   # Java 8 build
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java8:infrastructure-public-image-$COMMIT_SHA", "."]
     dir: java/java8
     id: java8-build
     waitFor: ["-"]
@@ -53,7 +54,7 @@ steps:
 
   # Java 17 build specifically for java-storage
   - name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "."]
+    args: ["build", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17", "-t", "us-central1-docker.pkg.dev/$PROJECT_ID/release-images/java17:infrastructure-public-image-$COMMIT_SHA", "."]
     dir: java/java17
     id: java17-build
     # Without waiting Java 8, you would get a conflict error "daemon: Conflict. The container name "/buildx_buildkit_buildx-builder0" is already in use by container"

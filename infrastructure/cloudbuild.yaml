@@ -26,6 +26,8 @@ steps:
       "gcr.io/$PROJECT_ID/googleapis:latest",
       "-t",
       "gcr.io/$PROJECT_ID/googleapis:prod",
+      "-t",
+      "gcr.io/$PROJECT_ID/googleapis:infrastructure-public-image-$COMMIT_SHA",
       ".",
     ]
   dir: "infrastructure/googleapis"
@@ -61,3 +63,4 @@ artifacts:
 images:
   - gcr.io/$PROJECT_ID/googleapis:latest
   - gcr.io/$PROJECT_ID/googleapis:prod
+  - gcr.io/$PROJECT_ID/googleapis:infrastructure-public-image-$COMMIT_SHA

@@ -23,7 +23,7 @@ steps:
 - id: 'build-php81'
   name: gcr.io/cloud-builders/docker
   args:
-    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '-t', 'gcr.io/cloud-devrel-public-resources/php81', '.']
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php81', '-t', 'gcr.io/cloud-devrel-public-resources/php81', '-t', 'gcr.io/cloud-devrel-public-resources/php81:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'php/php81'
   waitFor: ['-']
 
@@ -36,7 +36,7 @@ steps:
 - id: 'build-php82'
   name: gcr.io/cloud-builders/docker
   args:
-    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '-t', 'gcr.io/cloud-devrel-public-resources/php82', '.']
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '-t', 'gcr.io/cloud-devrel-public-resources/php82', '-t', 'gcr.io/cloud-devrel-public-resources/php82:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'php/php82'
   waitFor: ['-']
 
@@ -49,7 +49,7 @@ steps:
 - id: 'build-php83'
   name: gcr.io/cloud-builders/docker
   args:
-    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php83', '-t', 'gcr.io/cloud-devrel-public-resources/php83', '.']
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php83', '-t', 'gcr.io/cloud-devrel-public-resources/php83', '-t', 'gcr.io/cloud-devrel-public-resources/php83:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'php/php83'
   waitFor: ['-']
 
@@ -62,7 +62,7 @@ steps:
 - id: 'build-php-release'
   name: gcr.io/cloud-builders/docker
   args:
-    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/release', '-t', 'gcr.io/cloud-devrel-public-resources/release', '.']
+    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/release', '-t', 'gcr.io/cloud-devrel-public-resources/release', '-t', 'gcr.io/cloud-devrel-public-resources/release:infrastructure-public-image-$COMMIT_SHA', '.']
   dir: 'php/release'
   waitFor: ['-']
 

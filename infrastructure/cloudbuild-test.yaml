@@ -24,6 +24,8 @@ steps:
       "--no-cache",
       "-t",
       "googleapis",
+      "-t",
+      "googleapis:infrastructure-public-image-$COMMIT_SHA",
       ".",
     ]
   dir: "infrastructure/googleapis"

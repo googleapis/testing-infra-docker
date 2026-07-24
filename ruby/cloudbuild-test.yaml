@@ -34,6 +34,8 @@ steps:
     - 'gcr.io/cloud-devrel-kokoro-resources/yoshi-ruby/ruby-release'
     - '-t'
     - 'gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi'
+    - '-t'
+    - 'gcr.io/cloud-devrel-public-resources/yoshi-ruby/multi:infrastructure-public-image-$COMMIT_SHA'
     - '.'
   dir: 'ruby/multi'
   waitFor: ['-']
