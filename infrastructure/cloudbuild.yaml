@@ -23,7 +23,9 @@ steps:
       "build",
       "--no-cache",
       "-t",
-      "gcr.io/$PROJECT_ID/googleapis",
+      "gcr.io/$PROJECT_ID/googleapis:latest",
+      "-t",
+      "gcr.io/$PROJECT_ID/googleapis:prod",
       ".",
     ]
   dir: "infrastructure/googleapis"
@@ -57,4 +59,5 @@ artifacts:
       - /workspace/output/*.tar.gz
 
 images:
-  - gcr.io/$PROJECT_ID/googleapis
+  - gcr.io/$PROJECT_ID/googleapis:latest
+  - gcr.io/$PROJECT_ID/googleapis:prod
