@@ -113,7 +113,7 @@ RUN LATEST_VERSION="2.6.1" && \
     dpkg -i cosign_${LATEST_VERSION}_amd64.deb && \
     rm cosign_${LATEST_VERSION}_amd64.deb
 
-ARG PYTHON_VERSIONS="3.10.19 3.11.14 3.12.12 3.13.11 3.14.3"
+ARG PYTHON_VERSIONS="3.10.19 3.11.14 3.12.12 3.13.11 3.14.3 3.15.0rc1"
 
 SHELL ["/bin/bash", "-c"]
 
@@ -126,6 +126,7 @@ RUN set -eux; \
         [3.12]="thomas@python.org" \
         [3.13]="thomas@python.org" \
         [3.14]="hugo@python.org" \
+        [3.15]="hugo@python.org" \
     ); \
     declare -A PYTHON_ISSUERS; \
     PYTHON_ISSUERS=(\
@@ -134,18 +135,24 @@ RUN set -eux; \
         [3.12]="https://accounts.google.com" \
         [3.13]="https://accounts.google.com" \
         [3.14]="https://github.com/login/oauth" \
+        [3.15]="https://github.com/login/oauth" \
     ); \
     \
     for VERSION in $PYTHON_VERSIONS; do \
         # 1. Define VERSION_GROUP (e.g., 3.14 from 3.14.0)
         VERSION_GROUP="$(echo "${VERSION}" | cut -d . -f 1,2)"; \
+        # 2. Map Release Candidates (RC) to their actual parent release directories (e.g., 3.15.0rc1 resides in 3.15.0)
+        DOWNLOAD_DIR="${VERSION}"; \
+        if [ "${VERSION}" = "3.15.0rc1" ]; then \
+            DOWNLOAD_DIR="3.15.0"; \
+        fi; \
         \
-        # 2. Look up IDENTITY and ISSUER using the defined VERSION_GROUP
+        # 3. Look up IDENTITY and ISSUER using the defined VERSION_GROUP
         IDENTITY="${PYTHON_IDENTITIES[$VERSION_GROUP]}"; \
         ISSUER="${PYTHON_ISSUERS[$VERSION_GROUP]}"; \
         \
-      wget --quiet -O python-${VERSION}.tar.xz "https://www.python.org/ftp/python/${VERSION}/Python-$VERSION.tar.xz" \
-      && wget --quiet -O python-${VERSION}.tar.xz.sigstore "https://www.python.org/ftp/python/${VERSION}/Python-$VERSION.tar.xz.sigstore" \
+      wget --quiet -O python-${VERSION}.tar.xz "https://www.python.org/ftp/python/${DOWNLOAD_DIR}/Python-$VERSION.tar.xz" \
+      && wget --quiet -O python-${VERSION}.tar.xz.sigstore "https://www.python.org/ftp/python/${DOWNLOAD_DIR}/Python-$VERSION.tar.xz.sigstore" \
       # Verify the Python tarball signature with cosign.
       && cosign verify-blob python-${VERSION}.tar.xz \
         --certificate-oidc-issuer "${ISSUER}" \
@@ -209,6 +216,7 @@ RUN python3.11 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
 RUN python3.14 /tmp/get-pip.py
+RUN python3.15 /tmp/get-pip.py
 
 RUN rm /tmp/get-pip.py
 
@@ -219,6 +227,7 @@ RUN python3.11 -m pip
 RUN python3.12 -m pip
 RUN python3.13 -m pip
 RUN python3.14 -m pip
+RUN python3.15 -m pip
 
 # Install nox and upgrade setuptools installations for Python 3.10 and 3.11
 # for CVE-2025-47273/CVE-2025-47273.
