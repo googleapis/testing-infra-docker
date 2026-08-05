@@ -141,11 +141,8 @@ RUN set -eux; \
     for VERSION in $PYTHON_VERSIONS; do \
         # 1. Define VERSION_GROUP (e.g., 3.14 from 3.14.0)
         VERSION_GROUP="$(echo "${VERSION}" | cut -d . -f 1,2)"; \
-        # 2. Map Release Candidates (RC) to their actual parent release directories (e.g., 3.15.0rc1 resides in 3.15.0)
-        DOWNLOAD_DIR="${VERSION}"; \
-        if [ "${VERSION}" = "3.15.0rc1" ]; then \
-            DOWNLOAD_DIR="3.15.0"; \
-        fi; \
+        # 2. Automatically map Release Candidates (RC) to their parent release directories (e.g., 3.15.0rc1 -> 3.15.0) \
+        DOWNLOAD_DIR="${VERSION%rc*}"; \
         \
         # 3. Look up IDENTITY and ISSUER using the defined VERSION_GROUP
         IDENTITY="${PYTHON_IDENTITIES[$VERSION_GROUP]}"; \
