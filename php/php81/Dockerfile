@@ -1,8 +1,8 @@
-FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
+FROM ubuntu:24.04
 ENV PHP_DIR=/opt/php81
 ENV PHP_SRC_DIR=/usr/local/src/php81-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
-ENV PHP_VERISON=8.1.18
+ENV PHP_VERSION=8.1.18
 
 RUN apt-get update && \
     apt-get -y install \
@@ -31,7 +31,6 @@ RUN apt-get update && \
             libzip-dev \
             unixodbc-dev \
             php-imagick \
-            python-ipaddress \
             wget \
             zip \
             zlib1g-dev \
@@ -40,16 +39,13 @@ RUN apt-get update && \
             libsqlite3-dev \
             libonig-dev
 
-# Remove old version of PHP
-RUN apt purge -y php7.4-common
-
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
-    wget http://us1.php.net/get/php-$PHP_VERISON.tar.bz2/from/this/mirror \
-         -O php-$PHP_VERISON.tar.bz2 && \
-    tar jxf php-$PHP_VERISON.tar.bz2 && \
-    cd php-$PHP_VERISON && \
+    wget https://www.php.net/distributions/php-$PHP_VERSION.tar.bz2 \
+         -O php-$PHP_VERSION.tar.bz2 && \
+    tar jxf php-$PHP_VERSION.tar.bz2 && \
+    cd php-$PHP_VERSION && \
     ./configure \
         --prefix=${PHP_DIR} \
         --with-config-file-scan-dir=${PHP_DIR}/lib/conf.d \
