@@ -38,6 +38,9 @@ RUN apt-get update && \
             libsqlite3-dev \
             libonig-dev
 
+# Remove the system version of PHP installed by apt
+RUN apt-get purge -y php8.3-common php-common
+
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
