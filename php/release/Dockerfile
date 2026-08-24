@@ -31,7 +31,7 @@ FROM git-base
 ENV PHP_DIR=/opt/php84
 ENV PHP_SRC_DIR=/usr/local/src/php84-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
-ENV PHP_VERISON=8.4.3
+ENV PHP_VERSION=8.4.3
 
 RUN apt-get update && \
     apt-get -y install \
@@ -76,10 +76,10 @@ RUN apt purge -y php-common
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
-    wget http://us1.php.net/get/php-$PHP_VERISON.tar.bz2/from/this/mirror \
-         -O php-$PHP_VERISON.tar.bz2 && \
-    tar jxf php-$PHP_VERISON.tar.bz2 && \
-    cd php-$PHP_VERISON && \
+    wget https://www.php.net/distributions/php-$PHP_VERSION.tar.bz2 \
+         -O php-$PHP_VERSION.tar.bz2 && \
+    tar jxf php-$PHP_VERSION.tar.bz2 && \
+    cd php-$PHP_VERSION && \
     ./configure \
         --prefix=${PHP_DIR} \
         --with-config-file-scan-dir=${PHP_DIR}/lib/conf.d \
