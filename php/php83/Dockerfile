@@ -8,6 +8,7 @@ RUN apt-get update && \
     apt-get -y install \
             autoconf \
             build-essential \
+            curl \
             git-core \
             jq \
             libbz2-dev \
