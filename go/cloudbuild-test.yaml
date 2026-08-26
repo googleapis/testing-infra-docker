@@ -67,7 +67,7 @@ steps:
         "/workspace/go/go127.yaml",
         "-v",
       ]
-    waitFor: ["go126-build"]
+    waitFor: ["go127-build"]
 
   # Go 1.25 release build
   - name: gcr.io/cloud-builders/docker
@@ -118,4 +118,4 @@ steps:
         "/workspace/go/go127-release.yaml",
         "-v",
       ]
-    waitFor: ["go126-release-build"]
+    waitFor: ["go127-release-build"]
