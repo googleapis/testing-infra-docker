@@ -32,3 +32,6 @@ commandTests:
   - name: "gh version"
     command: ["gh", "--version"]
     expectedOutput: ["gh version 2.72.0"]
+  - name: "jq version"
+    command: ["jq", "--version"]
+    expectedOutput: ["jq-"]

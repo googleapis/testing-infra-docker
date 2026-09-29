@@ -50,6 +50,7 @@ RUN apt-get update \
       git \
       gnupg \
       gpg-agent \
+      jq \
       libbz2-dev \
       libffi-dev \
       libgdbm-dev \
