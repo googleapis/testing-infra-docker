@@ -19,7 +19,7 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y --allow-change-held-packages \
         gnupg curl ca-certificates apt-utils && \
     curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud-google-bootstrap.gpg && \
-    echo 'deb [signed-by=/usr/share/keyrings/cloud-google-bootstrap.gpg] http://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main' | tee -a /etc/apt/sources.list.d/artifact-registry.list
+    echo 'deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] http://packages.cloud.google.com/apt apt-transport-artifact-registry-stable main' | tee -a /etc/apt/sources.list.d/artifact-registry.list
 
 RUN apt-get update && apt-get install apt-transport-artifact-registry
 
