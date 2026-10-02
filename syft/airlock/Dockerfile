@@ -45,7 +45,7 @@ ARG GOOGLE_APPLICATION_CREDENTIALS
 
 # Use a secret mount to access your long lived credentials, without the risk of leaking them in any of the docker layers
 RUN --mount=type=secret,id=credentials \
-    echo 'deb [signed-by=/usr/share/keyrings/cloud-google-bootstrap.gpg] ar+https://us-apt.pkg.dev/remote/artifact-foundry-prod/ubuntu-3p-remote-noble noble main' | \
+    echo 'deb [signed-by=/usr/share/keyrings/ubuntu-archive-keyring.gpg] ar+https://us-apt.pkg.dev/remote/artifact-foundry-prod/ubuntu-3p-remote-noble noble main' | \
     tee -a  /etc/apt/sources.list.d/artifact-registry.list && \
     apt update
 
