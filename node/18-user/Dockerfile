@@ -62,6 +62,7 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 RUN mkdir -p $NPM_CONFIG_PREFIX && chmod 777 $NPM_CONFIG_PREFIX
 RUN npm config -g set update-notifier false
 RUN npm i -g npm@`npm --version`
+RUN npm i -g pnpm@10
 
 # Install pyenv
 RUN git clone https://github.com/pyenv/pyenv.git ~/.pyenv && \

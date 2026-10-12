@@ -20,6 +20,9 @@ commandTests:
 - name: "npm"
   command: ["npm", "--version"]
   expectedOutput: ["10.*"]
+- name: "pnpm"
+  command: ["pnpm", "--version"]
+  expectedOutput: ["10.*"]
 - name: "gcloud"
   command: ["gcloud", "version"]
   expectedOutput: ["Google Cloud SDK"]
