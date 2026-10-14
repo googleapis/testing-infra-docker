@@ -27,7 +27,7 @@ RUN apt-get update && \
 
 RUN mkdir -p /tools
 
-# Bootstrap modern version of Go. The bookwork tag is associated with debian,
+# Bootstrap modern version of Go. The bookworm tag is associated with debian,
 # our base image, and the 1.26 tag is the Go minor version to capture rolling
 # patch updates for. 
 COPY --from=golang:1.26-bookworm /usr/local/go /usr/local/go
