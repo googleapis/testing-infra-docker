@@ -15,16 +15,6 @@
 timeout: 7200s  # 2 hours
 steps:
 
-# Node 18
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18:infrastructure-public-image-$COMMIT_SHA', '.']
-  dir: 'node/18-user'
-  waitFor: ['-']
-# Node 18 puppeteer
-- name: gcr.io/cloud-builders/docker
-  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18-puppeteer', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18-puppeteer:infrastructure-public-image-$COMMIT_SHA', '.']
-  dir: 'node/18-puppeteer'
-  waitFor: ['-']
 # Node 22 user
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node22', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node22:infrastructure-public-image-$COMMIT_SHA', '.']
@@ -32,8 +22,6 @@ steps:
   waitFor: ['-']
 
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18
-  - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node18-puppeteer
   - us-central1-docker.pkg.dev/$PROJECT_ID/release-images/node22
 
 options:
