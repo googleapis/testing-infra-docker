@@ -2,12 +2,14 @@ FROM gcr.io/gcp-runtimes/ubuntu_20_0_4
 ENV PHP_DIR=/opt/php83
 ENV PHP_SRC_DIR=/usr/local/src/php83-build
 ENV PATH=${PATH}:/usr/local/bin:${PHP_DIR}/bin
-ENV PHP_VERISON=8.3.7
+ENV PHP_VERSION=8.3.36
 
 RUN apt-get update && \
     apt-get -y install \
             autoconf \
             build-essential \
+            gcc-10 \
+            g++-10 \
             git-core \
             jq \
             libbz2-dev \
@@ -45,10 +47,10 @@ RUN apt purge -y php7.4-common
 RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
     mkdir -p ${PHP_DIR} ${PHP_SRC_DIR} ${PHP_DIR}/lib/conf.d && \
     cd ${PHP_SRC_DIR} && \
-    wget http://us1.php.net/get/php-$PHP_VERISON.tar.bz2/from/this/mirror \
-         -O php-$PHP_VERISON.tar.bz2 && \
-    tar jxf php-$PHP_VERISON.tar.bz2 && \
-    cd php-$PHP_VERISON && \
+    wget https://www.php.net/distributions/php-$PHP_VERSION.tar.bz2 \
+         -O php-$PHP_VERSION.tar.bz2 && \
+    tar jxf php-$PHP_VERSION.tar.bz2 && \
+    cd php-$PHP_VERSION && \
     ./configure \
         --prefix=${PHP_DIR} \
         --with-config-file-scan-dir=${PHP_DIR}/lib/conf.d \
@@ -92,8 +94,10 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
         --with-pear && \
         make && \
         make install && \
+        export CC=gcc-10 && export CXX=g++-10 && \
         pecl install grpc pdo_sqlsrv-5.11.1 && \
         cp php.ini-production ${PHP_DIR}/lib/php.ini && \
+        echo 'session.upload_progress.enabled=0' >> ${PHP_DIR}/lib/php.ini && \
         echo 'zend_extension=opcache.so' >> ${PHP_DIR}/lib/php.ini && \
         echo 'extension=grpc.so' >> ${PHP_DIR}/lib/conf.d/ext-grpc.ini && \
         git clone https://github.com/Imagick/imagick /tmp/imagick && cd /tmp/imagick && phpize && ./configure && make && make install && cd - && \
@@ -107,7 +111,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
 RUN composer global require phpunit/phpunit:^8.0
 
 # Install Google Cloud SDK
-RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
+RUN curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz \
         -o ${HOME}/google-cloud-sdk.tar.gz \
     && tar xzf ${HOME}/google-cloud-sdk.tar.gz -C $HOME \
     && ${HOME}/google-cloud-sdk/install.sh \

@@ -6,7 +6,6 @@ The images for individual versions of PHP are available at `gcr.io/cloud-devrel-
 You can try them out by running:
 
 ```sh
-$ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php81
 $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php82
 $ docker run --rm -it gcr.io/cloud-devrel-kokoro-resources/php83
 ```

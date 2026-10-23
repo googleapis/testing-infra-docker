@@ -44,31 +44,15 @@ RUN mkdir -p /usr/bin/ \
     && phpbrew init \
     && echo 'source $HOME/.phpbrew/bashrc' >> /root/.bashrc
 
-# Install PHP 8.0
-RUN phpbrew install "8.0" \
+# Install PHP 8.2.35
+RUN phpbrew install "8.2.35" \
     +default +bcmath +bz2 +calendar +cli +ctype +dom +fileinfo +filter +json \
     +mbregex +mbstring +mhash +pcntl +pcre +pdo +phar +posix +readline +sockets \
     +tokenizer +xml +curl +zip +openssl=yes +opcache +fpm +sqlite +mysql \
     +default +intl +gettext
 
-# Install PHP 8.1
-RUN phpbrew install "8.1" \
-    +default +bcmath +bz2 +calendar +cli +ctype +dom +fileinfo +filter +json \
-    +mbregex +mbstring +mhash +pcntl +pcre +pdo +phar +posix +readline +sockets \
-    +tokenizer +xml +curl +zip +openssl=yes +opcache +fpm +sqlite +mysql \
-    +default +intl +gettext
-
-# Install PHP 8.2
-RUN phpbrew install "8.2" \
-    +default +bcmath +bz2 +calendar +cli +ctype +dom +fileinfo +filter +json \
-    +mbregex +mbstring +mhash +pcntl +pcre +pdo +phar +posix +readline +sockets \
-    +tokenizer +xml +curl +zip +openssl=yes +opcache +fpm +sqlite +mysql \
-    +default +intl +gettext
-
-# Install and enable Imagemagick extension for PHP 8.0, 8.1, and 8.2
+# Install and enable Imagemagick extension for PHP 8.2
 RUN source ~/.phpbrew/bashrc \
-    && phpbrew switch $(phpbrew list | grep 8.0) && phpbrew ext install imagick \
-    && phpbrew switch $(phpbrew list | grep 8.1) && phpbrew ext install imagick \
     # On PHP 8.2, Imagemagick must be compiled from src because it is not yet
     # available via PECL
     && phpbrew switch $(phpbrew list | grep 8.2) \
@@ -80,7 +64,7 @@ RUN source ~/.phpbrew/bashrc \
         && make install \
         && phpbrew ext enable imagick
 
-# Install and enable gRPC/memcache/opcache extensions for PHP 8.0, 8.1, and 8.2
+# Install and enable gRPC/memcache/opcache extensions for PHP 8.2
 RUN source ~/.phpbrew/bashrc \
     && phpbrew each phpbrew ext install grpc \
     && phpbrew each phpbrew ext install memcache \
@@ -90,7 +74,7 @@ RUN source ~/.phpbrew/bashrc \
 RUN wget -q -O /usr/bin/composer https://getcomposer.org/composer.phar && chmod +x /usr/bin/composer
 
 # Install Google Cloud SDK
-RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
+RUN curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz \
         -o ${HOME}/google-cloud-sdk.tar.gz \
     && tar xzf ${HOME}/google-cloud-sdk.tar.gz -C $HOME \
     && ${HOME}/google-cloud-sdk/install.sh \
