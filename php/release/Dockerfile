@@ -166,7 +166,7 @@ RUN wget https://www.python.org/ftp/python/3.9.14/Python-3.9.14.tgz \
     && make altinstall
 
 # Install pip
-RUN wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+RUN wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/pip/3.9/get-pip.py' \
   && python3.9 /tmp/get-pip.py \
   && rm /tmp/get-pip.py \
   && python3.9 -m pip
