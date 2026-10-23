@@ -74,7 +74,7 @@ RUN source ~/.phpbrew/bashrc \
 RUN wget -q -O /usr/bin/composer https://getcomposer.org/composer.phar && chmod +x /usr/bin/composer
 
 # Install Google Cloud SDK
-RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
+RUN curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz \
         -o ${HOME}/google-cloud-sdk.tar.gz \
     && tar xzf ${HOME}/google-cloud-sdk.tar.gz -C $HOME \
     && ${HOME}/google-cloud-sdk/install.sh \

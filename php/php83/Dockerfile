@@ -111,7 +111,7 @@ RUN ln -s /usr/lib/libc-client.a /usr/lib/x86_64-linux-gnu/libc-client.a && \
 RUN composer global require phpunit/phpunit:^8.0
 
 # Install Google Cloud SDK
-RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
+RUN curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz \
         -o ${HOME}/google-cloud-sdk.tar.gz \
     && tar xzf ${HOME}/google-cloud-sdk.tar.gz -C $HOME \
     && ${HOME}/google-cloud-sdk/install.sh \
