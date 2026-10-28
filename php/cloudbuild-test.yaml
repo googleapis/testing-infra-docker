@@ -19,32 +19,6 @@ options:
  machineType: 'E2_HIGHCPU_8'
 steps:
 
-# PHP 8.2
-- id: 'build-php82'
-  name: gcr.io/cloud-builders/docker
-  args:
-    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php82', '-t', 'gcr.io/cloud-devrel-public-resources/php82', '-t', 'gcr.io/cloud-devrel-public-resources/php82:infrastructure-public-image-$COMMIT_SHA', '.']
-  dir: 'php/php82'
-  waitFor: ['-']
-
-- name: gcr.io/gcp-runtimes/structure_test
-  args:
-    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php82', '--config', '/workspace/php/php82.yaml', '-v']
-  waitFor: ['build-php82']
-
-# PHP 8.3
-- id: 'build-php83'
-  name: gcr.io/cloud-builders/docker
-  args:
-    ['build', '-t', 'gcr.io/cloud-devrel-kokoro-resources/php83', '-t', 'gcr.io/cloud-devrel-public-resources/php83', '-t', 'gcr.io/cloud-devrel-public-resources/php83:infrastructure-public-image-$COMMIT_SHA', '.']
-  dir: 'php/php83'
-  waitFor: ['-']
-
-- name: gcr.io/gcp-runtimes/structure_test
-  args:
-    ['-i', 'gcr.io/cloud-devrel-kokoro-resources/php83', '--config', '/workspace/php/php83.yaml', '-v']
-  waitFor: ['build-php83']
-
 # PHP release
 - id: 'build-php-release'
   name: gcr.io/cloud-builders/docker
