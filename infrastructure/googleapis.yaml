@@ -40,3 +40,6 @@ commandTests:
 - name: "pip"
   command: ["python3", "-m", "pip", "--version"]
   expectedOutput: ["pip 23.*"]
+- name: "php"
+  command: ["php", "--version"]
+  expectedOutput: ["PHP 8.2.35.*"]

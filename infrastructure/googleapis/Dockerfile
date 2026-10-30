@@ -2,6 +2,7 @@ FROM marketplace.gcr.io/google/debian12:latest
 
 ARG BAZELISK_VERSION=1.28.1
 ARG BAZEL_VERSION=7.7.1
+ARG PHP_VERSION=8.2.35
 
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -48,6 +49,35 @@ ADD https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel
 # layers to make it easier to determine where vulnerabilities come from.
 RUN chmod +x /tools/bazelisk
 RUN chmod +x /tools/bazel
+
+# Build and install PHP from source at the required version.
+RUN curl -fsSL https://www.php.net/distributions/php-${PHP_VERSION}.tar.gz -o /tmp/php.tar.gz && \
+    mkdir -p /tmp/php-src && \
+    tar -xzpf /tmp/php.tar.gz -C /tmp/php-src --strip-components=1 && \
+    cd /tmp/php-src && \
+    ./configure \
+        --enable-static \
+        --disable-all \
+        --without-pear \
+        --enable-phar \
+        --enable-json \
+        --enable-filter \
+        --enable-tokenizer \
+        --with-curl \
+        --with-libxml \
+        --enable-xml \
+        --enable-dom \
+        --enable-xmlwriter \
+        --enable-mbstring \
+        --disable-mbregex \
+        --with-openssl \
+        --with-openssl-dir=/usr \
+        --with-iconv \
+        --enable-bcmath \
+        --prefix=/usr/local && \
+    make -j$(nproc) && \
+    make install && \
+    rm -rf /tmp/php.tar.gz /tmp/php-src
 
 WORKDIR /
 
