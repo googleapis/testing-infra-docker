@@ -159,17 +159,12 @@ RUN composer global require \
     phpunit/phpunit:^8.0 \
     friendsofphp/php-cs-fixer
 
-# Install Python3
-RUN wget https://www.python.org/ftp/python/3.9.14/Python-3.9.14.tgz \
-    && tar -xvf Python-3.9.14.tgz \
-    && ./Python-3.9.14/configure --enable-optimizations \
-    && make altinstall
-
-# Install pip
-RUN wget -O /tmp/get-pip.py 'https://bootstrap.pypa.io/pip/3.9/get-pip.py' \
-  && python3.9 /tmp/get-pip.py \
-  && rm /tmp/get-pip.py \
-  && python3.9 -m pip
+# Install Python3 and pip (Debian 12 provides Python 3.11)
+RUN apt-get update && \
+    apt-get -y install --no-install-recommends python3 python3-pip && \
+    rm -rf /var/lib/apt/lists/*
+# Allow pip install without a venv since this is already an isolated Docker container.
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
 # add the splitsh-lite command
 COPY --from=splitsh /workspace/splitsh-lite /bin/splitsh-lite
